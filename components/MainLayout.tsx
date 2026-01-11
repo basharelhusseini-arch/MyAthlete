@@ -1,11 +1,12 @@
 'use client';
 
+import { ReactNode } from 'react';
 import Sidebar from './Sidebar';
 
 export default function MainLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="min-h-screen bg-gray-50">
