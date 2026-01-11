@@ -79,3 +79,84 @@ export interface EmailNotification {
   sentAt?: string;
   createdAt: string;
 }
+
+// Phase 2: AI Workout Engine Types
+export interface Exercise {
+  id: string;
+  name: string;
+  description: string;
+  category: 'strength' | 'cardio' | 'flexibility' | 'balance' | 'plyometric' | 'endurance';
+  muscleGroups: string[]; // e.g., ['chest', 'triceps', 'shoulders']
+  equipment: 'bodyweight' | 'dumbbells' | 'barbell' | 'machine' | 'cable' | 'kettlebell' | 'resistance_bands' | 'other';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  instructions: string[];
+  videoUrl?: string;
+  imageUrl?: string;
+}
+
+export interface WorkoutExercise {
+  exerciseId: string;
+  sets: number;
+  reps?: number; // if null, it's time-based (e.g., planks)
+  duration?: number; // in seconds, for time-based exercises
+  weight?: number; // in lbs/kg
+  restSeconds: number;
+  notes?: string;
+  order: number;
+}
+
+export interface WorkoutPlan {
+  id: string;
+  memberId: string;
+  name: string;
+  description: string;
+  goal: 'strength' | 'endurance' | 'weight_loss' | 'muscle_gain' | 'general_fitness' | 'flexibility' | 'athletic_performance';
+  duration: number; // in weeks
+  frequency: number; // workouts per week
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  status: 'active' | 'completed' | 'paused' | 'cancelled';
+  createdAt: string;
+  startDate: string;
+  endDate?: string;
+  createdBy?: 'ai' | 'trainer' | 'member';
+}
+
+export interface Workout {
+  id: string;
+  workoutPlanId: string;
+  memberId: string;
+  name: string;
+  date: string;
+  exercises: WorkoutExercise[];
+  duration?: number; // actual duration in minutes
+  status: 'scheduled' | 'in_progress' | 'completed' | 'skipped';
+  notes?: string;
+  rating?: number; // 1-5 stars
+  completedAt?: string;
+}
+
+export interface WorkoutProgress {
+  id: string;
+  workoutId: string;
+  memberId: string;
+  exerciseId: string;
+  setsCompleted: number;
+  repsCompleted?: number[];
+  weightUsed?: number[];
+  durationCompleted?: number;
+  restTimeActual?: number;
+  notes?: string;
+  completedAt: string;
+}
+
+export interface WorkoutTemplate {
+  id: string;
+  name: string;
+  description: string;
+  goal: 'strength' | 'endurance' | 'weight_loss' | 'muscle_gain' | 'general_fitness' | 'flexibility' | 'athletic_performance';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  exercises: WorkoutExercise[];
+  estimatedDuration: number; // in minutes
+  tags: string[];
+  createdBy?: 'system' | 'trainer';
+}
