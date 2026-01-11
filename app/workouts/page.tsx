@@ -3,21 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Plus, Dumbbell, Calendar, Target, TrendingUp } from 'lucide-react';
-
-interface WorkoutPlan {
-  id: string;
-  memberId: string;
-  name: string;
-  description: string;
-  goal: string;
-  duration: number;
-  frequency: number;
-  difficulty: string;
-  status: string;
-  createdAt: string;
-  startDate: string;
-  createdBy?: 'ai' | 'trainer' | 'member';
-}
+import { WorkoutPlan } from '@/types';
 
 export default function WorkoutsPage() {
   const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlan[]>([]);
