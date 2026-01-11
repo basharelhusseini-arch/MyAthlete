@@ -29,7 +29,14 @@ class DataStore {
 
   // Initialize with sample data
   constructor() {
-    this.initializeSampleData();
+    // Lazy initialization to avoid build-time issues
+    if (typeof window === 'undefined') {
+      // Server-side: initialize immediately
+      this.initializeSampleData();
+    } else {
+      // Client-side: should not happen, but safe guard
+      this.initializeSampleData();
+    }
   }
 
   private initializeSampleData() {

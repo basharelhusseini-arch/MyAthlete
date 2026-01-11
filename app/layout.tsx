@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import MainLayout from '@/components/MainLayout';
 
 export const metadata: Metadata = {
   title: "MyAthlete - Fitness Management System",
   description: "Comprehensive CRM tool for gyms and fitness centers",
 };
-
-import MainLayout from '@/components/MainLayout';
 
 export default function RootLayout({
   children,
