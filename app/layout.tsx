@@ -4,7 +4,10 @@ import "./globals.css";
 import MainLayout from '@/components/MainLayout';
 
 export const metadata: Metadata = {
-  title: "MyAthlete - All-in-One Fitness Platform",
+  title: {
+    default: "MyAthlete - All-in-One Fitness Platform",
+    template: "%s | MyAthlete",
+  },
   description: "Uniting client management, AI-powered workouts, and AI-driven nutrition planning in one comprehensive platform",
 };
 

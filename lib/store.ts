@@ -1,4 +1,4 @@
-import { Member, Membership, Trainer, GymClass, Payment, EmailNotification } from '@/types';
+import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutProgress, WorkoutTemplate } from '@/types';
 
 // Simple password hashing (in production, use bcrypt)
 // This function must work in both build-time and runtime environments
@@ -26,6 +26,13 @@ class DataStore {
   private classes: GymClass[] = [];
   private payments: Payment[] = [];
   private notifications: EmailNotification[] = [];
+  
+  // Phase 2: Workout Engine
+  private exercises: Exercise[] = [];
+  private workoutPlans: WorkoutPlan[] = [];
+  private workouts: Workout[] = [];
+  private workoutProgress: WorkoutProgress[] = [];
+  private workoutTemplates: WorkoutTemplate[] = [];
 
   // Initialize with sample data
   constructor() {
@@ -35,7 +42,7 @@ class DataStore {
       this.initializeSampleData();
     } else {
       // Client-side: should not happen, but safe guard
-      this.initializeSampleData();
+    this.initializeSampleData();
     }
   }
 
@@ -442,6 +449,202 @@ class DataStore {
     notification.sent = true;
     notification.sentAt = new Date().toISOString();
     return true;
+  }
+
+  // Phase 2: Exercise methods
+  getAllExercises(): Exercise[] {
+    return this.exercises;
+  }
+
+  getExercise(id: string): Exercise | undefined {
+    return this.exercises.find(e => e.id === id);
+  }
+
+  addExercise(exercise: Omit<Exercise, 'id'>): Exercise {
+    const newExercise: Exercise = {
+      ...exercise,
+      id: Date.now().toString(),
+    };
+    this.exercises.push(newExercise);
+    return newExercise;
+  }
+
+  updateExercise(id: string, updates: Partial<Exercise>): Exercise | null {
+    const index = this.exercises.findIndex(e => e.id === id);
+    if (index === -1) return null;
+    this.exercises[index] = { ...this.exercises[index], ...updates };
+    return this.exercises[index];
+  }
+
+  deleteExercise(id: string): boolean {
+    const index = this.exercises.findIndex(e => e.id === id);
+    if (index === -1) return false;
+    this.exercises.splice(index, 1);
+    return true;
+  }
+
+  // Phase 2: Workout Plan methods
+  getAllWorkoutPlans(): WorkoutPlan[] {
+    return this.workoutPlans;
+  }
+
+  getWorkoutPlan(id: string): WorkoutPlan | undefined {
+    return this.workoutPlans.find(p => p.id === id);
+  }
+
+  getMemberWorkoutPlans(memberId: string): WorkoutPlan[] {
+    return this.workoutPlans.filter(p => p.memberId === memberId);
+  }
+
+  addWorkoutPlan(plan: Omit<WorkoutPlan, 'id' | 'createdAt'>): WorkoutPlan {
+    const newPlan: WorkoutPlan = {
+      ...plan,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    this.workoutPlans.push(newPlan);
+    return newPlan;
+  }
+
+  updateWorkoutPlan(id: string, updates: Partial<WorkoutPlan>): WorkoutPlan | null {
+    const index = this.workoutPlans.findIndex(p => p.id === id);
+    if (index === -1) return null;
+    this.workoutPlans[index] = { ...this.workoutPlans[index], ...updates };
+    return this.workoutPlans[index];
+  }
+
+  deleteWorkoutPlan(id: string): boolean {
+    const index = this.workoutPlans.findIndex(p => p.id === id);
+    if (index === -1) return false;
+    this.workoutPlans.splice(index, 1);
+    // Also delete associated workouts
+    this.workouts = this.workouts.filter(w => w.workoutPlanId !== id);
+    return true;
+  }
+
+  // Phase 2: Workout methods
+  getAllWorkouts(): Workout[] {
+    return this.workouts;
+  }
+
+  getWorkout(id: string): Workout | undefined {
+    return this.workouts.find(w => w.id === id);
+  }
+
+  getMemberWorkouts(memberId: string): Workout[] {
+    return this.workouts.filter(w => w.memberId === memberId);
+  }
+
+  getWorkoutPlanWorkouts(workoutPlanId: string): Workout[] {
+    return this.workouts.filter(w => w.workoutPlanId === workoutPlanId);
+  }
+
+  addWorkout(workout: Omit<Workout, 'id'>): Workout {
+    const newWorkout: Workout = {
+      ...workout,
+      id: Date.now().toString(),
+    };
+    this.workouts.push(newWorkout);
+    return newWorkout;
+  }
+
+  updateWorkout(id: string, updates: Partial<Workout>): Workout | null {
+    const index = this.workouts.findIndex(w => w.id === id);
+    if (index === -1) return null;
+    this.workouts[index] = { ...this.workouts[index], ...updates };
+    return this.workouts[index];
+  }
+
+  deleteWorkout(id: string): boolean {
+    const index = this.workouts.findIndex(w => w.id === id);
+    if (index === -1) return false;
+    this.workouts.splice(index, 1);
+    // Also delete associated progress
+    this.workoutProgress = this.workoutProgress.filter(p => p.workoutId !== id);
+    return true;
+  }
+
+  // Phase 2: Workout Progress methods
+  getWorkoutProgress(workoutId: string): WorkoutProgress[] {
+    return this.workoutProgress.filter(p => p.workoutId === workoutId);
+  }
+
+  getMemberWorkoutProgress(memberId: string): WorkoutProgress[] {
+    return this.workoutProgress.filter(p => p.memberId === memberId);
+  }
+
+  addWorkoutProgress(progress: Omit<WorkoutProgress, 'id' | 'completedAt'>): WorkoutProgress {
+    const newProgress: WorkoutProgress = {
+      ...progress,
+      id: Date.now().toString(),
+      completedAt: new Date().toISOString(),
+    };
+    this.workoutProgress.push(newProgress);
+    return newProgress;
+  }
+
+  // Phase 2: Workout Template methods
+  getAllWorkoutTemplates(): WorkoutTemplate[] {
+    return this.workoutTemplates;
+  }
+
+  getWorkoutTemplate(id: string): WorkoutTemplate | undefined {
+    return this.workoutTemplates.find(t => t.id === id);
+  }
+
+  addWorkoutTemplate(template: Omit<WorkoutTemplate, 'id'>): WorkoutTemplate {
+    const newTemplate: WorkoutTemplate = {
+      ...template,
+      id: Date.now().toString(),
+    };
+    this.workoutTemplates.push(newTemplate);
+    return newTemplate;
+  }
+
+  updateWorkoutTemplate(id: string, updates: Partial<WorkoutTemplate>): WorkoutTemplate | null {
+    const index = this.workoutTemplates.findIndex(t => t.id === id);
+    if (index === -1) return null;
+    this.workoutTemplates[index] = { ...this.workoutTemplates[index], ...updates };
+    return this.workoutTemplates[index];
+  }
+
+  deleteWorkoutTemplate(id: string): boolean {
+    const index = this.workoutTemplates.findIndex(t => t.id === id);
+    if (index === -1) return false;
+    this.workoutTemplates.splice(index, 1);
+    return true;
+  }
+
+  // Phase 2: AI Workout Generation (placeholder - will integrate AI later)
+  generateWorkoutPlan(params: {
+    memberId: string;
+    goal: WorkoutPlan['goal'];
+    difficulty: WorkoutPlan['difficulty'];
+    duration: number;
+    frequency: number;
+    equipment?: string[];
+    limitations?: string[];
+  }): WorkoutPlan {
+    // Placeholder implementation - will integrate AI/ML service later
+    // For now, create a basic workout plan structure
+    
+    const plan = this.addWorkoutPlan({
+      memberId: params.memberId,
+      name: `${params.goal} Workout Plan - ${params.difficulty}`,
+      description: `AI-generated ${params.goal} workout plan for ${params.difficulty} level`,
+      goal: params.goal,
+      duration: params.duration,
+      frequency: params.frequency,
+      difficulty: params.difficulty,
+      status: 'active',
+      startDate: new Date().toISOString().split('T')[0],
+      createdBy: 'ai',
+    });
+
+    // TODO: Generate workouts based on plan parameters
+    // This will integrate with AI service to create personalized workouts
+    
+    return plan;
   }
 }
 

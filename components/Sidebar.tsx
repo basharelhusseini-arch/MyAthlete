@@ -9,7 +9,8 @@ import {
   Calendar, 
   UserCog,
   Menu,
-  LogIn
+  LogIn,
+  Dumbbell
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Memberships', href: '/memberships', icon: CreditCard },
   { name: 'Classes', href: '/classes', icon: Calendar },
   { name: 'Trainers', href: '/trainers', icon: UserCog },
+  { name: 'Workouts', href: '/workouts', icon: Dumbbell },
 ];
 
 export default function Sidebar() {
