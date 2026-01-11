@@ -1,14 +1,30 @@
 # MyAthlete
 
-A comprehensive Customer Relationship Management (CRM) tool designed specifically for gyms and fitness centers.
+**The All-in-One Fitness Platform** - Uniting client management, AI-powered workout generation, and AI-driven nutrition planning in one comprehensive ecosystem.
 
-## Features
+MyAthlete is a unified platform designed to revolutionize fitness management by combining client relationship management, intelligent workout generation, and personalized nutrition planning. Built as a website first, with plans to expand into a mobile app.
 
+## Core Platform Features
+
+### 1. Client Management System ✅
 - **Member Management**: Track all gym members with their personal information and membership status
 - **Membership Management**: Manage different membership tiers and plans
 - **Class Scheduling**: Schedule and manage fitness classes
 - **Trainer Management**: Track trainers and their schedules
 - **Dashboard**: Overview of key metrics and recent activity
+- **Member Portal**: Self-service portal for members to manage their fitness journey
+
+### 2. AI Workout Engine 🚧 (Coming Soon)
+- **Intelligent Workout Generation**: AI-powered workout plans tailored to individual goals, fitness level, and preferences
+- **Progressive Overload Tracking**: Automatic progression recommendations
+- **Exercise Library**: Comprehensive database of exercises with form guides
+- **Workout Analytics**: Track performance and adapt workouts dynamically
+
+### 3. AI Macro & Meal Plan Generator 🚧 (Coming Soon)
+- **Personalized Nutrition Plans**: AI-generated meal plans based on goals, dietary preferences, and lifestyle
+- **Macro Calculator**: Intelligent macro and calorie calculations
+- **Meal Suggestions**: AI-powered recipe recommendations
+- **Nutrition Tracking**: Monitor macro intake and progress
 
 ## Tech Stack
 
