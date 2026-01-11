@@ -1,14 +1,17 @@
 import { Member, Membership, Trainer, GymClass, Payment, EmailNotification } from '@/types';
 
 // Simple password hashing (in production, use bcrypt)
+// This function must work in both build-time and runtime environments
 function hashPassword(password: string): string {
   // Simple hash for demo - in production use bcrypt
-  // Using Buffer for Node.js compatibility
-  if (typeof Buffer !== 'undefined') {
-    return Buffer.from(password).toString('base64').split('').reverse().join('');
+  // Using a simple encoding that works everywhere (no Buffer dependency)
+  // This is just for demo purposes - use proper bcrypt in production
+  let hash = '';
+  for (let i = 0; i < password.length; i++) {
+    const charCode = password.charCodeAt(i);
+    hash += String.fromCharCode(charCode + (i % 10) + 1);
   }
-  // Fallback for browser (though this shouldn't be used in server-side code)
-  return btoa(password).split('').reverse().join('');
+  return hash.split('').reverse().join('') + password.length.toString();
 }
 
 function verifyPassword(password: string, hash: string): boolean {
