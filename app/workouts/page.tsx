@@ -16,6 +16,7 @@ interface WorkoutPlan {
   status: string;
   createdAt: string;
   startDate: string;
+  createdBy?: 'ai' | 'trainer' | 'member';
 }
 
 export default function WorkoutsPage() {
