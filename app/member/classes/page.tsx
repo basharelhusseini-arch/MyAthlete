@@ -302,7 +302,7 @@ export default function MemberClassesPage() {
                       <div className="space-y-2">
                         <div className="flex items-center text-green-600 text-sm mb-2">
                           <CheckCircle className="w-4 h-4 mr-2" />
-                          You're enrolled
+                          You&apos;re enrolled
                         </div>
                         <button
                           onClick={() => handleCancelClass(classItem.id)}

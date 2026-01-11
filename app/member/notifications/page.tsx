@@ -113,7 +113,7 @@ export default function MemberNotificationsPage() {
               <div className="text-center py-12">
                 <Bell className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 text-lg mb-2">No notifications</p>
-                <p className="text-gray-400 text-sm">You're all caught up!</p>
+                <p className="text-gray-400 text-sm">You&apos;re all caught up!</p>
               </div>
             ) : (
               <div className="space-y-4">
