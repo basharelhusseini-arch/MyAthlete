@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Gym CRM - Fitness Management System",
+  title: "MyAthlete - Fitness Management System",
   description: "Comprehensive CRM tool for gyms and fitness centers",
 };
 

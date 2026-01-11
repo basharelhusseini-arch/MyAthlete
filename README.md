@@ -1,4 +1,4 @@
-# Gym CRM
+# MyAthlete
 
 A comprehensive Customer Relationship Management (CRM) tool designed specifically for gyms and fitness centers.
 

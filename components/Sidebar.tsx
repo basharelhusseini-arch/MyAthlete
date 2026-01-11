@@ -47,7 +47,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center h-16 px-4 border-b border-gray-800">
-            <h1 className="text-2xl font-bold text-blue-400">Gym CRM</h1>
+            <h1 className="text-2xl font-bold text-blue-400">MyAthlete</h1>
           </div>
 
           {/* Navigation */}
