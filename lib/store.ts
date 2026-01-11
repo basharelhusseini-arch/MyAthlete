@@ -1,4 +1,19 @@
-import { Member, Membership, Trainer, GymClass } from '@/types';
+import { Member, Membership, Trainer, GymClass, Payment, EmailNotification } from '@/types';
+
+// Simple password hashing (in production, use bcrypt)
+function hashPassword(password: string): string {
+  // Simple hash for demo - in production use bcrypt
+  // Using Buffer for Node.js compatibility
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(password).toString('base64').split('').reverse().join('');
+  }
+  // Fallback for browser (though this shouldn't be used in server-side code)
+  return btoa(password).split('').reverse().join('');
+}
+
+function verifyPassword(password: string, hash: string): boolean {
+  return hashPassword(password) === hash;
+}
 
 // In-memory data store (can be replaced with a real database later)
 class DataStore {
@@ -6,6 +21,8 @@ class DataStore {
   private memberships: Membership[] = [];
   private trainers: Trainer[] = [];
   private classes: GymClass[] = [];
+  private payments: Payment[] = [];
+  private notifications: EmailNotification[] = [];
 
   // Initialize with sample data
   constructor() {
@@ -78,7 +95,7 @@ class DataStore {
       },
     ];
 
-    // Sample members
+    // Sample members (default password: "password123")
     this.members = [
       {
         id: '1',
@@ -86,11 +103,13 @@ class DataStore {
         lastName: 'Williams',
         email: 'alice.williams@email.com',
         phone: '555-1001',
+        password: hashPassword('password123'),
         dateOfBirth: '1990-05-15',
         joinDate: '2024-01-10',
         membershipId: '2',
         status: 'active',
         notes: 'Prefers morning workouts',
+        completedSessions: 12,
       },
       {
         id: '2',
@@ -98,10 +117,12 @@ class DataStore {
         lastName: 'Brown',
         email: 'bob.brown@email.com',
         phone: '555-1002',
+        password: hashPassword('password123'),
         dateOfBirth: '1985-08-22',
         joinDate: '2024-01-15',
         membershipId: '1',
         status: 'active',
+        completedSessions: 8,
       },
       {
         id: '3',
@@ -109,11 +130,13 @@ class DataStore {
         lastName: 'Miller',
         email: 'carol.miller@email.com',
         phone: '555-1003',
+        password: hashPassword('password123'),
         dateOfBirth: '1992-11-30',
         joinDate: '2023-12-05',
         membershipId: '3',
         status: 'active',
         notes: 'Personal training client',
+        completedSessions: 25,
       },
     ];
 
@@ -133,6 +156,8 @@ class DataStore {
         endTime: '08:00',
         capacity: 20,
         enrolledMembers: ['1', '3'],
+        waitlist: [],
+        checkedInMembers: [],
         status: 'scheduled',
       },
       {
@@ -145,6 +170,8 @@ class DataStore {
         endTime: '19:00',
         capacity: 15,
         enrolledMembers: ['2'],
+        waitlist: [],
+        checkedInMembers: [],
         status: 'scheduled',
       },
     ];
@@ -277,7 +304,139 @@ class DataStore {
     this.classes.splice(index, 1);
     return true;
   }
+
+  // Authentication methods
+  authenticateMember(email: string, password: string): Member | null {
+    const member = this.members.find(m => m.email.toLowerCase() === email.toLowerCase());
+    if (!member || !member.password) return null;
+    if (!verifyPassword(password, member.password)) return null;
+    if (member.status !== 'active') return null;
+    return member;
+  }
+
+  // Session tracking methods
+  incrementMemberSessions(memberId: string): boolean {
+    const member = this.getMember(memberId);
+    if (!member) return false;
+    member.completedSessions = (member.completedSessions || 0) + 1;
+    return true;
+  }
+
+  getMemberSessions(memberId: string): number {
+    const member = this.getMember(memberId);
+    return member?.completedSessions || 0;
+  }
+
+  // Check-in methods
+  checkInMember(classId: string, memberId: string): boolean {
+    const gymClass = this.getClass(classId);
+    if (!gymClass) return false;
+    if (!gymClass.enrolledMembers.includes(memberId)) return false;
+    if (gymClass.checkedInMembers.includes(memberId)) return false;
+    
+    gymClass.checkedInMembers.push(memberId);
+    
+    // Increment session count when checking in
+    this.incrementMemberSessions(memberId);
+    
+    return true;
+  }
+
+  // Waitlist methods
+  addToWaitlist(classId: string, memberId: string): boolean {
+    const gymClass = this.getClass(classId);
+    if (!gymClass) return false;
+    if (gymClass.enrolledMembers.includes(memberId)) return false;
+    if (gymClass.waitlist.includes(memberId)) return false;
+    
+    gymClass.waitlist.push(memberId);
+    return true;
+  }
+
+  removeFromWaitlist(classId: string, memberId: string): boolean {
+    const gymClass = this.getClass(classId);
+    if (!gymClass) return false;
+    const index = gymClass.waitlist.indexOf(memberId);
+    if (index === -1) return false;
+    gymClass.waitlist.splice(index, 1);
+    return true;
+  }
+
+  // When a spot opens, move first waitlist member to enrolled
+  processWaitlist(classId: string): boolean {
+    const gymClass = this.getClass(classId);
+    if (!gymClass) return false;
+    if (gymClass.enrolledMembers.length >= gymClass.capacity) return false;
+    if (gymClass.waitlist.length === 0) return false;
+    
+    const memberId = gymClass.waitlist.shift();
+    if (memberId) {
+      gymClass.enrolledMembers.push(memberId);
+      // Send notification (in production)
+      this.createNotification(memberId, 'class_reminder', 
+        'Class Spot Available', 
+        `A spot has opened in ${gymClass.name}. You've been automatically enrolled.`);
+      return true;
+    }
+    return false;
+  }
+
+  // Payment methods
+  createPayment(payment: Omit<Payment, 'id' | 'createdAt'>): Payment {
+    const newPayment: Payment = {
+      ...payment,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    this.payments.push(newPayment);
+    return newPayment;
+  }
+
+  getMemberPayments(memberId: string): Payment[] {
+    return this.payments.filter(p => p.memberId === memberId);
+  }
+
+  updatePaymentStatus(paymentId: string, status: Payment['status'], transactionId?: string): Payment | null {
+    const payment = this.payments.find(p => p.id === paymentId);
+    if (!payment) return null;
+    payment.status = status;
+    if (transactionId) payment.transactionId = transactionId;
+    return payment;
+  }
+
+  // Email notification methods
+  createNotification(memberId: string, type: EmailNotification['type'], subject: string, body: string): EmailNotification {
+    const notification: EmailNotification = {
+      id: Date.now().toString(),
+      memberId,
+      type,
+      subject,
+      body,
+      sent: false,
+      createdAt: new Date().toISOString(),
+    };
+    this.notifications.push(notification);
+    // In production, send email here
+    return notification;
+  }
+
+  getMemberNotifications(memberId: string): EmailNotification[] {
+    return this.notifications
+      .filter(n => n.memberId === memberId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  markNotificationSent(notificationId: string): boolean {
+    const notification = this.notifications.find(n => n.id === notificationId);
+    if (!notification) return false;
+    notification.sent = true;
+    notification.sentAt = new Date().toISOString();
+    return true;
+  }
 }
+
+// Export password utilities
+export { hashPassword, verifyPassword };
 
 // Export singleton instance
 export const store = new DataStore();
