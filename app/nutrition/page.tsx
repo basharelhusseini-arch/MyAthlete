@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Calendar, Target, TrendingUp, ArrowRight } from 'lucide-react';
+import { Plus, Calendar, Target, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
 import { NutritionPlan } from '@/types';
 
 export default function NutritionPlansPage() {
@@ -30,7 +30,7 @@ export default function NutritionPlansPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Loading nutrition plans...</p>
+        <p className="text-gray-400">Loading nutrition plans...</p>
       </div>
     );
   }
@@ -39,16 +39,25 @@ export default function NutritionPlansPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Nutrition Plans</h1>
-          <p className="mt-2 text-gray-600">Manage and view all nutrition plans</p>
+          <h1 className="text-3xl font-bold text-white">Nutrition Plans</h1>
+          <p className="mt-2 text-gray-400">Manage and view all nutrition plans</p>
         </div>
-        <Link
-          href="/nutrition/new"
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Generate New Plan
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/nutrition/builder"
+            className="flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg shadow-purple-500/20"
+          >
+            <Sparkles className="w-5 h-5 mr-2" />
+            AI Diet Builder
+          </Link>
+          <Link
+            href="/nutrition/new"
+            className="flex items-center px-4 py-2 btn-primary"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Quick Generate
+          </Link>
+        </div>
       </div>
 
       {plans.length === 0 ? (
