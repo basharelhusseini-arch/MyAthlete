@@ -192,6 +192,193 @@ class DataStore {
         status: 'scheduled',
       },
     ];
+
+    // Phase 2: Sample exercises
+    this.exercises = [
+      // Strength exercises
+      {
+        id: 'ex1',
+        name: 'Push-ups',
+        description: 'Classic bodyweight exercise targeting chest, shoulders, and triceps',
+        category: 'strength',
+        muscleGroups: ['chest', 'triceps', 'shoulders'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Start in plank position with hands slightly wider than shoulders',
+          'Lower body until chest nearly touches floor',
+          'Push back up to starting position',
+          'Keep core engaged throughout movement'
+        ],
+      },
+      {
+        id: 'ex2',
+        name: 'Squats',
+        description: 'Fundamental lower body exercise for legs and glutes',
+        category: 'strength',
+        muscleGroups: ['quadriceps', 'glutes', 'hamstrings'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Stand with feet shoulder-width apart',
+          'Lower down as if sitting in a chair',
+          'Keep knees behind toes and chest up',
+          'Return to starting position by driving through heels'
+        ],
+      },
+      {
+        id: 'ex3',
+        name: 'Dumbbell Bench Press',
+        description: 'Upper body strength exercise using dumbbells',
+        category: 'strength',
+        muscleGroups: ['chest', 'triceps', 'shoulders'],
+        equipment: 'dumbbells',
+        difficulty: 'intermediate',
+        instructions: [
+          'Lie on bench with dumbbells at chest level',
+          'Press weights up until arms are fully extended',
+          'Lower weights slowly back to starting position',
+          'Keep core engaged and feet flat on floor'
+        ],
+      },
+      {
+        id: 'ex4',
+        name: 'Deadlifts',
+        description: 'Compound exercise targeting posterior chain',
+        category: 'strength',
+        muscleGroups: ['hamstrings', 'glutes', 'back'],
+        equipment: 'barbell',
+        difficulty: 'advanced',
+        instructions: [
+          'Stand with feet hip-width apart, bar over mid-foot',
+          'Hinge at hips and bend knees to grip bar',
+          'Keep back straight and chest up',
+          'Drive through heels to stand up, extending hips'
+        ],
+      },
+      {
+        id: 'ex5',
+        name: 'Pull-ups',
+        description: 'Upper body pulling exercise',
+        category: 'strength',
+        muscleGroups: ['back', 'biceps'],
+        equipment: 'bodyweight',
+        difficulty: 'intermediate',
+        instructions: [
+          'Hang from bar with palms facing away',
+          'Pull body up until chin clears bar',
+          'Lower slowly to full arm extension',
+          'Keep core engaged throughout'
+        ],
+      },
+      {
+        id: 'ex6',
+        name: 'Plank',
+        description: 'Core strengthening isometric exercise',
+        category: 'strength',
+        muscleGroups: ['core', 'shoulders'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Start in push-up position on forearms',
+          'Keep body in straight line from head to heels',
+          'Engage core and hold position',
+          'Breathe normally throughout'
+        ],
+      },
+      // Cardio exercises
+      {
+        id: 'ex7',
+        name: 'Burpees',
+        description: 'Full-body cardio exercise',
+        category: 'cardio',
+        muscleGroups: ['full body'],
+        equipment: 'bodyweight',
+        difficulty: 'intermediate',
+        instructions: [
+          'Start in standing position',
+          'Squat down and place hands on floor',
+          'Jump feet back into plank position',
+          'Jump feet forward and explosively jump up'
+        ],
+      },
+      {
+        id: 'ex8',
+        name: 'Jumping Jacks',
+        description: 'Simple cardio warm-up exercise',
+        category: 'cardio',
+        muscleGroups: ['full body'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Start with feet together and arms at sides',
+          'Jump while spreading legs and raising arms overhead',
+          'Jump back to starting position',
+          'Repeat in rhythmic motion'
+        ],
+      },
+      {
+        id: 'ex9',
+        name: 'Mountain Climbers',
+        description: 'Cardio and core exercise',
+        category: 'cardio',
+        muscleGroups: ['core', 'shoulders', 'legs'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Start in plank position',
+          'Alternately bring knees to chest',
+          'Keep hips level and core engaged',
+          'Maintain steady pace'
+        ],
+      },
+      // Flexibility exercises
+      {
+        id: 'ex10',
+        name: 'Downward Dog',
+        description: 'Yoga pose for flexibility and strength',
+        category: 'flexibility',
+        muscleGroups: ['hamstrings', 'shoulders', 'core'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Start on hands and knees',
+          'Lift hips up and back',
+          'Form inverted V shape with body',
+          'Press hands into floor and lengthen spine'
+        ],
+      },
+      {
+        id: 'ex11',
+        name: 'Lunges',
+        description: 'Lower body strength and balance exercise',
+        category: 'strength',
+        muscleGroups: ['quadriceps', 'glutes', 'hamstrings'],
+        equipment: 'bodyweight',
+        difficulty: 'beginner',
+        instructions: [
+          'Step forward with one leg',
+          'Lower hips until both knees are at 90 degrees',
+          'Push through front heel to return',
+          'Alternate legs'
+        ],
+      },
+      {
+        id: 'ex12',
+        name: 'Overhead Press',
+        description: 'Shoulder and upper body strength exercise',
+        category: 'strength',
+        muscleGroups: ['shoulders', 'triceps', 'core'],
+        equipment: 'dumbbells',
+        difficulty: 'intermediate',
+        instructions: [
+          'Stand with feet shoulder-width apart',
+          'Hold weights at shoulder height',
+          'Press weights overhead until arms fully extended',
+          'Lower slowly back to shoulders'
+        ],
+      },
+    ];
   }
 
   // Member methods
@@ -615,7 +802,7 @@ class DataStore {
     return true;
   }
 
-  // Phase 2: AI Workout Generation (placeholder - will integrate AI later)
+  // Phase 2: AI Workout Generation (rule-based implementation - can integrate AI later)
   generateWorkoutPlan(params: {
     memberId: string;
     goal: WorkoutPlan['goal'];
@@ -625,13 +812,11 @@ class DataStore {
     equipment?: string[];
     limitations?: string[];
   }): WorkoutPlan {
-    // Placeholder implementation - will integrate AI/ML service later
-    // For now, create a basic workout plan structure
-    
+    // Create workout plan
     const plan = this.addWorkoutPlan({
       memberId: params.memberId,
-      name: `${params.goal} Workout Plan - ${params.difficulty}`,
-      description: `AI-generated ${params.goal} workout plan for ${params.difficulty} level`,
+      name: `${params.goal.charAt(0).toUpperCase() + params.goal.slice(1).replace('_', ' ')} Workout Plan - ${params.difficulty.charAt(0).toUpperCase() + params.difficulty.slice(1)}`,
+      description: `Personalized ${params.goal.replace('_', ' ')} workout plan for ${params.difficulty} level. ${params.limitations ? `Limitations: ${params.limitations}.` : ''}`,
       goal: params.goal,
       duration: params.duration,
       frequency: params.frequency,
@@ -641,9 +826,111 @@ class DataStore {
       createdBy: 'ai',
     });
 
-    // TODO: Generate workouts based on plan parameters
-    // This will integrate with AI service to create personalized workouts
+    // Rule-based exercise selection based on goal and difficulty
+    const availableExercises = this.exercises.filter(ex => {
+      // Filter by equipment if specified
+      if (params.equipment && params.equipment.length > 0) {
+        if (!params.equipment.includes(ex.equipment)) return false;
+      }
+      // Filter by difficulty
+      if (params.difficulty === 'beginner' && ex.difficulty !== 'beginner') return false;
+      if (params.difficulty === 'intermediate' && ex.difficulty === 'advanced') return false;
+      return true;
+    });
+
+    // Select exercises based on goal
+    let selectedExercises: Exercise[] = [];
     
+    if (params.goal === 'strength' || params.goal === 'muscle_gain') {
+      selectedExercises = availableExercises.filter(ex => 
+        ex.category === 'strength'
+      ).slice(0, 6);
+    } else if (params.goal === 'weight_loss' || params.goal === 'endurance') {
+      selectedExercises = [
+        ...availableExercises.filter(ex => ex.category === 'cardio').slice(0, 3),
+        ...availableExercises.filter(ex => ex.category === 'strength').slice(0, 3),
+      ];
+    } else if (params.goal === 'flexibility') {
+      selectedExercises = availableExercises.filter(ex => 
+        ex.category === 'flexibility' || ex.category === 'strength'
+      ).slice(0, 5);
+    } else {
+      // general_fitness or athletic_performance
+      selectedExercises = [
+        ...availableExercises.filter(ex => ex.category === 'strength').slice(0, 4),
+        ...availableExercises.filter(ex => ex.category === 'cardio').slice(0, 2),
+      ];
+    }
+
+    // Ensure we have at least some exercises
+    if (selectedExercises.length === 0) {
+      selectedExercises = availableExercises.slice(0, 5);
+    }
+
+    // Generate workouts for the plan duration
+    const startDate = new Date(plan.startDate);
+    const totalWorkouts = params.duration * params.frequency;
+    const daysBetweenWorkouts = Math.floor(7 / params.frequency);
+
+    for (let i = 0; i < totalWorkouts; i++) {
+      const workoutDate = new Date(startDate);
+      workoutDate.setDate(startDate.getDate() + (i * daysBetweenWorkouts));
+
+      // Create workout exercises with appropriate reps/sets based on difficulty
+      const workoutExercises: WorkoutExercise[] = selectedExercises.map((ex, index) => {
+        let sets = 3;
+        let reps: number | undefined = 10;
+        let restSeconds = 60;
+        let duration: number | undefined;
+
+        if (params.difficulty === 'beginner') {
+          sets = 2;
+          reps = 8;
+          restSeconds = 90;
+        } else if (params.difficulty === 'intermediate') {
+          sets = 3;
+          reps = 10;
+          restSeconds = 60;
+        } else {
+          sets = 4;
+          reps = 12;
+          restSeconds = 45;
+        }
+
+        // Time-based exercises (like planks)
+        if (ex.name.toLowerCase().includes('plank') || ex.name.toLowerCase().includes('hold')) {
+          reps = undefined;
+          duration = params.difficulty === 'beginner' ? 30 : params.difficulty === 'intermediate' ? 45 : 60;
+        }
+
+        return {
+          exerciseId: ex.id,
+          sets,
+          reps,
+          duration,
+          restSeconds,
+          order: index + 1,
+        };
+      });
+
+      const workoutName = `Workout ${i + 1} - ${params.goal.replace('_', ' ')}`;
+      
+      // Estimate workout duration (simplified calculation)
+      const avgSets = params.difficulty === 'beginner' ? 2 : params.difficulty === 'intermediate' ? 3 : 4;
+      const avgRest = params.difficulty === 'beginner' ? 90 : params.difficulty === 'intermediate' ? 60 : 45;
+      const estimatedDuration = Math.ceil(workoutExercises.length * avgSets * (avgRest / 60 + 0.5));
+      
+      this.addWorkout({
+        workoutPlanId: plan.id,
+        memberId: params.memberId,
+        name: workoutName,
+        date: workoutDate.toISOString().split('T')[0],
+        exercises: workoutExercises,
+        status: 'scheduled',
+        duration: estimatedDuration,
+      });
+    }
+
     return plan;
   }
 }
