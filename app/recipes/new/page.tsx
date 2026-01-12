@@ -13,7 +13,7 @@ export default function NewRecipePage() {
     name: '',
     description: '',
     instructions: [''],
-    ingredients: [{ name: '', quantity: 0, unit: '' }] as Ingredient[],
+    ingredients: [{ name: '', amount: 0, unit: '' }] as Ingredient[],
     servings: 1,
     prepTime: 0,
     cookTime: 0,
@@ -80,7 +80,7 @@ export default function NewRecipePage() {
   const addIngredient = () => {
     setFormData({
       ...formData,
-      ingredients: [...formData.ingredients, { name: '', quantity: 0, unit: '' }],
+      ingredients: [...formData.ingredients, { name: '', amount: 0, unit: '' }],
     });
   };
 
@@ -225,8 +225,8 @@ export default function NewRecipePage() {
                   type="number"
                   min="0"
                   step="0.1"
-                  value={ingredient.quantity}
-                  onChange={(e) => updateIngredient(index, 'quantity', parseFloat(e.target.value) || 0)}
+                  value={ingredient.amount}
+                  onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value) || 0)}
                   placeholder="Quantity"
                   className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
