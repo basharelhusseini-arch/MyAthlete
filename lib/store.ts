@@ -417,7 +417,8 @@ class DataStore {
         protein: 54,
         carbohydrates: 0,
         fats: 12,
-        tags: ['high-protein', 'low-carb', 'gluten-free']
+        tags: ['high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800&h=600&fit=crop'
       },
       {
         id: 'r2',
@@ -497,7 +498,8 @@ class DataStore {
         protein: 35,
         carbohydrates: 35,
         fats: 12,
-        tags: ['quick', 'high-protein', 'vegetarian', 'smoothie']
+        tags: ['quick', 'high-protein', 'vegetarian', 'smoothie'],
+        imageUrl: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800&h=600&fit=crop'
       },
       {
         id: 'r5',
@@ -526,7 +528,8 @@ class DataStore {
         carbohydrates: 50,
         fats: 8,
         fiber: 6,
-        tags: ['vegetarian', 'vegan', 'high-fiber', 'meal-prep']
+        tags: ['vegetarian', 'vegan', 'high-fiber', 'meal-prep'],
+        imageUrl: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&h=600&fit=crop'
       },
       {
         id: 'r6',
@@ -552,7 +555,8 @@ class DataStore {
         protein: 25,
         carbohydrates: 35,
         fats: 10,
-        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop'
       },
       {
         id: 'r7',

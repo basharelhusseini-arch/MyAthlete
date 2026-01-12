@@ -11,7 +11,8 @@ import {
   Menu,
   LogIn,
   Dumbbell,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Sparkles
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Trainers', href: '/trainers', icon: UserCog },
   { name: 'Workouts', href: '/workouts', icon: Dumbbell },
   { name: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
+  { name: 'AI Diet Builder', href: '/nutrition/builder', icon: Sparkles },
 ];
 
 export default function Sidebar() {

@@ -111,14 +111,32 @@ export default function RecipesPage() {
             <Link
               key={recipe.id}
               href={`/recipes/${recipe.id}`}
-              className="dark-card p-6 card-hover"
+              className="dark-card overflow-hidden card-hover flex flex-col"
             >
-              <div className="flex items-start justify-between mb-4">
+              {/* Recipe Image */}
+              {recipe.imageUrl ? (
+                <div className="relative w-full h-48 bg-gray-800">
+                  <img
+                    src={recipe.imageUrl}
+                    alt={recipe.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-48 bg-gray-800/50 flex items-center justify-center">
+                  <UtensilsCrossed className="w-12 h-12 text-gray-600" />
+                </div>
+              )}
+
+              <div className="p-6 flex-1 flex flex-col">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-2">{recipe.name}</h3>
-                  <p className="text-gray-400 text-sm line-clamp-2">{recipe.description}</p>
+                  <p className="text-gray-400 text-sm line-clamp-2 mb-4">{recipe.description}</p>
                 </div>
-              </div>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
