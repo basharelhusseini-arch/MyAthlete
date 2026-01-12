@@ -1,19 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Users, Flame, ChefHat, UtensilsCrossed, Image as ImageIcon } from 'lucide-react';
 import { Recipe } from '@/types';
-import Image from 'next/image';
 
 export default function RecipeDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchRecipe = async () => {
+  const fetchRecipe = useCallback(async () => {
+    if (!params.id || typeof params.id !== 'string') return;
     try {
       const response = await fetch(`/api/recipes/${params.id}`);
       if (response.ok) {
@@ -27,13 +26,11 @@ export default function RecipeDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
-    if (params.id) {
-      fetchRecipe();
-    }
-  }, [params.id]);
+    fetchRecipe();
+  }, [fetchRecipe]);
 
   if (loading) {
     return (
