@@ -1,4 +1,4 @@
-import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate, Recipe, NutritionPlan, DailyMealPlan, MacroTargets, ShoppingList, Meal } from '@/types';
+import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate, Recipe, NutritionPlan, DailyMealPlan, MacroTargets, ShoppingList, Meal, Habit, HabitEntry, WhoopConnection, WhoopData } from '@/types';
 
 // Simple password hashing (in production, use bcrypt)
 // This function must work in both build-time and runtime environments
@@ -39,6 +39,12 @@ class DataStore {
   private nutritionPlans: NutritionPlan[] = [];
   private dailyMealPlans: DailyMealPlan[] = [];
   private shoppingLists: ShoppingList[] = [];
+
+  // Phase 4: Habit Tracking & Whoop Integration
+  private habits: Habit[] = [];
+  private habitEntries: HabitEntry[] = [];
+  private whoopConnections: WhoopConnection[] = [];
+  private whoopData: WhoopData[] = [];
 
   // Initialize with sample data
   constructor() {
@@ -1419,8 +1425,132 @@ class DataStore {
         status: 'planned',
       });
     }
-
+    
     return plan;
+  }
+
+  // Phase 4: Habit methods
+  getAllHabits(): Habit[] {
+    return this.habits;
+  }
+
+  getMemberHabits(memberId: string): Habit[] {
+    return this.habits.filter(h => h.memberId === memberId && h.status === 'active');
+  }
+
+  getHabit(id: string): Habit | undefined {
+    return this.habits.find(h => h.id === id);
+  }
+
+  addHabit(habit: Omit<Habit, 'id' | 'createdAt'>): Habit {
+    const newHabit: Habit = {
+      ...habit,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    this.habits.push(newHabit);
+    return newHabit;
+  }
+
+  updateHabit(id: string, updates: Partial<Habit>): Habit | null {
+    const index = this.habits.findIndex(h => h.id === id);
+    if (index === -1) return null;
+    this.habits[index] = { ...this.habits[index], ...updates };
+    return this.habits[index];
+  }
+
+  deleteHabit(id: string): boolean {
+    const index = this.habits.findIndex(h => h.id === id);
+    if (index === -1) return false;
+    this.habits.splice(index, 1);
+    // Also delete associated entries
+    this.habitEntries = this.habitEntries.filter(e => e.habitId !== id);
+    return true;
+  }
+
+  // Phase 4: Habit Entry methods
+  getHabitEntries(habitId: string): HabitEntry[] {
+    return this.habitEntries.filter(e => e.habitId === habitId);
+  }
+
+  getMemberHabitEntries(memberId: string): HabitEntry[] {
+    return this.habitEntries.filter(e => e.memberId === memberId);
+  }
+
+  getHabitEntryByDate(habitId: string, date: string): HabitEntry | undefined {
+    return this.habitEntries.find(e => e.habitId === habitId && e.date === date);
+  }
+
+  addHabitEntry(entry: Omit<HabitEntry, 'id'>): HabitEntry {
+    const newEntry: HabitEntry = {
+      ...entry,
+      id: Date.now().toString(),
+    };
+    this.habitEntries.push(newEntry);
+    return newEntry;
+  }
+
+  updateHabitEntry(id: string, updates: Partial<HabitEntry>): HabitEntry | null {
+    const index = this.habitEntries.findIndex(e => e.id === id);
+    if (index === -1) return null;
+    this.habitEntries[index] = { ...this.habitEntries[index], ...updates };
+    return this.habitEntries[index];
+  }
+
+  // Phase 4: Whoop Connection methods
+  getWhoopConnection(memberId: string): WhoopConnection | undefined {
+    return this.whoopConnections.find(c => c.memberId === memberId);
+  }
+
+  addWhoopConnection(connection: Omit<WhoopConnection, 'id'>): WhoopConnection {
+    const newConnection: WhoopConnection = {
+      ...connection,
+      id: Date.now().toString(),
+    };
+    // Remove existing connection for this member
+    this.whoopConnections = this.whoopConnections.filter(c => c.memberId !== connection.memberId);
+    this.whoopConnections.push(newConnection);
+    return newConnection;
+  }
+
+  updateWhoopConnection(memberId: string, updates: Partial<WhoopConnection>): WhoopConnection | null {
+    const connection = this.whoopConnections.find(c => c.memberId === memberId);
+    if (!connection) return null;
+    const index = this.whoopConnections.indexOf(connection);
+    this.whoopConnections[index] = { ...connection, ...updates };
+    return this.whoopConnections[index];
+  }
+
+  deleteWhoopConnection(memberId: string): boolean {
+    const index = this.whoopConnections.findIndex(c => c.memberId === memberId);
+    if (index === -1) return false;
+    this.whoopConnections.splice(index, 1);
+    // Also delete associated data
+    this.whoopData = this.whoopData.filter(d => d.memberId !== memberId);
+    return true;
+  }
+
+  // Phase 4: Whoop Data methods
+  getWhoopData(memberId: string, startDate?: string, endDate?: string): WhoopData[] {
+    let data = this.whoopData.filter(d => d.memberId === memberId);
+    if (startDate) {
+      data = data.filter(d => d.date >= startDate);
+    }
+    if (endDate) {
+      data = data.filter(d => d.date <= endDate);
+    }
+    return data.sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  addWhoopData(data: Omit<WhoopData, 'id'>): WhoopData {
+    const newData: WhoopData = {
+      ...data,
+      id: Date.now().toString(),
+    };
+    // Remove existing data for same date
+    this.whoopData = this.whoopData.filter(d => !(d.memberId === data.memberId && d.date === data.date));
+    this.whoopData.push(newData);
+    return newData;
   }
 }
 

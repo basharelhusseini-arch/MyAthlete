@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity } from 'lucide-react';
 
 interface MemberData {
   id: string;
@@ -363,6 +363,20 @@ export default function MemberDashboardPage() {
                 >
                   <UtensilsCrossed className="w-5 h-5 inline mr-2" />
                   My Nutrition
+                </Link>
+                <Link
+                  href="/member/habits"
+                  className="block w-full text-left px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors"
+                >
+                  <Target className="w-5 h-5 inline mr-2" />
+                  Habit Tracking
+                </Link>
+                <Link
+                  href="/member/whoop"
+                  className="block w-full text-left px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors"
+                >
+                  <Activity className="w-5 h-5 inline mr-2" />
+                  Whoop Integration
                 </Link>
               </div>
             </div>

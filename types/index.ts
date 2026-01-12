@@ -254,3 +254,81 @@ export interface ShoppingListItem {
   category?: string; // e.g., 'produce', 'dairy', 'meat', 'pantry'
   checked: boolean;
 }
+
+// Phase 4: Habit Tracking & Whoop Integration
+export interface Habit {
+  id: string;
+  memberId: string;
+  name: string;
+  description?: string;
+  category: 'health' | 'fitness' | 'nutrition' | 'recovery' | 'sleep' | 'productivity' | 'other';
+  frequency: 'daily' | 'weekly' | 'custom';
+  targetCount?: number; // For weekly habits, target per week
+  color?: string; // Hex color for UI
+  icon?: string; // Icon name
+  createdAt: string;
+  status: 'active' | 'archived' | 'paused';
+}
+
+export interface HabitEntry {
+  id: string;
+  habitId: string;
+  memberId: string;
+  date: string; // YYYY-MM-DD
+  completed: boolean;
+  value?: number; // For quantitative habits (e.g., 8 hours of sleep, 2L water)
+  unit?: string; // Unit for value (e.g., 'hours', 'liters', 'steps')
+  notes?: string;
+  completedAt?: string;
+}
+
+export interface HabitStreak {
+  habitId: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastCompletedDate?: string;
+}
+
+// Whoop Integration Types
+export interface WhoopConnection {
+  id: string;
+  memberId: string;
+  whoopUserId?: string;
+  accessToken?: string; // Encrypted in production
+  refreshToken?: string; // Encrypted in production
+  connected: boolean;
+  connectedAt?: string;
+  lastSyncedAt?: string;
+  expiresAt?: string;
+}
+
+export interface WhoopData {
+  id: string;
+  memberId: string;
+  date: string; // YYYY-MM-DD
+  recovery?: number; // 0-100
+  strain?: number; // 0-21
+  sleep?: {
+    totalSleep: number; // minutes
+    remSleep: number; // minutes
+    deepSleep: number; // minutes
+    lightSleep: number; // minutes
+    sleepScore?: number; // 0-100
+    sleepEfficiency?: number; // percentage
+  };
+  heartRate?: {
+    resting?: number;
+    max?: number;
+    avg?: number;
+  };
+  workouts?: Array<{
+    name: string;
+    startTime: string;
+    endTime: string;
+    strain: number;
+    calories: number;
+    avgHeartRate: number;
+    maxHeartRate: number;
+  }>;
+  syncedAt: string;
+}
