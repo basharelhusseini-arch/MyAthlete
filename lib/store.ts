@@ -584,7 +584,8 @@ class DataStore {
         carbohydrates: 42,
         fats: 8,
         fiber: 6,
-        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop'
       },
       {
         id: 'r8',
@@ -643,7 +644,8 @@ class DataStore {
         carbohydrates: 68,
         fats: 18,
         fiber: 12,
-        tags: ['dinner', 'vegetarian', 'high-protein', 'gluten-free', 'vegan']
+        tags: ['dinner', 'vegetarian', 'high-protein', 'gluten-free', 'vegan'],
+        imageUrl: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&h=600&fit=crop'
       },
       {
         id: 'r10',
@@ -673,7 +675,8 @@ class DataStore {
         carbohydrates: 42,
         fats: 12,
         fiber: 6,
-        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free']
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'
       },
       {
         id: 'r11',
@@ -701,7 +704,8 @@ class DataStore {
         protein: 28,
         carbohydrates: 8,
         fats: 8,
-        tags: ['breakfast', 'high-protein', 'low-carb', 'gluten-free']
+        tags: ['breakfast', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&h=600&fit=crop'
       },
       {
         id: 'r12',
@@ -730,7 +734,8 @@ class DataStore {
         protein: 35,
         carbohydrates: 10,
         fats: 6,
-        tags: ['lunch', 'high-protein', 'low-carb', 'gluten-free', 'quick']
+        tags: ['lunch', 'high-protein', 'low-carb', 'gluten-free', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1518492104633-130d0cc84637?w=800&h=600&fit=crop'
       },
       {
         id: 'r13',
@@ -759,7 +764,8 @@ class DataStore {
         protein: 32,
         carbohydrates: 18,
         fats: 14,
-        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free', 'omega-3']
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free', 'omega-3'],
+        imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop'
       },
       {
         id: 'r14',
@@ -789,7 +795,8 @@ class DataStore {
         carbohydrates: 42,
         fats: 12,
         fiber: 6,
-        tags: ['breakfast', 'high-protein', 'vegetarian']
+        tags: ['breakfast', 'high-protein', 'vegetarian'],
+        imageUrl: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop'
       },
     ];
   }
