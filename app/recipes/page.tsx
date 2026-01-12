@@ -177,6 +177,7 @@ export default function RecipesPage() {
                   </div>
                 )}
               </div>
+              </div>
             </Link>
           ))}
         </div>
