@@ -3,11 +3,10 @@ import { store } from '@/lib/store';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
-    const recipe = store.getRecipe(id);
+    const recipe = store.getRecipe(params.id);
     if (!recipe) {
       return NextResponse.json(
         { error: 'Recipe not found' },
