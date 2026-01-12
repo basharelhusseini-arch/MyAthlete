@@ -1,4 +1,4 @@
-import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutProgress, WorkoutTemplate } from '@/types';
+import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate } from '@/types';
 
 // Simple password hashing (in production, use bcrypt)
 // This function must work in both build-time and runtime environments
