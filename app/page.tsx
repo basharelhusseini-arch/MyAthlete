@@ -69,8 +69,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-600">Welcome to your MyAthlete</p>
+        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+        <p className="mt-2 text-gray-400">Welcome to your MyAthlete</p>
       </div>
 
       {/* Stats Grid */}
@@ -81,14 +81,14 @@ export default function DashboardPage() {
             <Link
               key={stat.name}
               href={stat.href}
-              className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
+              className="glass-effect rounded-xl p-6 card-hover group"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                  <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300 transition-colors">{stat.name}</p>
+                  <p className="mt-2 text-3xl font-bold text-white">{stat.value}</p>
                 </div>
-                <div className={`${stat.color} p-3 rounded-full`}>
+                <div className={`${stat.color} p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform duration-200`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -100,28 +100,28 @@ export default function DashboardPage() {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Members */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Members</h2>
+        <div className="glass-effect rounded-xl shadow-lg card-hover">
+          <div className="px-6 py-4 border-b border-gray-800/50">
+            <h2 className="text-lg font-semibold text-white">Recent Members</h2>
           </div>
           <div className="p-6">
             {recentMembers.length > 0 ? (
               <ul className="space-y-4">
                 {recentMembers.map((member) => (
-                  <li key={member.id} className="flex items-center justify-between">
+                  <li key={member.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-800/30 transition-colors">
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-white">
                         {member.firstName} {member.lastName}
                       </p>
-                      <p className="text-sm text-gray-500">{member.email}</p>
+                      <p className="text-sm text-gray-400">{member.email}</p>
                     </div>
                     <span
                       className={`px-3 py-1 text-xs font-medium rounded-full ${
                         member.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                           : member.status === 'suspended'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                       }`}
                     >
                       {member.status}
@@ -130,12 +130,12 @@ export default function DashboardPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 text-center py-4">No members yet</p>
+              <p className="text-gray-400 text-center py-4">No members yet</p>
             )}
             <div className="mt-6">
               <Link
                 href="/members"
-                className="block text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="block text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20"
               >
                 View All Members
               </Link>
@@ -144,9 +144,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Upcoming Classes */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Upcoming Classes</h2>
+        <div className="glass-effect rounded-xl shadow-lg card-hover">
+          <div className="px-6 py-4 border-b border-gray-800/50">
+            <h2 className="text-lg font-semibold text-white">Upcoming Classes</h2>
           </div>
           <div className="p-6">
             {upcomingClassList.length > 0 ? (
@@ -157,17 +157,17 @@ export default function DashboardPage() {
                     ? `${trainer.firstName} ${trainer.lastName}`
                     : 'Unknown Trainer';
                   return (
-                    <li key={gymClass.id} className="flex items-center justify-between">
+                    <li key={gymClass.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-800/30 transition-colors">
                       <div>
-                        <p className="font-medium text-gray-900">{gymClass.name}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-medium text-white">{gymClass.name}</p>
+                        <p className="text-sm text-gray-400">
                           {new Date(gymClass.date).toLocaleDateString()} at {gymClass.startTime} - {trainerName}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-500">
                           {gymClass.enrolledMembers.length}/{gymClass.capacity} enrolled
                         </p>
                       </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                         {gymClass.status}
                       </span>
                     </li>
@@ -175,12 +175,12 @@ export default function DashboardPage() {
                 })}
               </ul>
             ) : (
-              <p className="text-gray-500 text-center py-4">No upcoming classes</p>
+              <p className="text-gray-400 text-center py-4">No upcoming classes</p>
             )}
             <div className="mt-6">
               <Link
                 href="/classes"
-                className="block text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="block text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20"
               >
                 View All Classes
               </Link>

@@ -47,7 +47,7 @@ export default function MembersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Loading members...</p>
+        <p className="text-gray-400">Loading members...</p>
       </div>
     );
   }
@@ -56,76 +56,76 @@ export default function MembersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Members</h1>
-          <p className="mt-2 text-gray-600">Manage all gym members</p>
+          <h1 className="text-3xl font-bold text-white">Members</h1>
+          <p className="mt-2 text-gray-400">Manage all gym members</p>
         </div>
         <Link
           href="/members/new"
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center px-4 py-2 btn-primary"
         >
           <Plus className="w-5 h-5 mr-2" />
           Add Member
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="dark-card overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-800/50">
+          <thead className="bg-gray-900/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Phone
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Join Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-800/50">
             {members.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-400">
                   No members found. Add your first member to get started.
                 </td>
               </tr>
             ) : (
               members.map((member) => (
-                <tr key={member.id} className="hover:bg-gray-50">
+                <tr key={member.id} className="hover:bg-gray-800/30 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-white">
                       {member.firstName} {member.lastName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{member.email}</div>
+                    <div className="text-sm text-gray-400">{member.email}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{member.phone}</div>
+                    <div className="text-sm text-gray-400">{member.phone}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-400">
                       {new Date(member.joinDate).toLocaleDateString()}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
+                      className={`px-3 py-1 text-xs font-medium rounded-full border ${
                         member.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-500/20 text-green-400 border-green-500/30'
                           : member.status === 'suspended'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-red-500/20 text-red-400 border-red-500/30'
+                          : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
                       }`}
                     >
                       {member.status}
@@ -135,19 +135,19 @@ export default function MembersPage() {
                     <div className="flex items-center justify-end space-x-2">
                       <Link
                         href={`/members/${member.id}`}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
                       >
                         <Eye className="w-5 h-5" />
                       </Link>
                       <Link
                         href={`/members/${member.id}/edit`}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
                       >
                         <Edit className="w-5 h-5" />
                       </Link>
                       <button
                         onClick={() => handleDelete(member.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-400 hover:text-red-300 transition-colors"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>

@@ -2,22 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply transition-colors duration-200;
+  }
+  
+  body {
+    @apply bg-gray-950 text-gray-100;
+  }
+  
+  html {
+    @apply scroll-smooth;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-gray-900/50 backdrop-blur-xl border border-gray-800/50;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/10;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30;
+  }
+  
+  .dark-card {
+    @apply glass-effect rounded-xl shadow-lg card-hover;
+  }
+  
+  .dark-text-primary {
+    @apply text-white;
+  }
+  
+  .dark-text-secondary {
+    @apply text-gray-400;
+  }
+  
+  .dark-text-muted {
+    @apply text-gray-500;
+  }
+  
+  .dark-border {
+    @apply border-gray-800/50;
+  }
 }
 
 @layer utilities {
