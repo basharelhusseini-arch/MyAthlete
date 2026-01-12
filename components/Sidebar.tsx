@@ -22,7 +22,6 @@ const navigation = [
   { name: 'Classes', href: '/classes', icon: Calendar },
   { name: 'Trainers', href: '/trainers', icon: UserCog },
   { name: 'Workouts', href: '/workouts', icon: Dumbbell },
-  { name: 'Nutrition', href: '/nutrition', icon: UtensilsCrossed },
   { name: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
 ];
 
