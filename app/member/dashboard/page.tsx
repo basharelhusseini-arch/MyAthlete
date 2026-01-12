@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed } from 'lucide-react';
 
 interface MemberData {
   id: string;
@@ -356,6 +356,13 @@ export default function MemberDashboardPage() {
                 >
                   <Dumbbell className="w-5 h-5 inline mr-2" />
                   My Workouts
+                </Link>
+                <Link
+                  href="/member/nutrition"
+                  className="block w-full text-left px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                >
+                  <UtensilsCrossed className="w-5 h-5 inline mr-2" />
+                  My Nutrition
                 </Link>
               </div>
             </div>

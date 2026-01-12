@@ -160,3 +160,97 @@ export interface WorkoutTemplate {
   tags: string[];
   createdBy?: 'system' | 'trainer';
 }
+
+// Phase 3: AI Nutrition Planner Types
+export interface MacroTargets {
+  calories: number;
+  protein: number; // in grams
+  carbohydrates: number; // in grams
+  fats: number; // in grams
+}
+
+export interface Ingredient {
+  name: string;
+  amount: number;
+  unit: string; // e.g., 'g', 'ml', 'cup', 'tbsp'
+}
+
+export interface Recipe {
+  id: string;
+  name: string;
+  description: string;
+  instructions: string[];
+  ingredients: Ingredient[];
+  servings: number;
+  prepTime: number; // in minutes
+  cookTime: number; // in minutes
+  calories: number;
+  protein: number; // in grams per serving
+  carbohydrates: number; // in grams per serving
+  fats: number; // in grams per serving
+  fiber?: number; // in grams per serving
+  tags: string[]; // e.g., 'vegetarian', 'gluten-free', 'high-protein', 'quick'
+  imageUrl?: string;
+}
+
+export interface Meal {
+  id: string;
+  name: string;
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  recipeId?: string;
+  recipe?: Recipe;
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fats: number;
+  time?: string; // e.g., '08:00' for breakfast time
+  notes?: string;
+}
+
+export interface NutritionPlan {
+  id: string;
+  memberId: string;
+  name: string;
+  description: string;
+  goal: 'weight_loss' | 'muscle_gain' | 'maintenance' | 'performance' | 'general_health';
+  macroTargets: MacroTargets;
+  duration: number; // in days
+  status: 'active' | 'completed' | 'paused' | 'cancelled';
+  createdAt: string;
+  startDate: string;
+  endDate?: string;
+  createdBy?: 'ai' | 'trainer' | 'member';
+  dietaryRestrictions?: string[]; // e.g., 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'
+  preferences?: string[]; // e.g., 'low-carb', 'high-protein', 'mediterranean'
+}
+
+export interface DailyMealPlan {
+  id: string;
+  nutritionPlanId: string;
+  memberId: string;
+  date: string;
+  meals: Meal[];
+  totalCalories: number;
+  totalProtein: number;
+  totalCarbohydrates: number;
+  totalFats: number;
+  status: 'planned' | 'completed';
+  notes?: string;
+}
+
+export interface ShoppingList {
+  id: string;
+  nutritionPlanId?: string;
+  memberId: string;
+  items: ShoppingListItem[];
+  createdAt: string;
+  completed?: boolean;
+}
+
+export interface ShoppingListItem {
+  ingredient: string;
+  amount: number;
+  unit: string;
+  category?: string; // e.g., 'produce', 'dairy', 'meat', 'pantry'
+  checked: boolean;
+}

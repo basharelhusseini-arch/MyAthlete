@@ -1,4 +1,4 @@
-import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate } from '@/types';
+import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate, Recipe, NutritionPlan, DailyMealPlan, MacroTargets, ShoppingList, Meal } from '@/types';
 
 // Simple password hashing (in production, use bcrypt)
 // This function must work in both build-time and runtime environments
@@ -33,6 +33,12 @@ class DataStore {
   private workouts: Workout[] = [];
   private workoutProgress: WorkoutProgress[] = [];
   private workoutTemplates: WorkoutTemplate[] = [];
+
+  // Phase 3: Nutrition Planner
+  private recipes: Recipe[] = [];
+  private nutritionPlans: NutritionPlan[] = [];
+  private dailyMealPlans: DailyMealPlan[] = [];
+  private shoppingLists: ShoppingList[] = [];
 
   // Initialize with sample data
   constructor() {
@@ -377,6 +383,170 @@ class DataStore {
           'Press weights overhead until arms fully extended',
           'Lower slowly back to shoulders'
         ],
+      },
+    ];
+
+    // Phase 3: Sample recipes
+    this.recipes = [
+      {
+        id: 'r1',
+        name: 'Grilled Chicken Breast',
+        description: 'Simple high-protein grilled chicken',
+        instructions: [
+          'Season chicken breast with salt and pepper',
+          'Preheat grill to medium-high heat',
+          'Grill chicken for 6-7 minutes per side',
+          'Let rest for 5 minutes before serving'
+        ],
+        ingredients: [
+          { name: 'Chicken breast', amount: 200, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Salt', amount: 0.5, unit: 'tsp' },
+          { name: 'Pepper', amount: 0.25, unit: 'tsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 15,
+        calories: 330,
+        protein: 54,
+        carbohydrates: 0,
+        fats: 12,
+        tags: ['high-protein', 'low-carb', 'gluten-free']
+      },
+      {
+        id: 'r2',
+        name: 'Overnight Oats',
+        description: 'Healthy breakfast with oats, fruits, and protein',
+        instructions: [
+          'Mix oats, milk, and Greek yogurt in a jar',
+          'Add honey and chia seeds',
+          'Stir in berries',
+          'Refrigerate overnight and enjoy in the morning'
+        ],
+        ingredients: [
+          { name: 'Rolled oats', amount: 50, unit: 'g' },
+          { name: 'Greek yogurt', amount: 100, unit: 'g' },
+          { name: 'Almond milk', amount: 120, unit: 'ml' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Chia seeds', amount: 1, unit: 'tbsp' },
+          { name: 'Mixed berries', amount: 50, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 350,
+        protein: 20,
+        carbohydrates: 45,
+        fats: 10,
+        fiber: 8,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'meal-prep']
+      },
+      {
+        id: 'r3',
+        name: 'Salmon with Vegetables',
+        description: 'Baked salmon with roasted vegetables',
+        instructions: [
+          'Preheat oven to 400°F',
+          'Season salmon with lemon, dill, salt, and pepper',
+          'Toss vegetables with olive oil',
+          'Bake salmon and vegetables for 15-20 minutes'
+        ],
+        ingredients: [
+          { name: 'Salmon fillet', amount: 150, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Sweet potato', amount: 150, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 20,
+        calories: 450,
+        protein: 38,
+        carbohydrates: 35,
+        fats: 18,
+        tags: ['high-protein', 'omega-3', 'gluten-free']
+      },
+      {
+        id: 'r4',
+        name: 'Protein Smoothie',
+        description: 'Quick and nutritious protein smoothie',
+        instructions: [
+          'Add banana, protein powder, and milk to blender',
+          'Add spinach and peanut butter',
+          'Blend until smooth',
+          'Serve immediately'
+        ],
+        ingredients: [
+          { name: 'Banana', amount: 1, unit: 'medium' },
+          { name: 'Protein powder', amount: 30, unit: 'g' },
+          { name: 'Almond milk', amount: 250, unit: 'ml' },
+          { name: 'Spinach', amount: 30, unit: 'g' },
+          { name: 'Peanut butter', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 380,
+        protein: 35,
+        carbohydrates: 35,
+        fats: 12,
+        tags: ['quick', 'high-protein', 'vegetarian', 'smoothie']
+      },
+      {
+        id: 'r5',
+        name: 'Quinoa Salad',
+        description: 'Fresh and nutritious quinoa salad',
+        instructions: [
+          'Cook quinoa according to package directions',
+          'Let quinoa cool to room temperature',
+          'Mix with vegetables and chickpeas',
+          'Toss with olive oil and lemon dressing'
+        ],
+        ingredients: [
+          { name: 'Quinoa', amount: 100, unit: 'g' },
+          { name: 'Chickpeas', amount: 100, unit: 'g' },
+          { name: 'Cucumber', amount: 100, unit: 'g' },
+          { name: 'Tomato', amount: 100, unit: 'g' },
+          { name: 'Red onion', amount: 30, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Lemon juice', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 2,
+        prepTime: 15,
+        cookTime: 15,
+        calories: 320,
+        protein: 12,
+        carbohydrates: 50,
+        fats: 8,
+        fiber: 6,
+        tags: ['vegetarian', 'vegan', 'high-fiber', 'meal-prep']
+      },
+      {
+        id: 'r6',
+        name: 'Greek Yogurt Bowl',
+        description: 'Protein-rich Greek yogurt with toppings',
+        instructions: [
+          'Scoop Greek yogurt into a bowl',
+          'Top with granola and fresh berries',
+          'Drizzle with honey',
+          'Add nuts for extra protein'
+        ],
+        ingredients: [
+          { name: 'Greek yogurt', amount: 200, unit: 'g' },
+          { name: 'Granola', amount: 30, unit: 'g' },
+          { name: 'Mixed berries', amount: 50, unit: 'g' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Almonds', amount: 15, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 320,
+        protein: 25,
+        carbohydrates: 35,
+        fats: 10,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
       },
     ];
   }
@@ -928,6 +1098,325 @@ class DataStore {
         exercises: workoutExercises,
         status: 'scheduled',
         duration: estimatedDuration,
+      });
+    }
+
+    return plan;
+  }
+
+  // Phase 3: Recipe methods
+  getAllRecipes(): Recipe[] {
+    return this.recipes;
+  }
+
+  getRecipe(id: string): Recipe | undefined {
+    return this.recipes.find(r => r.id === id);
+  }
+
+  addRecipe(recipe: Omit<Recipe, 'id'>): Recipe {
+    const newRecipe: Recipe = {
+      ...recipe,
+      id: Date.now().toString(),
+    };
+    this.recipes.push(newRecipe);
+    return newRecipe;
+  }
+
+  updateRecipe(id: string, updates: Partial<Recipe>): Recipe | null {
+    const index = this.recipes.findIndex(r => r.id === id);
+    if (index === -1) return null;
+    this.recipes[index] = { ...this.recipes[index], ...updates };
+    return this.recipes[index];
+  }
+
+  deleteRecipe(id: string): boolean {
+    const index = this.recipes.findIndex(r => r.id === id);
+    if (index === -1) return false;
+    this.recipes.splice(index, 1);
+    return true;
+  }
+
+  // Phase 3: Nutrition Plan methods
+  getAllNutritionPlans(): NutritionPlan[] {
+    return this.nutritionPlans;
+  }
+
+  getNutritionPlan(id: string): NutritionPlan | undefined {
+    return this.nutritionPlans.find(p => p.id === id);
+  }
+
+  getMemberNutritionPlans(memberId: string): NutritionPlan[] {
+    return this.nutritionPlans.filter(p => p.memberId === memberId);
+  }
+
+  addNutritionPlan(plan: Omit<NutritionPlan, 'id' | 'createdAt'>): NutritionPlan {
+    const newPlan: NutritionPlan = {
+      ...plan,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    this.nutritionPlans.push(newPlan);
+    return newPlan;
+  }
+
+  updateNutritionPlan(id: string, updates: Partial<NutritionPlan>): NutritionPlan | null {
+    const index = this.nutritionPlans.findIndex(p => p.id === id);
+    if (index === -1) return null;
+    this.nutritionPlans[index] = { ...this.nutritionPlans[index], ...updates };
+    return this.nutritionPlans[index];
+  }
+
+  deleteNutritionPlan(id: string): boolean {
+    const index = this.nutritionPlans.findIndex(p => p.id === id);
+    if (index === -1) return false;
+    this.nutritionPlans.splice(index, 1);
+    // Also delete associated daily meal plans
+    this.dailyMealPlans = this.dailyMealPlans.filter(mp => mp.nutritionPlanId !== id);
+    return true;
+  }
+
+  // Phase 3: Daily Meal Plan methods
+  getDailyMealPlans(nutritionPlanId: string): DailyMealPlan[] {
+    return this.dailyMealPlans.filter(mp => mp.nutritionPlanId === nutritionPlanId);
+  }
+
+  getMemberDailyMealPlans(memberId: string): DailyMealPlan[] {
+    return this.dailyMealPlans.filter(mp => mp.memberId === memberId);
+  }
+
+  addDailyMealPlan(mealPlan: Omit<DailyMealPlan, 'id'>): DailyMealPlan {
+    const newMealPlan: DailyMealPlan = {
+      ...mealPlan,
+      id: Date.now().toString(),
+    };
+    this.dailyMealPlans.push(newMealPlan);
+    return newMealPlan;
+  }
+
+  updateDailyMealPlan(id: string, updates: Partial<DailyMealPlan>): DailyMealPlan | null {
+    const index = this.dailyMealPlans.findIndex(mp => mp.id === id);
+    if (index === -1) return null;
+    this.dailyMealPlans[index] = { ...this.dailyMealPlans[index], ...updates };
+    return this.dailyMealPlans[index];
+  }
+
+  // Phase 3: Macro Calculator (Mifflin-St Jeor formula)
+  calculateMacros(params: {
+    gender: 'male' | 'female';
+    age: number;
+    height: number; // in cm
+    weight: number; // in kg
+    activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+    goal: 'weight_loss' | 'muscle_gain' | 'maintenance' | 'performance' | 'general_health';
+  }): MacroTargets {
+    // Calculate BMR using Mifflin-St Jeor equation
+    let bmr: number;
+    if (params.gender === 'male') {
+      bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age + 5;
+    } else {
+      bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age - 161;
+    }
+
+    // Activity multipliers
+    const activityMultipliers = {
+      sedentary: 1.2,
+      light: 1.375,
+      moderate: 1.55,
+      active: 1.725,
+      very_active: 1.9,
+    };
+
+    // Calculate TDEE (Total Daily Energy Expenditure)
+    const tdee = bmr * activityMultipliers[params.activityLevel];
+
+    // Adjust calories based on goal
+    let targetCalories: number;
+    switch (params.goal) {
+      case 'weight_loss':
+        targetCalories = tdee * 0.85; // 15% deficit
+        break;
+      case 'muscle_gain':
+        targetCalories = tdee * 1.15; // 15% surplus
+        break;
+      case 'performance':
+        targetCalories = tdee * 1.1; // 10% surplus
+        break;
+      default:
+        targetCalories = tdee; // maintenance
+    }
+
+    // Calculate macros
+    // Protein: 2.2g per kg body weight (for muscle gain) or 1.6g (for weight loss)
+    const proteinGrams = params.goal === 'muscle_gain' 
+      ? Math.round(params.weight * 2.2) 
+      : Math.round(params.weight * 1.6);
+    const proteinCalories = proteinGrams * 4;
+
+    // Fats: 25-30% of calories
+    const fatPercentage = 0.275; // 27.5%
+    const fatCalories = Math.round(targetCalories * fatPercentage);
+    const fatGrams = Math.round(fatCalories / 9);
+
+    // Carbohydrates: remaining calories
+    const carbCalories = Math.round(targetCalories - proteinCalories - fatCalories);
+    const carbGrams = Math.round(carbCalories / 4);
+
+    return {
+      calories: Math.round(targetCalories),
+      protein: proteinGrams,
+      carbohydrates: carbGrams,
+      fats: fatGrams,
+    };
+  }
+
+  // Phase 3: Generate Nutrition Plan (rule-based - can integrate AI later)
+  generateNutritionPlan(params: {
+    memberId: string;
+    goal: NutritionPlan['goal'];
+    gender: 'male' | 'female';
+    age: number;
+    height: number;
+    weight: number;
+    activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+    duration: number;
+    dietaryRestrictions?: string[];
+    preferences?: string[];
+  }): NutritionPlan {
+    // Calculate macro targets
+    const macroTargets = this.calculateMacros({
+      gender: params.gender,
+      age: params.age,
+      height: params.height,
+      weight: params.weight,
+      activityLevel: params.activityLevel,
+      goal: params.goal,
+    });
+
+    // Create nutrition plan
+    const plan = this.addNutritionPlan({
+      memberId: params.memberId,
+      name: `${params.goal.charAt(0).toUpperCase() + params.goal.slice(1).replace('_', ' ')} Nutrition Plan`,
+      description: `Personalized ${params.goal.replace('_', ' ')} nutrition plan with ${macroTargets.calories} calories/day. ${params.dietaryRestrictions?.length ? `Restrictions: ${params.dietaryRestrictions.join(', ')}.` : ''}`,
+      goal: params.goal,
+      macroTargets,
+      duration: params.duration,
+      status: 'active',
+      startDate: new Date().toISOString().split('T')[0],
+      createdBy: 'ai',
+      dietaryRestrictions: params.dietaryRestrictions,
+      preferences: params.preferences,
+    });
+
+    // Generate daily meal plans for the duration
+    const startDate = new Date(plan.startDate);
+    for (let i = 0; i < params.duration; i++) {
+      const mealPlanDate = new Date(startDate);
+      mealPlanDate.setDate(startDate.getDate() + i);
+
+      // Create meals based on goal and available recipes
+      const availableRecipes = this.recipes.filter(r => {
+        // Filter by dietary restrictions
+        if (params.dietaryRestrictions) {
+          if (params.dietaryRestrictions.includes('vegetarian') && !r.tags.includes('vegetarian') && !r.tags.includes('vegan')) return false;
+          if (params.dietaryRestrictions.includes('vegan') && !r.tags.includes('vegan')) return false;
+        }
+        return true;
+      });
+
+      // Select recipes for the day (simplified - in production, use AI to balance macros)
+      const breakfast = availableRecipes.find(r => r.tags.includes('breakfast')) || availableRecipes[1];
+      const lunch = availableRecipes.find(r => !r.tags.includes('breakfast') && !r.tags.includes('smoothie')) || availableRecipes[2];
+      const dinner = availableRecipes.find(r => !r.tags.includes('breakfast') && !r.tags.includes('smoothie')) || availableRecipes[0];
+      const snack = availableRecipes.find(r => r.tags.includes('smoothie') || r.tags.includes('quick')) || availableRecipes[3];
+
+      const meals: Meal[] = [];
+      let totalCalories = 0;
+      let totalProtein = 0;
+      let totalCarbs = 0;
+      let totalFats = 0;
+
+      if (breakfast) {
+        meals.push({
+          id: `meal-${i}-breakfast`,
+          name: breakfast.name,
+          mealType: 'breakfast' as const,
+          recipeId: breakfast.id,
+          calories: breakfast.calories,
+          protein: breakfast.protein,
+          carbohydrates: breakfast.carbohydrates,
+          fats: breakfast.fats,
+          time: '08:00',
+        });
+        totalCalories += breakfast.calories;
+        totalProtein += breakfast.protein;
+        totalCarbs += breakfast.carbohydrates;
+        totalFats += breakfast.fats;
+      }
+
+      if (lunch) {
+        meals.push({
+          id: `meal-${i}-lunch`,
+          name: lunch.name,
+          mealType: 'lunch' as const,
+          recipeId: lunch.id,
+          calories: lunch.calories,
+          protein: lunch.protein,
+          carbohydrates: lunch.carbohydrates,
+          fats: lunch.fats,
+          time: '13:00',
+        });
+        totalCalories += lunch.calories;
+        totalProtein += lunch.protein;
+        totalCarbs += lunch.carbohydrates;
+        totalFats += lunch.fats;
+      }
+
+      if (dinner) {
+        meals.push({
+          id: `meal-${i}-dinner`,
+          name: dinner.name,
+          mealType: 'dinner' as const,
+          recipeId: dinner.id,
+          calories: dinner.calories,
+          protein: dinner.protein,
+          carbohydrates: dinner.carbohydrates,
+          fats: dinner.fats,
+          time: '19:00',
+        });
+        totalCalories += dinner.calories;
+        totalProtein += dinner.protein;
+        totalCarbs += dinner.carbohydrates;
+        totalFats += dinner.fats;
+      }
+
+      if (snack && totalCalories < macroTargets.calories * 0.9) {
+        meals.push({
+          id: `meal-${i}-snack`,
+          name: snack.name,
+          mealType: 'snack' as const,
+          recipeId: snack.id,
+          calories: snack.calories,
+          protein: snack.protein,
+          carbohydrates: snack.carbohydrates,
+          fats: snack.fats,
+          time: '16:00',
+        });
+        totalCalories += snack.calories;
+        totalProtein += snack.protein;
+        totalCarbs += snack.carbohydrates;
+        totalFats += snack.fats;
+      }
+
+      this.addDailyMealPlan({
+        nutritionPlanId: plan.id,
+        memberId: params.memberId,
+        date: mealPlanDate.toISOString().split('T')[0],
+        meals: meals,
+        totalCalories,
+        totalProtein,
+        totalCarbohydrates: totalCarbs,
+        totalFats,
+        status: 'planned',
       });
     }
 
