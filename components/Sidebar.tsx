@@ -23,6 +23,7 @@ const navigation = [
   { name: 'Trainers', href: '/trainers', icon: UserCog },
   { name: 'Workouts', href: '/workouts', icon: Dumbbell },
   { name: 'Nutrition', href: '/nutrition', icon: UtensilsCrossed },
+  { name: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
 ];
 
 export default function Sidebar() {

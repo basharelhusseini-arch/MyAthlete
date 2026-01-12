@@ -152,8 +152,15 @@ export default function MemberHabitsPage() {
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
           />
+          <Link
+            href="/member/habits/new"
+            className="flex items-center px-4 py-2 btn-primary"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Add Habit
+          </Link>
         </div>
 
         {habits.length === 0 ? (
@@ -184,13 +191,13 @@ export default function MemberHabitsPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{habit.name}</h3>
-                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full capitalize">
+                        <h3 className="text-lg font-semibold text-white">{habit.name}</h3>
+                        <span className="text-xs px-2 py-1 bg-gray-800/50 text-gray-400 border border-gray-700/50 rounded-full capitalize">
                           {habit.category}
                         </span>
                       </div>
                       {habit.description && (
-                        <p className="text-gray-600 text-sm mb-2">{habit.description}</p>
+                        <p className="text-gray-400 text-sm mb-2">{habit.description}</p>
                       )}
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <div className="flex items-center">
@@ -205,10 +212,10 @@ export default function MemberHabitsPage() {
                     </div>
                     <button
                       onClick={() => toggleHabitEntry(habit.id, selectedDate, !isCompleted)}
-                      className={`ml-4 p-4 rounded-lg transition-colors ${
+                      className={`ml-4 p-4 rounded-lg transition-all duration-200 ${
                         isCompleted
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                          : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                          ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30'
+                          : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800/70 border border-gray-700/50'
                       }`}
                     >
                       {isCompleted ? (
