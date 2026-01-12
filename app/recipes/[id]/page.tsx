@@ -13,12 +13,6 @@ export default function RecipeDetailPage() {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (params.id) {
-      fetchRecipe();
-    }
-  }, [params.id]);
-
   const fetchRecipe = async () => {
     try {
       const response = await fetch(`/api/recipes/${params.id}`);
@@ -34,6 +28,12 @@ export default function RecipeDetailPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (params.id) {
+      fetchRecipe();
+    }
+  }, [params.id]);
 
   if (loading) {
     return (
