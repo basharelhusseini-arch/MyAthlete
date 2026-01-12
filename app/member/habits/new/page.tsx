@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -20,14 +20,14 @@ export default function NewHabitPage() {
     icon: '',
   });
 
-  useState(() => {
+  useEffect(() => {
     const storedMemberId = localStorage.getItem('memberId');
     if (!storedMemberId) {
       router.push('/member/login');
       return;
     }
     setMemberId(storedMemberId);
-  });
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
