@@ -554,6 +554,239 @@ class DataStore {
         fats: 10,
         tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
       },
+      {
+        id: 'r7',
+        name: 'Greek Yogurt Parfait',
+        description: 'Layered yogurt parfait with berries and granola',
+        instructions: [
+          'Layer Greek yogurt in a glass or bowl',
+          'Add mixed berries (blueberries, strawberries, raspberries)',
+          'Sprinkle with granola',
+          'Drizzle with honey and repeat layers',
+          'Top with fresh mint'
+        ],
+        ingredients: [
+          { name: 'Greek yogurt', amount: 200, unit: 'g' },
+          { name: 'Mixed berries', amount: 100, unit: 'g' },
+          { name: 'Granola', amount: 30, unit: 'g' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Mint leaves', amount: 2, unit: 'leaves' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 320,
+        protein: 22,
+        carbohydrates: 42,
+        fats: 8,
+        fiber: 6,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
+      },
+      {
+        id: 'r8',
+        name: 'Turkey and Avocado Wrap',
+        description: 'Protein-packed wrap with lean turkey and avocado',
+        instructions: [
+          'Lay out whole wheat tortilla',
+          'Spread mashed avocado on tortilla',
+          'Add sliced turkey breast',
+          'Add lettuce, tomato, and red onion',
+          'Roll tightly and cut in half'
+        ],
+        ingredients: [
+          { name: 'Whole wheat tortilla', amount: 1, unit: 'large' },
+          { name: 'Turkey breast', amount: 100, unit: 'g' },
+          { name: 'Avocado', amount: 0.5, unit: 'medium' },
+          { name: 'Lettuce', amount: 30, unit: 'g' },
+          { name: 'Tomato', amount: 0.5, unit: 'medium' },
+          { name: 'Red onion', amount: 10, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 0,
+        calories: 380,
+        protein: 28,
+        carbohydrates: 35,
+        fats: 16,
+        fiber: 8,
+        tags: ['lunch', 'high-protein', 'quick', 'meal-prep']
+      },
+      {
+        id: 'r9',
+        name: 'Quinoa Buddha Bowl',
+        description: 'Nutritious bowl with quinoa, vegetables, and tahini dressing',
+        instructions: [
+          'Cook quinoa according to package instructions',
+          'Roast sweet potato and broccoli at 400°F for 20 minutes',
+          'Roast chickpeas with olive oil and spices',
+          'Assemble bowl with quinoa, roasted vegetables, and chickpeas',
+          'Drizzle with tahini dressing'
+        ],
+        ingredients: [
+          { name: 'Quinoa', amount: 80, unit: 'g' },
+          { name: 'Sweet potato', amount: 150, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Chickpeas', amount: 100, unit: 'g' },
+          { name: 'Tahini', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon juice', amount: 1, unit: 'tbsp' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 25,
+        calories: 520,
+        protein: 22,
+        carbohydrates: 68,
+        fats: 18,
+        fiber: 12,
+        tags: ['dinner', 'vegetarian', 'high-protein', 'gluten-free', 'vegan']
+      },
+      {
+        id: 'r10',
+        name: 'Grilled Chicken with Vegetables',
+        description: 'Lean grilled chicken with seasonal vegetables',
+        instructions: [
+          'Season chicken breast with herbs and spices',
+          'Grill chicken for 6-7 minutes per side',
+          'Steam or roast mixed vegetables',
+          'Serve with a side of brown rice or quinoa',
+          'Drizzle with lemon juice before serving'
+        ],
+        ingredients: [
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Asparagus', amount: 100, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Zucchini', amount: 100, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Brown rice', amount: 100, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 20,
+        calories: 480,
+        protein: 45,
+        carbohydrates: 42,
+        fats: 12,
+        fiber: 6,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free']
+      },
+      {
+        id: 'r11',
+        name: 'Egg White Omelette',
+        description: 'Protein-rich omelette with vegetables',
+        instructions: [
+          'Whisk egg whites until frothy',
+          'Heat non-stick pan with cooking spray',
+          'Pour egg whites into pan',
+          'Add diced vegetables (mushrooms, spinach, tomatoes)',
+          'Cook until set, fold in half, and serve'
+        ],
+        ingredients: [
+          { name: 'Egg whites', amount: 6, unit: 'large' },
+          { name: 'Mushrooms', amount: 50, unit: 'g' },
+          { name: 'Spinach', amount: 30, unit: 'g' },
+          { name: 'Cherry tomatoes', amount: 50, unit: 'g' },
+          { name: 'Feta cheese', amount: 30, unit: 'g' },
+          { name: 'Olive oil', amount: 0.5, unit: 'tsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 8,
+        calories: 220,
+        protein: 28,
+        carbohydrates: 8,
+        fats: 8,
+        tags: ['breakfast', 'high-protein', 'low-carb', 'gluten-free']
+      },
+      {
+        id: 'r12',
+        name: 'Tuna Salad Lettuce Wraps',
+        description: 'Light and protein-packed tuna salad in lettuce wraps',
+        instructions: [
+          'Drain canned tuna and flake with fork',
+          'Mix tuna with Greek yogurt, celery, and red onion',
+          'Season with lemon juice, salt, and pepper',
+          'Spoon mixture into large lettuce leaves',
+          'Garnish with fresh dill'
+        ],
+        ingredients: [
+          { name: 'Canned tuna (in water)', amount: 120, unit: 'g' },
+          { name: 'Greek yogurt', amount: 60, unit: 'g' },
+          { name: 'Celery', amount: 30, unit: 'g' },
+          { name: 'Red onion', amount: 15, unit: 'g' },
+          { name: 'Lemon juice', amount: 1, unit: 'tbsp' },
+          { name: 'Lettuce leaves', amount: 4, unit: 'large' },
+          { name: 'Dill', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 0,
+        calories: 240,
+        protein: 35,
+        carbohydrates: 10,
+        fats: 6,
+        tags: ['lunch', 'high-protein', 'low-carb', 'gluten-free', 'quick']
+      },
+      {
+        id: 'r13',
+        name: 'Baked Cod with Roasted Vegetables',
+        description: 'Light and flaky cod with colorful roasted vegetables',
+        instructions: [
+          'Preheat oven to 400°F',
+          'Season cod fillets with lemon, herbs, and olive oil',
+          'Toss vegetables (carrots, bell peppers, zucchini) with olive oil',
+          'Bake cod and vegetables for 15-18 minutes',
+          'Serve with a squeeze of lemon'
+        ],
+        ingredients: [
+          { name: 'Cod fillet', amount: 150, unit: 'g' },
+          { name: 'Carrots', amount: 100, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Zucchini', amount: 100, unit: 'g' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Fresh herbs', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 18,
+        calories: 320,
+        protein: 32,
+        carbohydrates: 18,
+        fats: 14,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free', 'omega-3']
+      },
+      {
+        id: 'r14',
+        name: 'Protein Pancakes',
+        description: 'Fluffy high-protein pancakes for breakfast',
+        instructions: [
+          'Mix protein powder, oats, eggs, and banana',
+          'Blend until smooth',
+          'Heat non-stick pan over medium heat',
+          'Pour batter to form pancakes',
+          'Flip when bubbles form, cook until golden',
+          'Serve with berries and Greek yogurt'
+        ],
+        ingredients: [
+          { name: 'Protein powder', amount: 30, unit: 'g' },
+          { name: 'Oats', amount: 40, unit: 'g' },
+          { name: 'Eggs', amount: 2, unit: 'large' },
+          { name: 'Banana', amount: 0.5, unit: 'medium' },
+          { name: 'Greek yogurt', amount: 60, unit: 'g' },
+          { name: 'Berries', amount: 50, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 10,
+        calories: 420,
+        protein: 38,
+        carbohydrates: 42,
+        fats: 12,
+        fiber: 6,
+        tags: ['breakfast', 'high-protein', 'vegetarian']
+      },
     ];
   }
 
