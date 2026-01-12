@@ -38,28 +38,28 @@ export default function MemberNutritionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Loading nutrition plans...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <p className="text-gray-400">Loading nutrition plans...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gray-950">
+      <header className="glass-effect border-b border-gray-800/50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link
                 href="/member/dashboard"
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                className="flex items-center text-gray-400 hover:text-white transition-colors"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Back to Dashboard
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">My Nutrition Plans</h1>
-                <p className="text-sm text-gray-600">View and manage your nutrition plans</p>
+                <h1 className="text-2xl font-bold text-white">My Nutrition Plans</h1>
+                <p className="text-sm text-gray-400">View and manage your nutrition plans</p>
               </div>
             </div>
           </div>

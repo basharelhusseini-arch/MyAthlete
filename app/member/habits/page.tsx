@@ -118,8 +118,8 @@ export default function MemberHabitsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Loading habits...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <p className="text-gray-400">Loading habits...</p>
       </div>
     );
   }
@@ -157,13 +157,13 @@ export default function MemberHabitsPage() {
         </div>
 
         {habits.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <Target className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No habits yet</h3>
-            <p className="text-gray-600 mb-6">Start tracking your habits to build consistency</p>
+          <div className="dark-card p-12 text-center">
+            <Target className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">No habits yet</h3>
+            <p className="text-gray-400 mb-6">Start tracking your habits to build consistency</p>
             <Link
               href="/member/habits/new"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 btn-primary"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add Your First Habit
@@ -179,7 +179,7 @@ export default function MemberHabitsPage() {
               return (
                 <div
                   key={habit.id}
-                  className="bg-white rounded-lg shadow p-6"
+                  className="dark-card p-6"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
