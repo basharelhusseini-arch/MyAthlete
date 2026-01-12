@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Target, Calendar, Clock, TrendingUp, Dumbbell, Edit, Trash2 } from 'lucide-react';
@@ -16,14 +16,25 @@ export default function WorkoutPlanDetailPage() {
   const [exercises, setExercises] = useState<Record<string, Exercise>>({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (planId) {
-      fetchPlanData();
-      fetchExercises();
+  const fetchExercises = useCallback(async () => {
+    try {
+      const response = await fetch('/api/exercises');
+      if (response.ok) {
+        const exercisesData: Exercise[] = await response.json();
+        const exercisesMap: Record<string, Exercise> = {};
+        exercisesData.forEach(ex => {
+          exercisesMap[ex.id] = ex;
+        });
+        setExercises(exercisesMap);
+      }
+    } catch (error) {
+      console.error('Failed to fetch exercises:', error);
     }
-  }, [planId]);
+  }, []);
 
-  const fetchPlanData = async () => {
+  const fetchPlanData = useCallback(async () => {
+    if (!planId) return;
+
     try {
       const [planRes, workoutsRes] = await Promise.all([
         fetch(`/api/workout-plans/${planId}`),
@@ -41,26 +52,17 @@ export default function WorkoutPlanDetailPage() {
       }
     } catch (error) {
       console.error('Failed to fetch plan data:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [planId]);
 
-  const fetchExercises = async () => {
-    try {
-      const response = await fetch('/api/exercises');
-      if (response.ok) {
-        const exercisesData: Exercise[] = await response.json();
-        const exercisesMap: Record<string, Exercise> = {};
-        exercisesData.forEach(ex => {
-          exercisesMap[ex.id] = ex;
-        });
-        setExercises(exercisesMap);
-      }
-    } catch (error) {
-      console.error('Failed to fetch exercises:', error);
+  useEffect(() => {
+    if (planId) {
+      setLoading(true);
+      Promise.all([fetchPlanData(), fetchExercises()]).finally(() => {
+        setLoading(false);
+      });
     }
-  };
+  }, [planId, fetchPlanData, fetchExercises]);
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this workout plan?')) return;

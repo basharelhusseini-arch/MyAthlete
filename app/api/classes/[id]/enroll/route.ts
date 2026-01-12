@@ -50,6 +50,13 @@ export async function POST(
       enrolledMembers: [...gymClass.enrolledMembers, memberId],
     });
 
+    if (!updatedClass) {
+      return NextResponse.json(
+        { error: 'Class not found' },
+        { status: 404 }
+      );
+    }
+
     // Remove from waitlist if they were on it
     store.removeFromWaitlist(classId, memberId);
 
@@ -105,6 +112,13 @@ export async function DELETE(
     const updatedClass = store.updateClass(classId, {
       enrolledMembers: updatedEnrolled,
     });
+
+    if (!updatedClass) {
+      return NextResponse.json(
+        { error: 'Class not found' },
+        { status: 404 }
+      );
+    }
 
     // Process waitlist - move next person up if available
     store.processWaitlist(classId);
