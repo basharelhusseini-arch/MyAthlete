@@ -351,7 +351,7 @@ export default function HealthStatisticsPage() {
               <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
                 <p className="text-sm font-medium text-green-400 mb-1">Excellent Health Score!</p>
                 <p className="text-xs text-gray-400">
-                  You're maintaining great health across all categories. Keep it up!
+                  You&apos;re maintaining great health across all categories. Keep it up!
                 </p>
               </div>
             )}
