@@ -1017,7 +1017,7 @@ class DataStore {
         carbohydrates: 0,
         fats: 12,
         tags: ['high-protein', 'low-carb', 'gluten-free'],
-        imageUrl: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1588347818036-8fc90d4e2f6c?w=800&h=600&fit=crop'
       },
       {
         id: 'r2',
@@ -2403,7 +2403,7 @@ class DataStore {
         fats: 40,
         fiber: 0,
         tags: ['high-protein', 'low-carb', 'keto', 'gluten-free', 'dinner'],
-        imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=800&h=600&fit=crop'
       },
       {
         id: 'r47',
@@ -2433,7 +2433,7 @@ class DataStore {
         fats: 18,
         fiber: 5,
         tags: ['high-protein', 'lunch', 'dinner'],
-        imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=600&fit=crop'
       },
       {
         id: 'r48',
@@ -2465,7 +2465,7 @@ class DataStore {
         fats: 24,
         fiber: 5,
         tags: ['high-protein', 'dinner', 'quick'],
-        imageUrl: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&h=600&fit=crop'
       },
       {
         id: 'r49',
@@ -2497,7 +2497,7 @@ class DataStore {
         fats: 18,
         fiber: 8,
         tags: ['high-protein', 'dinner', 'comfort-food'],
-        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=800&h=600&fit=crop'
       },
       {
         id: 'r50',
@@ -2528,7 +2528,7 @@ class DataStore {
         fats: 14,
         fiber: 4,
         tags: ['high-protein', 'dinner', 'quick', 'asian'],
-        imageUrl: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop'
       },
       {
         id: 'r51',
@@ -2559,7 +2559,7 @@ class DataStore {
         fats: 24,
         fiber: 3,
         tags: ['high-protein', 'dinner', 'italian', 'comfort-food'],
-        imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1623001171243-da4be6c72c44?w=800&h=600&fit=crop'
       },
       {
         id: 'r52',
@@ -2591,7 +2591,7 @@ class DataStore {
         fats: 22,
         fiber: 12,
         tags: ['high-protein', 'high-fiber', 'dinner', 'comfort-food'],
-        imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1596897554601-0ef37e8565eb?w=800&h=600&fit=crop'
       },
       {
         id: 'r53',
@@ -2623,7 +2623,7 @@ class DataStore {
         fats: 16,
         fiber: 2,
         tags: ['high-protein', 'dinner', 'asian', 'quick'],
-        imageUrl: 'https://images.unsplash.com/photo-1598511726623-d2e9996892f0?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1630409346693-4844baf6d7e1?w=800&h=600&fit=crop'
       },
       {
         id: 'r54',
@@ -2655,7 +2655,7 @@ class DataStore {
         fats: 14,
         fiber: 6,
         tags: ['high-protein', 'dinner', 'asian'],
-        imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800&h=600&fit=crop'
       },
       {
         id: 'r55',
@@ -2688,7 +2688,7 @@ class DataStore {
         fats: 22,
         fiber: 8,
         tags: ['high-protein', 'dinner', 'comfort-food', 'british'],
-        imageUrl: 'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1572453800999-e8d2d1589b7c?w=800&h=600&fit=crop'
       },
     ];
   }

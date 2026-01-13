@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity, Watch, Trophy } from 'lucide-react';
 
 interface MemberData {
   id: string;
@@ -369,7 +369,7 @@ export default function MemberDashboardPage() {
         </div>
 
         {/* Main Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Book a Class */}
           <Link
             href="/member/classes"
@@ -466,6 +466,56 @@ export default function MemberDashboardPage() {
               <div className="flex items-center text-purple-400 font-medium">
                 Manage Habits
                 <Target className="w-4 h-4 ml-2" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Connect Wearable */}
+          <Link
+            href="/member/wearables"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-pink-500/20 rounded-xl">
+                  <Watch className="w-8 h-8 text-pink-400" />
+                </div>
+                <div className="text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Watch className="w-5 h-5" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Connect Wearable</h2>
+              <p className="text-gray-400 mb-4">
+                Sync your Whoop, Garmin, or Apple Health data for automatic tracking and personalized insights.
+              </p>
+              <div className="flex items-center text-pink-400 font-medium">
+                Connect Device
+                <Watch className="w-4 h-4 ml-2" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Rewards */}
+          <Link
+            href="/member/rewards"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-yellow-500/20 rounded-xl">
+                  <Trophy className="w-8 h-8 text-yellow-400" />
+                </div>
+                <div className="text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Trophy className="w-5 h-5" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Rewards</h2>
+              <p className="text-gray-400 mb-4">
+                Earn points with your health score and unlock exclusive discounts, free classes, and premium perks.
+              </p>
+              <div className="flex items-center text-yellow-400 font-medium">
+                View Rewards
+                <Trophy className="w-4 h-4 ml-2" />
               </div>
             </div>
           </Link>
