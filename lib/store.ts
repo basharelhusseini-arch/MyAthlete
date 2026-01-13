@@ -2335,6 +2335,10 @@ class DataStore {
 
   // Phase 3: Recipe methods
   getAllRecipes(): Recipe[] {
+    // Verify all recipes are loaded
+    if (this.recipes.length !== 45) {
+      console.warn(`Expected 45 recipes but found ${this.recipes.length}`);
+    }
     return this.recipes;
   }
 
