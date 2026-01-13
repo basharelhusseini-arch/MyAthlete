@@ -37,12 +37,33 @@ interface ClassData {
   status: string;
 }
 
+interface HealthScore {
+  total: number;
+  workoutScore: number;
+  dietScore: number;
+  habitScore: number;
+  sleepScore: number;
+  workoutCount: number;
+  workoutIntensity: number;
+  dietQuality: number;
+  habitCompletion: number;
+  sleepQuality: number;
+}
+
+interface LeaderboardEntry {
+  id: string;
+  name: string;
+  score: number;
+}
+
 export default function MemberDashboardPage() {
   const router = useRouter();
   const [member, setMember] = useState<MemberData | null>(null);
   const [membership, setMembership] = useState<MembershipData | null>(null);
   const [upcomingClasses, setUpcomingClasses] = useState<ClassData[]>([]);
   const [completedSessions, setCompletedSessions] = useState(0);
+  const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -84,6 +105,16 @@ export default function MemberDashboardPage() {
         new Date(`${c.date}T${c.startTime}`) >= new Date()
       );
       setUpcomingClasses(enrolled);
+
+      // Fetch health score
+      const healthScoreRes = await fetch(`/api/health/score?memberId=${memberId}`);
+      const healthScoreData = await healthScoreRes.json();
+      setHealthScore(healthScoreData);
+
+      // Fetch leaderboard
+      const leaderboardRes = await fetch(`/api/health/friends?memberId=${memberId}`);
+      const leaderboardData = await leaderboardRes.json();
+      setLeaderboard(leaderboardData);
     } catch (error) {
       console.error('Failed to fetch member data:', error);
     } finally {
@@ -131,6 +162,212 @@ export default function MemberDashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Health Score & Leaderboard Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Large Health Score Display */}
+          <div className="lg:col-span-1">
+            <div className="dark-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-800/50">
+                <h2 className="text-lg font-semibold text-white flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-blue-400" />
+                  Your Health Score
+                </h2>
+              </div>
+              <div className="p-8 flex flex-col items-center justify-center">
+                {healthScore ? (
+                  <>
+                    {/* Circular Score Display */}
+                    <div className="relative w-48 h-48 mb-6">
+                      {/* Background Circle */}
+                      <svg className="transform -rotate-90 w-48 h-48">
+                        <circle
+                          cx="96"
+                          cy="96"
+                          r="88"
+                          stroke="currentColor"
+                          strokeWidth="12"
+                          fill="none"
+                          className="text-gray-800"
+                        />
+                        {/* Progress Circle */}
+                        <circle
+                          cx="96"
+                          cy="96"
+                          r="88"
+                          stroke="currentColor"
+                          strokeWidth="12"
+                          fill="none"
+                          strokeDasharray={`${2 * Math.PI * 88}`}
+                          strokeDashoffset={`${2 * Math.PI * 88 * (1 - healthScore.total / 100)}`}
+                          className={`transition-all duration-1000 ${
+                            healthScore.total >= 90 ? 'text-green-400' :
+                            healthScore.total >= 80 ? 'text-blue-400' :
+                            healthScore.total >= 70 ? 'text-yellow-400' :
+                            healthScore.total >= 60 ? 'text-orange-400' :
+                            'text-red-400'
+                          }`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      {/* Score Number */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <div className={`text-6xl font-bold ${
+                          healthScore.total >= 90 ? 'text-green-400' :
+                          healthScore.total >= 80 ? 'text-blue-400' :
+                          healthScore.total >= 70 ? 'text-yellow-400' :
+                          healthScore.total >= 60 ? 'text-orange-400' :
+                          'text-red-400'
+                        }`}>
+                          {healthScore.total}
+                        </div>
+                        <div className="text-gray-400 text-sm font-medium">/ 100</div>
+                      </div>
+                    </div>
+
+                    {/* Score Category */}
+                    <div className="text-center mb-6">
+                      <p className={`text-xl font-bold mb-1 ${
+                        healthScore.total >= 90 ? 'text-green-400' :
+                        healthScore.total >= 80 ? 'text-blue-400' :
+                        healthScore.total >= 70 ? 'text-yellow-400' :
+                        healthScore.total >= 60 ? 'text-orange-400' :
+                        'text-red-400'
+                      }`}>
+                        {healthScore.total >= 90 ? '🏆 Elite Lifestyle' :
+                         healthScore.total >= 80 ? '💪 Very Strong' :
+                         healthScore.total >= 70 ? '✅ Healthy' :
+                         healthScore.total >= 60 ? '⚠️ Suboptimal' :
+                         '🚨 Risk Zone'}
+                      </p>
+                      <p className="text-gray-500 text-sm">Keep up the great work!</p>
+                    </div>
+
+                    {/* Score Breakdown */}
+                    <div className="w-full space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400 flex items-center">
+                          <Dumbbell className="w-4 h-4 mr-2 text-orange-400" />
+                          Training
+                        </span>
+                        <span className="text-white font-semibold">{healthScore.workoutScore}/30</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400 flex items-center">
+                          <UtensilsCrossed className="w-4 h-4 mr-2 text-green-400" />
+                          Diet
+                        </span>
+                        <span className="text-white font-semibold">{healthScore.dietScore.toFixed(1)}/30</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400 flex items-center">
+                          <Activity className="w-4 h-4 mr-2 text-blue-400" />
+                          Sleep
+                        </span>
+                        <span className="text-white font-semibold">{healthScore.sleepScore.toFixed(1)}/25</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400 flex items-center">
+                          <Target className="w-4 h-4 mr-2 text-purple-400" />
+                          Habits
+                        </span>
+                        <span className="text-white font-semibold">{healthScore.habitScore.toFixed(1)}/15</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-8">
+                    <Activity className="w-12 h-12 text-gray-500 mx-auto mb-4 animate-pulse" />
+                    <p className="text-gray-400">Calculating your score...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Leaderboard */}
+          <div className="lg:col-span-2">
+            <div className="dark-card">
+              <div className="px-6 py-4 border-b border-gray-800/50 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-blue-400" />
+                  Health Score Leaderboard
+                </h2>
+                <span className="text-sm text-gray-400">Top Athletes</span>
+              </div>
+              <div className="p-6">
+                {leaderboard.length > 0 ? (
+                  <div className="space-y-3">
+                    {leaderboard.slice(0, 10).map((entry, index) => {
+                      const isCurrentUser = entry.id === member?.id;
+                      const rank = index + 1;
+                      return (
+                        <div
+                          key={entry.id}
+                          className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+                            isCurrentUser 
+                              ? 'bg-blue-500/20 border-2 border-blue-500/50 shadow-lg shadow-blue-500/10' 
+                              : 'bg-gray-800/30 hover:bg-gray-800/50 border border-gray-800/50'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-4">
+                            {/* Rank Badge */}
+                            <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
+                              rank === 1 ? 'bg-yellow-500/20 text-yellow-400 text-lg' :
+                              rank === 2 ? 'bg-gray-400/20 text-gray-300 text-lg' :
+                              rank === 3 ? 'bg-orange-500/20 text-orange-400 text-lg' :
+                              'bg-gray-700/50 text-gray-400'
+                            }`}>
+                              {rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}
+                            </div>
+                            
+                            {/* User Name */}
+                            <div>
+                              <p className={`font-semibold ${isCurrentUser ? 'text-blue-300' : 'text-white'}`}>
+                                {entry.name}
+                                {isCurrentUser && (
+                                  <span className="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">
+                                    You
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {entry.score >= 90 ? 'Elite Lifestyle' :
+                                 entry.score >= 80 ? 'Very Strong' :
+                                 entry.score >= 70 ? 'Healthy' :
+                                 entry.score >= 60 ? 'Suboptimal' :
+                                 'Risk Zone'}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Score */}
+                          <div className="text-right">
+                            <div className={`text-2xl font-bold ${
+                              entry.score >= 90 ? 'text-green-400' :
+                              entry.score >= 80 ? 'text-blue-400' :
+                              entry.score >= 70 ? 'text-yellow-400' :
+                              entry.score >= 60 ? 'text-orange-400' :
+                              'text-red-400'
+                            }`}>
+                              {entry.score}
+                            </div>
+                            <div className="text-xs text-gray-500">points</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                    <p className="text-gray-400">Loading leaderboard...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Main Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Book a Class */}
