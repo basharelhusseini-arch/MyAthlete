@@ -418,7 +418,7 @@ class DataStore {
         carbohydrates: 0,
         fats: 12,
         tags: ['high-protein', 'low-carb', 'gluten-free'],
-        imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800&h=600&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop'
       },
       {
         id: 'r2',
@@ -472,7 +472,8 @@ class DataStore {
         protein: 38,
         carbohydrates: 35,
         fats: 18,
-        tags: ['high-protein', 'omega-3', 'gluten-free']
+        tags: ['high-protein', 'omega-3', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop'
       },
       {
         id: 'r4',
@@ -614,7 +615,8 @@ class DataStore {
         carbohydrates: 35,
         fats: 16,
         fiber: 8,
-        tags: ['lunch', 'high-protein', 'quick', 'meal-prep']
+        tags: ['lunch', 'high-protein', 'quick', 'meal-prep'],
+        imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'
       },
       {
         id: 'r9',
@@ -797,6 +799,983 @@ class DataStore {
         fiber: 6,
         tags: ['breakfast', 'high-protein', 'vegetarian'],
         imageUrl: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r15',
+        name: 'Chicken and Brown Rice Bowl',
+        description: 'Balanced meal with lean protein and complex carbs',
+        instructions: [
+          'Cook brown rice according to package directions',
+          'Season and grill chicken breast until cooked through',
+          'Steam broccoli and carrots',
+          'Assemble bowl with rice, chicken, and vegetables',
+          'Drizzle with low-sodium soy sauce or teriyaki'
+        ],
+        ingredients: [
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Brown rice', amount: 120, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Carrots', amount: 80, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Soy sauce', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 25,
+        calories: 520,
+        protein: 48,
+        carbohydrates: 55,
+        fats: 12,
+        fiber: 6,
+        tags: ['dinner', 'high-protein', 'meal-prep', 'gluten-free']
+      },
+      {
+        id: 'r16',
+        name: 'Avocado Toast with Eggs',
+        description: 'Nutritious breakfast with healthy fats and protein',
+        instructions: [
+          'Toast whole grain bread',
+          'Mash avocado with lemon juice and salt',
+          'Spread avocado on toast',
+          'Top with poached or fried eggs',
+          'Garnish with red pepper flakes and fresh herbs'
+        ],
+        ingredients: [
+          { name: 'Whole grain bread', amount: 2, unit: 'slices' },
+          { name: 'Avocado', amount: 0.5, unit: 'medium' },
+          { name: 'Eggs', amount: 2, unit: 'large' },
+          { name: 'Lemon juice', amount: 1, unit: 'tsp' },
+          { name: 'Red pepper flakes', amount: 0.25, unit: 'tsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 8,
+        calories: 420,
+        protein: 20,
+        carbohydrates: 32,
+        fats: 24,
+        fiber: 12,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
+      },
+      {
+        id: 'r17',
+        name: 'Mediterranean Quinoa Bowl',
+        description: 'Fresh and flavorful Mediterranean-inspired bowl',
+        instructions: [
+          'Cook quinoa and let cool',
+          'Dice cucumber, tomatoes, and red onion',
+          'Mix quinoa with vegetables and chickpeas',
+          'Add feta cheese and olives',
+          'Drizzle with olive oil and lemon dressing'
+        ],
+        ingredients: [
+          { name: 'Quinoa', amount: 100, unit: 'g' },
+          { name: 'Chickpeas', amount: 100, unit: 'g' },
+          { name: 'Cucumber', amount: 100, unit: 'g' },
+          { name: 'Cherry tomatoes', amount: 100, unit: 'g' },
+          { name: 'Feta cheese', amount: 50, unit: 'g' },
+          { name: 'Kalamata olives', amount: 30, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Lemon juice', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 15,
+        calories: 480,
+        protein: 20,
+        carbohydrates: 58,
+        fats: 18,
+        fiber: 10,
+        tags: ['lunch', 'vegetarian', 'high-fiber', 'gluten-free', 'meal-prep']
+      },
+      {
+        id: 'r18',
+        name: 'Lean Beef Stir Fry',
+        description: 'High-protein stir fry with lean beef and vegetables',
+        instructions: [
+          'Slice beef into thin strips and marinate',
+          'Heat wok or large pan over high heat',
+          'Stir-fry beef until browned, remove',
+          'Stir-fry vegetables until crisp-tender',
+          'Return beef to pan, add sauce, and toss'
+        ],
+        ingredients: [
+          { name: 'Lean beef sirloin', amount: 150, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Snow peas', amount: 80, unit: 'g' },
+          { name: 'Soy sauce', amount: 2, unit: 'tbsp' },
+          { name: 'Ginger', amount: 1, unit: 'tsp' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Sesame oil', amount: 1, unit: 'tsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 12,
+        calories: 380,
+        protein: 42,
+        carbohydrates: 18,
+        fats: 14,
+        fiber: 5,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free']
+      },
+      {
+        id: 'r19',
+        name: 'Chia Seed Pudding',
+        description: 'Protein-rich pudding perfect for breakfast or snack',
+        instructions: [
+          'Mix chia seeds with almond milk and vanilla',
+          'Add protein powder and sweetener',
+          'Stir well and let sit for 5 minutes',
+          'Refrigerate overnight or at least 4 hours',
+          'Top with berries and nuts before serving'
+        ],
+        ingredients: [
+          { name: 'Chia seeds', amount: 30, unit: 'g' },
+          { name: 'Almond milk', amount: 200, unit: 'ml' },
+          { name: 'Protein powder', amount: 25, unit: 'g' },
+          { name: 'Vanilla extract', amount: 0.5, unit: 'tsp' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Mixed berries', amount: 50, unit: 'g' },
+          { name: 'Almonds', amount: 15, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 320,
+        protein: 28,
+        carbohydrates: 28,
+        fats: 12,
+        fiber: 14,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'vegan', 'meal-prep']
+      },
+      {
+        id: 'r20',
+        name: 'Turkey Meatballs with Zucchini Noodles',
+        description: 'Low-carb meal with lean turkey and vegetable noodles',
+        instructions: [
+          'Mix ground turkey with herbs and form into meatballs',
+          'Bake meatballs at 400°F for 15-18 minutes',
+          'Spiralize zucchini into noodles',
+          'Sauté zucchini noodles briefly',
+          'Serve meatballs over zucchini noodles with marinara'
+        ],
+        ingredients: [
+          { name: 'Ground turkey', amount: 150, unit: 'g' },
+          { name: 'Zucchini', amount: 200, unit: 'g' },
+          { name: 'Egg', amount: 1, unit: 'large' },
+          { name: 'Breadcrumbs', amount: 15, unit: 'g' },
+          { name: 'Marinara sauce', amount: 100, unit: 'ml' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 20,
+        calories: 380,
+        protein: 38,
+        carbohydrates: 18,
+        fats: 18,
+        fiber: 4,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free']
+      },
+      {
+        id: 'r21',
+        name: 'Black Bean and Sweet Potato Bowl',
+        description: 'Plant-based protein bowl with complex carbs',
+        instructions: [
+          'Roast sweet potato cubes at 400°F for 20 minutes',
+          'Heat black beans with spices',
+          'Prepare brown rice',
+          'Assemble bowl with rice, beans, and sweet potato',
+          'Top with avocado, salsa, and cilantro'
+        ],
+        ingredients: [
+          { name: 'Black beans', amount: 150, unit: 'g' },
+          { name: 'Sweet potato', amount: 200, unit: 'g' },
+          { name: 'Brown rice', amount: 100, unit: 'g' },
+          { name: 'Avocado', amount: 0.25, unit: 'medium' },
+          { name: 'Salsa', amount: 50, unit: 'g' },
+          { name: 'Cilantro', amount: 1, unit: 'tbsp' },
+          { name: 'Lime juice', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 25,
+        calories: 480,
+        protein: 18,
+        carbohydrates: 85,
+        fats: 10,
+        fiber: 18,
+        tags: ['dinner', 'vegetarian', 'vegan', 'high-fiber', 'gluten-free']
+      },
+      {
+        id: 'r22',
+        name: 'Cottage Cheese Bowl',
+        description: 'High-protein breakfast or snack option',
+        instructions: [
+          'Scoop cottage cheese into a bowl',
+          'Top with fresh berries and sliced banana',
+          'Add granola for crunch',
+          'Drizzle with honey',
+          'Sprinkle with chia seeds'
+        ],
+        ingredients: [
+          { name: 'Cottage cheese', amount: 200, unit: 'g' },
+          { name: 'Mixed berries', amount: 80, unit: 'g' },
+          { name: 'Banana', amount: 0.5, unit: 'medium' },
+          { name: 'Granola', amount: 25, unit: 'g' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Chia seeds', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 320,
+        protein: 28,
+        carbohydrates: 38,
+        fats: 8,
+        fiber: 6,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'quick']
+      },
+      {
+        id: 'r23',
+        name: 'Shrimp Scampi with Zucchini',
+        description: 'Light and protein-rich seafood dish',
+        instructions: [
+          'Sauté shrimp in olive oil until pink',
+          'Add garlic and white wine',
+          'Spiralize zucchini into noodles',
+          'Toss zucchini with shrimp and sauce',
+          'Garnish with parsley and lemon'
+        ],
+        ingredients: [
+          { name: 'Shrimp', amount: 150, unit: 'g' },
+          { name: 'Zucchini', amount: 200, unit: 'g' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'White wine', amount: 50, unit: 'ml' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Parsley', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 12,
+        calories: 280,
+        protein: 32,
+        carbohydrates: 12,
+        fats: 12,
+        fiber: 3,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free', 'omega-3']
+      },
+      {
+        id: 'r24',
+        name: 'Lentil Curry',
+        description: 'Hearty plant-based curry with lentils and vegetables',
+        instructions: [
+          'Sauté onions and garlic until fragrant',
+          'Add curry spices and cook for 1 minute',
+          'Add lentils, coconut milk, and vegetables',
+          'Simmer until lentils are tender',
+          'Serve over brown rice or quinoa'
+        ],
+        ingredients: [
+          { name: 'Red lentils', amount: 100, unit: 'g' },
+          { name: 'Coconut milk', amount: 100, unit: 'ml' },
+          { name: 'Onion', amount: 50, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Curry powder', amount: 1, unit: 'tbsp' },
+          { name: 'Tomatoes', amount: 100, unit: 'g' },
+          { name: 'Spinach', amount: 50, unit: 'g' },
+          { name: 'Brown rice', amount: 100, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 25,
+        calories: 420,
+        protein: 22,
+        carbohydrates: 65,
+        fats: 10,
+        fiber: 16,
+        tags: ['dinner', 'vegetarian', 'vegan', 'high-fiber', 'gluten-free']
+      },
+      {
+        id: 'r25',
+        name: 'Steel Cut Oats with Berries',
+        description: 'Hearty breakfast with complex carbs and antioxidants',
+        instructions: [
+          'Cook steel cut oats according to package directions',
+          'Top with fresh mixed berries',
+          'Add Greek yogurt for extra protein',
+          'Drizzle with honey or maple syrup',
+          'Sprinkle with nuts or seeds'
+        ],
+        ingredients: [
+          { name: 'Steel cut oats', amount: 50, unit: 'g' },
+          { name: 'Almond milk', amount: 150, unit: 'ml' },
+          { name: 'Greek yogurt', amount: 60, unit: 'g' },
+          { name: 'Mixed berries', amount: 80, unit: 'g' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' },
+          { name: 'Almonds', amount: 15, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 20,
+        calories: 380,
+        protein: 18,
+        carbohydrates: 58,
+        fats: 10,
+        fiber: 8,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'high-fiber', 'meal-prep']
+      },
+      {
+        id: 'r26',
+        name: 'Baked Chicken Thighs with Vegetables',
+        description: 'Flavorful one-pan meal with dark meat and roasted vegetables',
+        instructions: [
+          'Season chicken thighs with herbs and spices',
+          'Toss vegetables with olive oil and seasonings',
+          'Arrange chicken and vegetables on baking sheet',
+          'Bake at 425°F for 25-30 minutes',
+          'Serve hot with lemon wedges'
+        ],
+        ingredients: [
+          { name: 'Chicken thighs', amount: 150, unit: 'g' },
+          { name: 'Brussels sprouts', amount: 150, unit: 'g' },
+          { name: 'Carrots', amount: 100, unit: 'g' },
+          { name: 'Red potatoes', amount: 100, unit: 'g' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Fresh herbs', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 30,
+        calories: 480,
+        protein: 38,
+        carbohydrates: 32,
+        fats: 22,
+        fiber: 8,
+        tags: ['dinner', 'high-protein', 'gluten-free', 'meal-prep']
+      },
+      {
+        id: 'r27',
+        name: 'Green Smoothie Bowl',
+        description: 'Nutrient-dense smoothie bowl packed with greens and fruits',
+        instructions: [
+          'Blend spinach, banana, and frozen mango',
+          'Add protein powder and almond milk',
+          'Blend until smooth and thick',
+          'Pour into bowl and top with granola',
+          'Add fresh berries, coconut, and seeds'
+        ],
+        ingredients: [
+          { name: 'Spinach', amount: 50, unit: 'g' },
+          { name: 'Banana', amount: 1, unit: 'medium' },
+          { name: 'Frozen mango', amount: 100, unit: 'g' },
+          { name: 'Protein powder', amount: 25, unit: 'g' },
+          { name: 'Almond milk', amount: 150, unit: 'ml' },
+          { name: 'Granola', amount: 30, unit: 'g' },
+          { name: 'Berries', amount: 50, unit: 'g' },
+          { name: 'Coconut flakes', amount: 10, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 380,
+        protein: 30,
+        carbohydrates: 52,
+        fats: 10,
+        fiber: 10,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'vegan', 'quick']
+      },
+      {
+        id: 'r28',
+        name: 'Tofu Stir Fry',
+        description: 'Plant-based protein stir fry with vegetables',
+        instructions: [
+          'Press and cube tofu, marinate in soy sauce',
+          'Pan-fry tofu until golden and crispy',
+          'Stir-fry vegetables until crisp-tender',
+          'Add tofu back to pan with sauce',
+          'Serve over brown rice or quinoa'
+        ],
+        ingredients: [
+          { name: 'Firm tofu', amount: 200, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Carrots', amount: 80, unit: 'g' },
+          { name: 'Soy sauce', amount: 2, unit: 'tbsp' },
+          { name: 'Ginger', amount: 1, unit: 'tsp' },
+          { name: 'Sesame oil', amount: 1, unit: 'tsp' },
+          { name: 'Brown rice', amount: 100, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 15,
+        calories: 420,
+        protein: 24,
+        carbohydrates: 55,
+        fats: 14,
+        fiber: 8,
+        tags: ['dinner', 'vegetarian', 'vegan', 'high-protein', 'gluten-free']
+      },
+      {
+        id: 'r29',
+        name: 'Whole Wheat Pasta with Turkey and Vegetables',
+        description: 'Healthy pasta dish with lean turkey and colorful vegetables',
+        instructions: [
+          'Cook whole wheat pasta according to package directions',
+          'Sauté ground turkey until browned',
+          'Add diced bell peppers, zucchini, and tomatoes',
+          'Season with Italian herbs and garlic',
+          'Toss pasta with turkey and vegetables',
+          'Top with fresh basil and Parmesan'
+        ],
+        ingredients: [
+          { name: 'Whole wheat pasta', amount: 80, unit: 'g' },
+          { name: 'Ground turkey', amount: 120, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Zucchini', amount: 100, unit: 'g' },
+          { name: 'Cherry tomatoes', amount: 100, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Fresh basil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 20,
+        calories: 480,
+        protein: 38,
+        carbohydrates: 58,
+        fats: 14,
+        fiber: 8,
+        tags: ['dinner', 'high-protein', 'high-fiber', 'meal-prep'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r30',
+        name: 'Chickpea Pasta with Marinara and Spinach',
+        description: 'High-protein pasta made from chickpeas with vegetables',
+        instructions: [
+          'Cook chickpea pasta according to package directions',
+          'Heat marinara sauce in a pan',
+          'Add fresh spinach and let wilt',
+          'Toss pasta with sauce and spinach',
+          'Top with nutritional yeast or Parmesan',
+          'Garnish with fresh basil'
+        ],
+        ingredients: [
+          { name: 'Chickpea pasta', amount: 80, unit: 'g' },
+          { name: 'Marinara sauce', amount: 150, unit: 'ml' },
+          { name: 'Fresh spinach', amount: 100, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Fresh basil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 12,
+        calories: 420,
+        protein: 28,
+        carbohydrates: 62,
+        fats: 12,
+        fiber: 12,
+        tags: ['dinner', 'high-protein', 'vegetarian', 'gluten-free', 'high-fiber'],
+        imageUrl: 'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r31',
+        name: 'Zucchini Noodles with Chicken and Pesto',
+        description: 'Low-carb pasta alternative with lean protein',
+        instructions: [
+          'Spiralize zucchini into noodles',
+          'Season and grill chicken breast, slice',
+          'Sauté zucchini noodles briefly until tender',
+          'Toss with homemade or store-bought pesto',
+          'Top with sliced chicken and cherry tomatoes',
+          'Garnish with pine nuts and basil'
+        ],
+        ingredients: [
+          { name: 'Zucchini', amount: 300, unit: 'g' },
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Pesto', amount: 2, unit: 'tbsp' },
+          { name: 'Cherry tomatoes', amount: 80, unit: 'g' },
+          { name: 'Pine nuts', amount: 10, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 15,
+        calories: 380,
+        protein: 42,
+        carbohydrates: 12,
+        fats: 18,
+        fiber: 4,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r32',
+        name: 'Lentil Pasta with Turkey Meatballs',
+        description: 'High-protein pasta with lean turkey meatballs',
+        instructions: [
+          'Cook lentil pasta according to package directions',
+          'Mix ground turkey with herbs and form meatballs',
+          'Bake meatballs at 400°F for 15-18 minutes',
+          'Heat marinara sauce',
+          'Toss pasta with sauce and meatballs',
+          'Top with fresh basil and Parmesan'
+        ],
+        ingredients: [
+          { name: 'Lentil pasta', amount: 80, unit: 'g' },
+          { name: 'Ground turkey', amount: 120, unit: 'g' },
+          { name: 'Egg', amount: 1, unit: 'large' },
+          { name: 'Breadcrumbs', amount: 15, unit: 'g' },
+          { name: 'Marinara sauce', amount: 150, unit: 'ml' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Fresh basil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 20,
+        calories: 480,
+        protein: 42,
+        carbohydrates: 52,
+        fats: 14,
+        fiber: 10,
+        tags: ['dinner', 'high-protein', 'high-fiber', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r33',
+        name: 'Brown Rice Pasta with Shrimp and Vegetables',
+        description: 'Gluten-free pasta with lean seafood and vegetables',
+        instructions: [
+          'Cook brown rice pasta according to package directions',
+          'Sauté shrimp until pink and cooked through',
+          'Add bell peppers, broccoli, and snap peas',
+          'Toss with garlic, olive oil, and lemon',
+          'Combine pasta with shrimp and vegetables',
+          'Garnish with parsley and lemon zest'
+        ],
+        ingredients: [
+          { name: 'Brown rice pasta', amount: 80, unit: 'g' },
+          { name: 'Shrimp', amount: 150, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Snap peas', amount: 80, unit: 'g' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Parsley', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 15,
+        calories: 420,
+        protein: 36,
+        carbohydrates: 55,
+        fats: 10,
+        fiber: 6,
+        tags: ['dinner', 'high-protein', 'gluten-free', 'omega-3'],
+        imageUrl: 'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r34',
+        name: 'Quinoa Pasta with Chicken and Broccoli',
+        description: 'Protein-rich pasta with lean chicken and vegetables',
+        instructions: [
+          'Cook quinoa pasta according to package directions',
+          'Season and cook chicken breast, slice',
+          'Steam broccoli until tender-crisp',
+          'Sauté garlic in olive oil',
+          'Toss pasta with chicken, broccoli, and garlic',
+          'Season with herbs and Parmesan cheese'
+        ],
+        ingredients: [
+          { name: 'Quinoa pasta', amount: 80, unit: 'g' },
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Broccoli', amount: 150, unit: 'g' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Italian herbs', amount: 1, unit: 'tsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 18,
+        calories: 480,
+        protein: 48,
+        carbohydrates: 52,
+        fats: 14,
+        fiber: 6,
+        tags: ['dinner', 'high-protein', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r35',
+        name: 'Whole Grain Spaghetti with Turkey Bolognese',
+        description: 'Healthy twist on classic spaghetti with lean ground turkey',
+        instructions: [
+          'Cook whole grain spaghetti according to package directions',
+          'Sauté ground turkey until browned',
+          'Add diced onions, carrots, and celery',
+          'Add crushed tomatoes and simmer',
+          'Season with Italian herbs and garlic',
+          'Serve pasta with bolognese sauce and Parmesan'
+        ],
+        ingredients: [
+          { name: 'Whole grain spaghetti', amount: 80, unit: 'g' },
+          { name: 'Ground turkey', amount: 120, unit: 'g' },
+          { name: 'Onion', amount: 50, unit: 'g' },
+          { name: 'Carrots', amount: 50, unit: 'g' },
+          { name: 'Celery', amount: 30, unit: 'g' },
+          { name: 'Crushed tomatoes', amount: 200, unit: 'ml' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 25,
+        calories: 480,
+        protein: 36,
+        carbohydrates: 62,
+        fats: 12,
+        fiber: 10,
+        tags: ['dinner', 'high-protein', 'high-fiber', 'meal-prep'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r36',
+        name: 'Edamame Pasta with Vegetables and Tofu',
+        description: 'Plant-based high-protein pasta with vegetables',
+        instructions: [
+          'Cook edamame pasta according to package directions',
+          'Cube and pan-fry tofu until golden',
+          'Sauté mixed vegetables (broccoli, bell peppers, mushrooms)',
+          'Toss pasta with vegetables and tofu',
+          'Add soy sauce, ginger, and sesame oil',
+          'Garnish with green onions and sesame seeds'
+        ],
+        ingredients: [
+          { name: 'Edamame pasta', amount: 80, unit: 'g' },
+          { name: 'Firm tofu', amount: 150, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Mushrooms', amount: 80, unit: 'g' },
+          { name: 'Soy sauce', amount: 2, unit: 'tbsp' },
+          { name: 'Ginger', amount: 1, unit: 'tsp' },
+          { name: 'Sesame oil', amount: 1, unit: 'tsp' },
+          { name: 'Green onions', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 15,
+        calories: 440,
+        protein: 38,
+        carbohydrates: 48,
+        fats: 12,
+        fiber: 14,
+        tags: ['dinner', 'high-protein', 'vegetarian', 'vegan', 'gluten-free', 'high-fiber'],
+        imageUrl: 'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r37',
+        name: 'Spaghetti Squash with Turkey Meatballs',
+        description: 'Low-carb pasta alternative with lean meatballs',
+        instructions: [
+          'Bake spaghetti squash at 400°F for 40-45 minutes',
+          'Scrape out squash strands with fork',
+          'Mix ground turkey with herbs and form meatballs',
+          'Bake meatballs at 400°F for 15-18 minutes',
+          'Heat marinara sauce',
+          'Serve squash with meatballs and sauce',
+          'Top with fresh basil and Parmesan'
+        ],
+        ingredients: [
+          { name: 'Spaghetti squash', amount: 300, unit: 'g' },
+          { name: 'Ground turkey', amount: 120, unit: 'g' },
+          { name: 'Egg', amount: 1, unit: 'large' },
+          { name: 'Breadcrumbs', amount: 15, unit: 'g' },
+          { name: 'Marinara sauce', amount: 150, unit: 'ml' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Fresh basil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 45,
+        calories: 320,
+        protein: 32,
+        carbohydrates: 22,
+        fats: 12,
+        fiber: 6,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r38',
+        name: 'Black Bean Pasta with Vegetables',
+        description: 'High-fiber pasta made from black beans with mixed vegetables',
+        instructions: [
+          'Cook black bean pasta according to package directions',
+          'Sauté bell peppers, zucchini, and mushrooms',
+          'Add cherry tomatoes and let burst',
+          'Toss pasta with vegetables',
+          'Season with garlic, olive oil, and herbs',
+          'Top with feta cheese and fresh basil'
+        ],
+        ingredients: [
+          { name: 'Black bean pasta', amount: 80, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Zucchini', amount: 100, unit: 'g' },
+          { name: 'Mushrooms', amount: 80, unit: 'g' },
+          { name: 'Cherry tomatoes', amount: 100, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Feta cheese', amount: 30, unit: 'g' },
+          { name: 'Fresh basil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 15,
+        calories: 420,
+        protein: 28,
+        carbohydrates: 58,
+        fats: 14,
+        fiber: 16,
+        tags: ['dinner', 'high-protein', 'vegetarian', 'gluten-free', 'high-fiber'],
+        imageUrl: 'https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r39',
+        name: 'Whole Wheat Penne with Salmon and Asparagus',
+        description: 'Healthy pasta with omega-3 rich salmon and vegetables',
+        instructions: [
+          'Cook whole wheat penne according to package directions',
+          'Season and bake salmon at 400°F for 12-15 minutes',
+          'Sauté asparagus until tender-crisp',
+          'Toss pasta with olive oil, lemon, and herbs',
+          'Flake salmon and combine with pasta and asparagus',
+          'Garnish with lemon zest and dill'
+        ],
+        ingredients: [
+          { name: 'Whole wheat penne', amount: 80, unit: 'g' },
+          { name: 'Salmon fillet', amount: 150, unit: 'g' },
+          { name: 'Asparagus', amount: 150, unit: 'g' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Fresh dill', amount: 1, unit: 'tbsp' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 18,
+        calories: 520,
+        protein: 42,
+        carbohydrates: 58,
+        fats: 16,
+        fiber: 8,
+        tags: ['dinner', 'high-protein', 'omega-3', 'high-fiber'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r40',
+        name: 'Red Lentil Pasta with Chicken and Vegetables',
+        description: 'High-protein pasta with lean chicken and colorful vegetables',
+        instructions: [
+          'Cook red lentil pasta according to package directions',
+          'Season and cook chicken breast, slice',
+          'Sauté bell peppers, broccoli, and carrots',
+          'Toss pasta with chicken and vegetables',
+          'Add garlic, olive oil, and Italian herbs',
+          'Top with Parmesan cheese and fresh parsley'
+        ],
+        ingredients: [
+          { name: 'Red lentil pasta', amount: 80, unit: 'g' },
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Carrots', amount: 80, unit: 'g' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Fresh parsley', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 20,
+        calories: 480,
+        protein: 46,
+        carbohydrates: 52,
+        fats: 14,
+        fiber: 10,
+        tags: ['dinner', 'high-protein', 'gluten-free', 'high-fiber'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r41',
+        name: 'Chicken and Vegetable Skewers',
+        description: 'Grilled chicken and vegetables on skewers',
+        instructions: [
+          'Cut chicken breast into cubes and marinate',
+          'Cut bell peppers, zucchini, and onions into chunks',
+          'Thread chicken and vegetables onto skewers',
+          'Grill for 10-12 minutes, turning occasionally',
+          'Serve with quinoa or brown rice',
+          'Drizzle with lemon and herbs'
+        ],
+        ingredients: [
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Bell peppers', amount: 100, unit: 'g' },
+          { name: 'Zucchini', amount: 100, unit: 'g' },
+          { name: 'Red onion', amount: 50, unit: 'g' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' },
+          { name: 'Lemon', amount: 0.5, unit: 'piece' },
+          { name: 'Herbs', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 12,
+        calories: 320,
+        protein: 38,
+        carbohydrates: 18,
+        fats: 12,
+        fiber: 4,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r42',
+        name: 'Mushroom and Spinach Frittata',
+        description: 'Protein-rich egg dish with vegetables',
+        instructions: [
+          'Sauté mushrooms and spinach until tender',
+          'Whisk eggs with milk and seasonings',
+          'Pour eggs over vegetables in oven-safe pan',
+          'Bake at 375°F for 15-18 minutes',
+          'Top with feta cheese and fresh herbs',
+          'Serve warm or at room temperature'
+        ],
+        ingredients: [
+          { name: 'Eggs', amount: 4, unit: 'large' },
+          { name: 'Mushrooms', amount: 100, unit: 'g' },
+          { name: 'Spinach', amount: 80, unit: 'g' },
+          { name: 'Feta cheese', amount: 40, unit: 'g' },
+          { name: 'Milk', amount: 30, unit: 'ml' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' },
+          { name: 'Fresh herbs', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 18,
+        calories: 380,
+        protein: 28,
+        carbohydrates: 12,
+        fats: 24,
+        fiber: 3,
+        tags: ['breakfast', 'high-protein', 'vegetarian', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r43',
+        name: 'Stuffed Bell Peppers with Turkey and Quinoa',
+        description: 'Lean protein and whole grains in bell peppers',
+        instructions: [
+          'Cook quinoa according to package directions',
+          'Sauté ground turkey until browned',
+          'Mix turkey with quinoa, vegetables, and seasonings',
+          'Stuff bell peppers with mixture',
+          'Bake at 375°F for 25-30 minutes',
+          'Top with cheese and fresh herbs'
+        ],
+        ingredients: [
+          { name: 'Bell peppers', amount: 2, unit: 'large' },
+          { name: 'Ground turkey', amount: 120, unit: 'g' },
+          { name: 'Quinoa', amount: 60, unit: 'g' },
+          { name: 'Onion', amount: 50, unit: 'g' },
+          { name: 'Tomatoes', amount: 100, unit: 'g' },
+          { name: 'Cheese', amount: 30, unit: 'g' },
+          { name: 'Olive oil', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 35,
+        calories: 420,
+        protein: 32,
+        carbohydrates: 42,
+        fats: 14,
+        fiber: 8,
+        tags: ['dinner', 'high-protein', 'gluten-free', 'meal-prep'],
+        imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r44',
+        name: 'Cauliflower Rice Bowl with Chicken',
+        description: 'Low-carb rice alternative with lean protein',
+        instructions: [
+          'Pulse cauliflower in food processor to create rice',
+          'Sauté cauliflower rice until tender',
+          'Season and cook chicken breast, slice',
+          'Sauté vegetables (broccoli, carrots, snap peas)',
+          'Assemble bowl with cauliflower rice, chicken, and vegetables',
+          'Drizzle with low-sodium soy sauce or teriyaki'
+        ],
+        ingredients: [
+          { name: 'Cauliflower', amount: 300, unit: 'g' },
+          { name: 'Chicken breast', amount: 150, unit: 'g' },
+          { name: 'Broccoli', amount: 100, unit: 'g' },
+          { name: 'Carrots', amount: 80, unit: 'g' },
+          { name: 'Snap peas', amount: 80, unit: 'g' },
+          { name: 'Soy sauce', amount: 1, unit: 'tbsp' },
+          { name: 'Olive oil', amount: 2, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 20,
+        calories: 320,
+        protein: 42,
+        carbohydrates: 22,
+        fats: 10,
+        fiber: 8,
+        tags: ['dinner', 'high-protein', 'low-carb', 'gluten-free'],
+        imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r45',
+        name: 'Acai Bowl',
+        description: 'Antioxidant-rich breakfast bowl with fruits and toppings',
+        instructions: [
+          'Blend frozen acai with banana and almond milk',
+          'Pour into bowl and top with granola',
+          'Add fresh berries, banana slices, and coconut',
+          'Drizzle with honey or agave',
+          'Sprinkle with chia seeds and nuts'
+        ],
+        ingredients: [
+          { name: 'Frozen acai', amount: 100, unit: 'g' },
+          { name: 'Banana', amount: 1, unit: 'medium' },
+          { name: 'Almond milk', amount: 100, unit: 'ml' },
+          { name: 'Granola', amount: 30, unit: 'g' },
+          { name: 'Mixed berries', amount: 80, unit: 'g' },
+          { name: 'Coconut flakes', amount: 15, unit: 'g' },
+          { name: 'Chia seeds', amount: 1, unit: 'tbsp' },
+          { name: 'Honey', amount: 1, unit: 'tbsp' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 0,
+        calories: 360,
+        protein: 8,
+        carbohydrates: 68,
+        fats: 10,
+        fiber: 12,
+        tags: ['breakfast', 'vegetarian', 'vegan', 'high-fiber', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop'
       },
     ];
   }

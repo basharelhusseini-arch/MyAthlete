@@ -131,58 +131,110 @@ export default function MemberDashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Completed Sessions</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {completedSessions}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">Keep it up!</p>
+        {/* Main Feature Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Book a Class */}
+          <Link
+            href="/member/classes"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-blue-500/20 rounded-xl">
+                  <Calendar className="w-8 h-8 text-blue-400" />
+                </div>
+                <div className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <BookOpen className="w-5 h-5" />
+                </div>
               </div>
-              <CheckCircle className="w-8 h-8 text-green-500" />
+              <h2 className="text-2xl font-bold text-white mb-2">Book a Class</h2>
+              <p className="text-gray-400 mb-4">
+                Browse and enroll in fitness classes. You have {upcomingClasses.length} upcoming {upcomingClasses.length === 1 ? 'class' : 'classes'}.
+              </p>
+              <div className="flex items-center text-blue-400 font-medium">
+                Browse Classes
+                <BookOpen className="w-4 h-4 ml-2" />
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">My Membership</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {membership ? membership.name : 'None'}
-                </p>
+          {/* Diet / Nutrition */}
+          <Link
+            href="/member/nutrition"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-green-500/20 rounded-xl">
+                  <UtensilsCrossed className="w-8 h-8 text-green-400" />
+                </div>
+                <div className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <UtensilsCrossed className="w-5 h-5" />
+                </div>
               </div>
-              <CreditCard className="w-8 h-8 text-blue-500" />
+              <h2 className="text-2xl font-bold text-white mb-2">Diet & Nutrition</h2>
+              <p className="text-gray-400 mb-4">
+                Get personalized nutrition plans and meal recommendations tailored to your fitness goals.
+              </p>
+              <div className="flex items-center text-green-400 font-medium">
+                View Nutrition Plans
+                <UtensilsCrossed className="w-4 h-4 ml-2" />
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Upcoming Classes</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {upcomingClasses.length}
-                </p>
+          {/* Workout */}
+          <Link
+            href="/member/workouts"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-orange-500/20 rounded-xl">
+                  <Dumbbell className="w-8 h-8 text-orange-400" />
+                </div>
+                <div className="text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Dumbbell className="w-5 h-5" />
+                </div>
               </div>
-              <Calendar className="w-8 h-8 text-orange-500" />
+              <h2 className="text-2xl font-bold text-white mb-2">Workouts</h2>
+              <p className="text-gray-400 mb-4">
+                Track your workouts, view progress, and access personalized workout plans designed for you.
+              </p>
+              <div className="flex items-center text-orange-400 font-medium">
+                View Workouts
+                <Dumbbell className="w-4 h-4 ml-2" />
+              </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Account Status</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1 capitalize">
-                  {member.status}
-                </p>
+          {/* Habit Tracking */}
+          <Link
+            href="/member/habits"
+            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+          >
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-4 bg-purple-500/20 rounded-xl">
+                  <Target className="w-8 h-8 text-purple-400" />
+                </div>
+                <div className="text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Target className="w-5 h-5" />
+                </div>
               </div>
-              <User className="w-8 h-8 text-purple-500" />
+              <h2 className="text-2xl font-bold text-white mb-2">Habit Tracking</h2>
+              <p className="text-gray-400 mb-4">
+                Build and track healthy habits. Monitor your progress and maintain consistency with your goals.
+              </p>
+              <div className="flex items-center text-purple-400 font-medium">
+                Manage Habits
+                <Target className="w-4 h-4 ml-2" />
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
 
+        {/* Stats and Additional Info */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Upcoming Classes */}
           <div className="lg:col-span-2">
@@ -252,7 +304,8 @@ export default function MemberDashboardPage() {
                               )}
                               {canCheckIn && (
                                 <button
-                                  onClick={async () => {
+                                  onClick={async (e) => {
+                                    e.preventDefault();
                                     try {
                                       const res = await fetch(`/api/classes/${classItem.id}/checkin`, {
                                         method: 'POST',
@@ -285,8 +338,46 @@ export default function MemberDashboardPage() {
             </div>
           </div>
 
-          {/* Membership Info & Quick Links */}
+          {/* Membership Info & Quick Stats */}
           <div className="space-y-6">
+            {/* Quick Stats */}
+            <div className="dark-card">
+              <div className="px-6 py-4 border-b border-gray-800/50">
+                <h2 className="text-lg font-semibold text-white">Quick Stats</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    <div>
+                      <p className="text-sm text-gray-400">Completed Sessions</p>
+                      <p className="text-xl font-bold text-white">{completedSessions}</p>
+                    </div>
+                  </div>
+                </div>
+                {membership && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <CreditCard className="w-5 h-5 text-blue-400 mr-3" />
+                      <div>
+                        <p className="text-sm text-gray-400">Membership</p>
+                        <p className="text-xl font-bold text-white">{membership.name}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <User className="w-5 h-5 text-purple-400 mr-3" />
+                    <div>
+                      <p className="text-sm text-gray-400">Status</p>
+                      <p className="text-xl font-bold text-white capitalize">{member.status}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Membership Card */}
             {membership && (
               <div className="dark-card">
@@ -315,71 +406,6 @@ export default function MemberDashboardPage() {
                 </div>
               </div>
             )}
-
-            {/* Quick Links */}
-            <div className="dark-card">
-              <div className="px-6 py-4 border-b border-gray-800/50">
-                <h2 className="text-lg font-semibold text-white">Quick Links</h2>
-              </div>
-              <div className="p-6 space-y-3">
-                <Link
-                  href="/member/classes"
-                  className="block w-full text-left px-4 py-3 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-all duration-200 border border-blue-500/30"
-                >
-                  <BookOpen className="w-5 h-5 inline mr-2" />
-                  Browse & Book Classes
-                </Link>
-                <Link
-                  href="/member/profile"
-                  className="block w-full text-left px-4 py-3 bg-gray-800/50 text-gray-300 rounded-lg hover:bg-gray-800/70 transition-all duration-200 border border-gray-800/50"
-                >
-                  <User className="w-5 h-5 inline mr-2" />
-                  My Profile
-                </Link>
-                <Link
-                  href="/member/payments"
-                  className="block w-full text-left px-4 py-3 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-all duration-200 border border-green-500/30"
-                >
-                  <DollarSign className="w-5 h-5 inline mr-2" />
-                  Payments
-                </Link>
-                <Link
-                  href="/member/notifications"
-                  className="block w-full text-left px-4 py-3 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-all duration-200 border border-purple-500/30"
-                >
-                  <Bell className="w-5 h-5 inline mr-2" />
-                  Notifications
-                </Link>
-                <Link
-                  href="/member/workouts"
-                  className="block w-full text-left px-4 py-3 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-all duration-200 border border-orange-500/30"
-                >
-                  <Dumbbell className="w-5 h-5 inline mr-2" />
-                  My Workouts
-                </Link>
-                <Link
-                  href="/member/nutrition"
-                  className="block w-full text-left px-4 py-3 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-all duration-200 border border-green-500/30"
-                >
-                  <UtensilsCrossed className="w-5 h-5 inline mr-2" />
-                  My Nutrition
-                </Link>
-                <Link
-                  href="/member/habits"
-                  className="block w-full text-left px-4 py-3 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-all duration-200 border border-purple-500/30"
-                >
-                  <Target className="w-5 h-5 inline mr-2" />
-                  Habit Tracking
-                </Link>
-                <Link
-                  href="/member/whoop"
-                  className="block w-full text-left px-4 py-3 bg-indigo-500/20 text-indigo-400 rounded-lg hover:bg-indigo-500/30 transition-all duration-200 border border-indigo-500/30"
-                >
-                  <Activity className="w-5 h-5 inline mr-2" />
-                  Whoop Integration
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </main>
