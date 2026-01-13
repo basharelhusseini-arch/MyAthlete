@@ -2892,8 +2892,8 @@ class DataStore {
             return d.sleep.sleepScore;
           }
           // Calculate from sleep efficiency and duration
-          const efficiency = d.sleep.sleepEfficiency || 85;
-          const totalSleep = d.sleep.totalSleep || 0;
+          const efficiency = d.sleep?.sleepEfficiency ?? 85;
+          const totalSleep = d.sleep?.totalSleep ?? 0;
           const targetSleep = 8 * 60; // 8 hours in minutes
           const durationScore = Math.min(100, (totalSleep / targetSleep) * 100);
           return (efficiency * 0.6) + (durationScore * 0.4);
