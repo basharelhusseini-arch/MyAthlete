@@ -2779,6 +2779,170 @@ class DataStore {
     this.whoopData.push(newData);
     return newData;
   }
+
+  // Health Score Calculation Methods
+  calculateHealthScore(memberId: string): {
+    total: number;
+    workoutScore: number;
+    dietScore: number;
+    habitScore: number;
+    sleepScore: number;
+    workoutCount: number;
+    workoutIntensity: number;
+    dietQuality: number;
+    habitCompletion: number;
+    sleepQuality: number;
+  } {
+    // Get member workouts from last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const memberWorkouts = this.workouts.filter(w => 
+      w.memberId === memberId && 
+      new Date(w.date) >= thirtyDaysAgo &&
+      w.status === 'completed'
+    );
+
+    // Calculate workout score (0-25 points)
+    const workoutCount = memberWorkouts.length;
+    const targetWorkouts = 12; // 3 per week * 4 weeks
+    const workoutFrequencyScore = Math.min(25, (workoutCount / targetWorkouts) * 25);
+    
+    // Calculate workout intensity (average duration and exercise count)
+    let totalIntensity = 0;
+    let avgIntensity = 0;
+    if (memberWorkouts.length > 0) {
+      const intensities = memberWorkouts.map(w => {
+        const exerciseCount = w.exercises.length;
+        const duration = w.duration || 30; // default 30 min
+        return (exerciseCount * 10) + (duration / 60 * 20); // max 100 per workout
+      });
+      totalIntensity = intensities.reduce((sum, i) => sum + i, 0);
+      avgIntensity = totalIntensity / memberWorkouts.length;
+    }
+    const workoutIntensityScore = Math.min(25, (avgIntensity / 100) * 25);
+    const workoutScore = workoutFrequencyScore + workoutIntensityScore;
+    const workoutIntensity = avgIntensity;
+
+    // Calculate diet score (0-25 points)
+    const nutritionPlans = this.getMemberNutritionPlans(memberId);
+    const activePlan = nutritionPlans.find(p => p.status === 'active');
+    let dietScore = 0;
+    let dietQuality = 0;
+    
+    if (activePlan) {
+      const dailyPlans = this.getDailyMealPlans(activePlan.id);
+      const recentPlans = dailyPlans.filter(dp => 
+        new Date(dp.date) >= thirtyDaysAgo
+      );
+      
+      if (recentPlans.length > 0) {
+        // Calculate adherence to macro targets
+        const adherenceScores = recentPlans.map(dp => {
+          const proteinDiff = Math.abs(dp.totalProtein - activePlan.macroTargets.protein) / activePlan.macroTargets.protein;
+          const carbDiff = Math.abs(dp.totalCarbohydrates - activePlan.macroTargets.carbohydrates) / activePlan.macroTargets.carbohydrates;
+          const fatDiff = Math.abs(dp.totalFats - activePlan.macroTargets.fats) / activePlan.macroTargets.fats;
+          const avgDiff = (proteinDiff + carbDiff + fatDiff) / 3;
+          return Math.max(0, 100 - (avgDiff * 100));
+        });
+        dietQuality = adherenceScores.reduce((sum, s) => sum + s, 0) / adherenceScores.length;
+        dietScore = (dietQuality / 100) * 25;
+      }
+    } else {
+      // No active plan, give baseline score
+      dietScore = 5;
+      dietQuality = 20;
+    }
+
+    // Calculate habit score (0-25 points)
+    const memberHabits = this.getMemberHabits(memberId);
+    let habitScore = 0;
+    let habitCompletion = 0;
+    
+    if (memberHabits.length > 0) {
+      const habitEntries = this.getMemberHabitEntries(memberId);
+      const recentEntries = habitEntries.filter(e => 
+        new Date(e.date) >= thirtyDaysAgo
+      );
+      
+      // Calculate completion rate
+      const totalPossibleEntries = memberHabits.length * 30; // 30 days
+      const completedEntries = recentEntries.filter(e => e.completed).length;
+      habitCompletion = totalPossibleEntries > 0 
+        ? (completedEntries / totalPossibleEntries) * 100 
+        : 0;
+      habitScore = (habitCompletion / 100) * 25;
+    } else {
+      habitScore = 5;
+      habitCompletion = 20;
+    }
+
+    // Calculate sleep score (0-25 points) from Whoop data
+    const whoopConnection = this.getWhoopConnection(memberId);
+    let sleepScore = 0;
+    let sleepQuality = 0;
+    
+    if (whoopConnection && whoopConnection.connected) {
+      const whoopData = this.getWhoopData(memberId, thirtyDaysAgo.toISOString().split('T')[0]);
+      const recentSleepData = whoopData.filter(d => d.sleep);
+      
+      if (recentSleepData.length > 0) {
+        const sleepScores = recentSleepData.map(d => {
+          if (d.sleep?.sleepScore) {
+            return d.sleep.sleepScore;
+          }
+          // Calculate from sleep efficiency and duration
+          const efficiency = d.sleep.sleepEfficiency || 85;
+          const totalSleep = d.sleep.totalSleep || 0;
+          const targetSleep = 8 * 60; // 8 hours in minutes
+          const durationScore = Math.min(100, (totalSleep / targetSleep) * 100);
+          return (efficiency * 0.6) + (durationScore * 0.4);
+        });
+        sleepQuality = sleepScores.reduce((sum, s) => sum + s, 0) / sleepScores.length;
+        sleepScore = (sleepQuality / 100) * 25;
+      } else {
+        sleepScore = 5;
+        sleepQuality = 20;
+      }
+    } else {
+      // No Whoop connection, give baseline score
+      sleepScore = 5;
+      sleepQuality = 20;
+    }
+
+    // Total score (0-100)
+    const total = Math.round(workoutScore + dietScore + habitScore + sleepScore);
+
+    return {
+      total,
+      workoutScore,
+      dietScore,
+      habitScore,
+      sleepScore,
+      workoutCount,
+      workoutIntensity,
+      dietQuality,
+      habitCompletion,
+      sleepQuality,
+    };
+  }
+
+  getFriendsHealthScores(memberId: string): Array<{ id: string; name: string; score: number }> {
+    // Get all active members (as "friends" for comparison)
+    const allMembers = this.getAllMembers().filter(m => m.status === 'active');
+    
+    const friendsScores = allMembers.map(member => {
+      const healthScore = this.calculateHealthScore(member.id);
+      return {
+        id: member.id,
+        name: `${member.firstName} ${member.lastName}`,
+        score: healthScore.total,
+      };
+    });
+
+    // Sort by score descending
+    return friendsScores.sort((a, b) => b.score - a.score);
+  }
 }
 
 // Export password utilities

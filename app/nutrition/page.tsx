@@ -39,8 +39,8 @@ export default function NutritionPlansPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Nutrition Plans</h1>
-          <p className="mt-2 text-gray-400">Manage and view all nutrition plans</p>
+          <h1 className="text-3xl font-bold text-white">Diet Tracker</h1>
+          <p className="mt-2 text-gray-400">Track your nutrition and generate AI-powered meal plans</p>
         </div>
         <div className="flex gap-3">
           <Link

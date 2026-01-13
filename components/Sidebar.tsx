@@ -4,27 +4,27 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
-  Users, 
-  CreditCard, 
+  Activity,
   Calendar, 
   UserCog,
   Menu,
   LogIn,
   Dumbbell,
   UtensilsCrossed,
-  Sparkles
+  Target,
+  Heart
 } from 'lucide-react';
 import { useState } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Members', href: '/members', icon: Users },
-  { name: 'Memberships', href: '/memberships', icon: CreditCard },
+  { name: 'Health Statistics', href: '/health', icon: Activity },
   { name: 'Classes', href: '/classes', icon: Calendar },
   { name: 'Trainers', href: '/trainers', icon: UserCog },
   { name: 'Workouts', href: '/workouts', icon: Dumbbell },
   { name: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
-  { name: 'AI Diet Builder', href: '/nutrition/builder', icon: Sparkles },
+  { name: 'Diet Tracker', href: '/nutrition', icon: Heart },
+  { name: 'Habit Tracker', href: '/habits', icon: Target },
 ];
 
 export default function Sidebar() {
