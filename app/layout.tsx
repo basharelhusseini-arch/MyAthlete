@@ -4,7 +4,7 @@ import "./globals.css";
 import MainLayout from '@/components/MainLayout';
 
 export const metadata: Metadata = {
-  title: "MyAthlete - All-in-One Fitness Platform",
+  title: "Thriv - All-in-One Fitness Platform",
   description: "Uniting client management, AI-powered workouts, and AI-driven nutrition planning in one comprehensive platform",
 };
 

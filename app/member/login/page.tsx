@@ -45,7 +45,7 @@ export default function MemberLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-950">
       <div className="max-w-md w-full glass-effect rounded-xl shadow-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">MyAthlete</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">Thriv</h1>
           <p className="text-gray-400">Member Portal</p>
         </div>
 

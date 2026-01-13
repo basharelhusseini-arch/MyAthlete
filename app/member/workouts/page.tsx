@@ -61,7 +61,7 @@ export default function MemberWorkoutsPage() {
           <div className="flex items-center justify-between">
             <div>
               <Link href="/member/dashboard" className="text-2xl font-bold text-gray-900 hover:text-blue-600">
-                MyAthlete
+                Thriv
               </Link>
               <p className="text-sm text-gray-600">My Workout Plans</p>
             </div>

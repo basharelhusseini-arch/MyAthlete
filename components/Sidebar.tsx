@@ -57,7 +57,7 @@ export default function Sidebar() {
           {/* Logo */}
           <div className="flex items-center justify-center h-16 px-4 border-b border-yellow-500/30">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              MyAthlete
+              Thriv
             </h1>
           </div>
 

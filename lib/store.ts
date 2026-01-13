@@ -3396,22 +3396,76 @@ class DataStore {
     const proteinGrams = params.goal === 'muscle_gain' 
       ? Math.round(params.weight * 2.2) 
       : Math.round(params.weight * 1.6);
-    const proteinCalories = proteinGrams * 4;
-
+    
     // Fats: 25-30% of calories
     const fatPercentage = 0.275; // 27.5%
     const fatCalories = Math.round(targetCalories * fatPercentage);
     const fatGrams = Math.round(fatCalories / 9);
 
     // Carbohydrates: remaining calories
-    const carbCalories = Math.round(targetCalories - proteinCalories - fatCalories);
+    const proteinCalories = proteinGrams * 4;
+    const actualFatCalories = fatGrams * 9;
+    const carbCalories = Math.round(targetCalories - proteinCalories - actualFatCalories);
     const carbGrams = Math.round(carbCalories / 4);
 
+    // Verify and normalize to ensure exact calorie match
+    const calculatedCalories = (proteinGrams * 4) + (carbGrams * 4) + (fatGrams * 9);
+    const caloriesDiff = Math.round(targetCalories) - calculatedCalories;
+    
+    // Adjust carbs to match target calories exactly (carbs are most flexible macro)
+    const adjustedCarbGrams = carbGrams + Math.round(caloriesDiff / 4);
+    const finalCalories = (proteinGrams * 4) + (adjustedCarbGrams * 4) + (fatGrams * 9);
+
     return {
-      calories: Math.round(targetCalories),
+      calories: finalCalories,
       protein: proteinGrams,
-      carbohydrates: carbGrams,
+      carbohydrates: adjustedCarbGrams,
       fats: fatGrams,
+    };
+  }
+
+  // Helper function to normalize macros to match target calories
+  private normalizeMacros(
+    currentProtein: number,
+    currentCarbs: number,
+    currentFats: number,
+    targetCalories: number
+  ): { protein: number; carbs: number; fats: number; calories: number } {
+    const currentCalories = (currentProtein * 4) + (currentCarbs * 4) + (currentFats * 9);
+    
+    if (Math.abs(currentCalories - targetCalories) < 5) {
+      // Close enough, return as is
+      return {
+        protein: Math.round(currentProtein),
+        carbs: Math.round(currentCarbs),
+        fats: Math.round(currentFats),
+        calories: (Math.round(currentProtein) * 4) + (Math.round(currentCarbs) * 4) + (Math.round(currentFats) * 9)
+      };
+    }
+
+    // Scale proportionally to match target
+    const scale = targetCalories / currentCalories;
+    const scaledProtein = currentProtein * scale;
+    const scaledCarbs = currentCarbs * scale;
+    const scaledFats = currentFats * scale;
+
+    // Round and verify
+    let protein = Math.round(scaledProtein);
+    let carbs = Math.round(scaledCarbs);
+    let fats = Math.round(scaledFats);
+    
+    // Final adjustment to match exactly
+    const calculatedCals = (protein * 4) + (carbs * 4) + (fats * 9);
+    const diff = targetCalories - calculatedCals;
+    
+    // Adjust carbs (most flexible) to match exactly
+    carbs += Math.round(diff / 4);
+    
+    return {
+      protein,
+      carbs,
+      fats,
+      calories: (protein * 4) + (carbs * 4) + (fats * 9)
     };
   }
 
@@ -3553,15 +3607,23 @@ class DataStore {
         totalFats += snack.fats;
       }
 
+      // Normalize macros to match target calories
+      const normalized = this.normalizeMacros(
+        totalProtein,
+        totalCarbs,
+        totalFats,
+        macroTargets.calories
+      );
+
       this.addDailyMealPlan({
         nutritionPlanId: plan.id,
         memberId: params.memberId,
         date: mealPlanDate.toISOString().split('T')[0],
         meals: meals,
-        totalCalories,
-        totalProtein,
-        totalCarbohydrates: totalCarbs,
-        totalFats,
+        totalCalories: normalized.calories,
+        totalProtein: normalized.protein,
+        totalCarbohydrates: normalized.carbs,
+        totalFats: normalized.fats,
         status: 'planned',
       });
     }

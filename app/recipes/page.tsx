@@ -64,21 +64,21 @@ export default function RecipesPage() {
       {/* Search and Filter */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-500/50 w-5 h-5" />
           <input
             type="text"
             placeholder="Search recipes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-black border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-500/50 w-5 h-5" />
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="pl-10 pr-8 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none"
+            className="pl-10 pr-8 py-2 bg-black border border-yellow-500/30 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all appearance-none"
           >
             <option value="">All Tags</option>
             {allTags.map(tag => (
@@ -91,9 +91,9 @@ export default function RecipesPage() {
       {/* Recipes Grid */}
       {filteredRecipes.length === 0 ? (
         <div className="dark-card p-12 text-center">
-          <UtensilsCrossed className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+          <UtensilsCrossed className="w-16 h-16 text-yellow-500/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">No recipes found</h3>
-          <p className="text-gray-400 mb-6">
+          <p className="text-gray-300 mb-6">
             {searchTerm || selectedTag ? 'Try adjusting your search or filters' : 'Get started by adding your first recipe'}
           </p>
           {!searchTerm && !selectedTag && (
@@ -116,18 +116,26 @@ export default function RecipesPage() {
             >
               {/* Recipe Image */}
               {recipe.imageUrl ? (
-                <div className="relative w-full h-48 bg-gray-800">
+                <div className="relative w-full h-48 bg-black">
                   <Image
                     src={recipe.imageUrl}
                     alt={recipe.name}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    onError={(e) => {
+                      // Fallback to placeholder if image fails to load
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-gray-900"><svg class="w-12 h-12 text-yellow-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>';
+                      }
+                    }}
                   />
                 </div>
               ) : (
-                <div className="w-full h-48 bg-gray-800/50 flex items-center justify-center">
-                  <UtensilsCrossed className="w-12 h-12 text-gray-600" />
+                <div className="w-full h-48 bg-gray-900 flex items-center justify-center">
+                  <UtensilsCrossed className="w-12 h-12 text-yellow-500/30" />
                 </div>
               )}
 
