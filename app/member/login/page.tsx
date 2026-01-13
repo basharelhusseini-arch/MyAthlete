@@ -26,9 +26,10 @@ export default function MemberLoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Store member ID in localStorage for session
+        // Store member ID and info in localStorage for session
         localStorage.setItem('memberId', data.memberId);
         localStorage.setItem('memberName', `${data.firstName} ${data.lastName}`);
+        localStorage.setItem('memberEmail', data.email || email);
         localStorage.setItem('completedSessions', data.completedSessions?.toString() || '0');
         router.push('/member/dashboard');
       } else {
@@ -45,7 +46,7 @@ export default function MemberLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-950">
       <div className="max-w-md w-full glass-effect rounded-xl shadow-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">Thriv</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">Thrivv</h1>
           <p className="text-gray-400">Member Portal</p>
         </div>
 
