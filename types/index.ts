@@ -85,13 +85,23 @@ export interface Exercise {
   id: string;
   name: string;
   description: string;
-  category: 'strength' | 'cardio' | 'flexibility' | 'balance' | 'plyometric' | 'endurance';
+  category: 'strength' | 'cardio' | 'flexibility' | 'balance' | 'plyometric' | 'endurance' | 'hybrid';
   muscleGroups: string[]; // e.g., ['chest', 'triceps', 'shoulders']
-  equipment: 'bodyweight' | 'dumbbells' | 'barbell' | 'machine' | 'cable' | 'kettlebell' | 'resistance_bands' | 'other';
+  equipment: 'bodyweight' | 'dumbbells' | 'barbell' | 'machine' | 'cable' | 'kettlebell' | 'resistance_bands' | 'cardio_machine' | 'other';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   instructions: string[];
   videoUrl?: string;
   imageUrl?: string;
+  // Cardio-specific fields
+  mets?: number; // Metabolic Equivalent of Task (e.g., running at 6mph = 9.8 METs)
+  caloriesPerMinute?: number; // Average calories burned per minute (at average intensity)
+  supportsDistance?: boolean; // Can track distance (running, cycling, rowing)
+  supportsTime?: boolean; // Can track time (all cardio)
+  intensityLevels?: {
+    low: { mets: number; caloriesPerMinute: number; description: string };
+    moderate: { mets: number; caloriesPerMinute: number; description: string };
+    high: { mets: number; caloriesPerMinute: number; description: string };
+  };
 }
 
 export interface WorkoutExercise {
@@ -103,6 +113,11 @@ export interface WorkoutExercise {
   restSeconds: number;
   notes?: string;
   order: number;
+  // Cardio-specific fields
+  distance?: number; // in miles or km for cardio exercises
+  distanceUnit?: 'miles' | 'km';
+  caloriesBurned?: number; // calculated or tracked calories
+  intensity?: 'low' | 'moderate' | 'high'; // cardio intensity level
 }
 
 export interface WorkoutPlan {
