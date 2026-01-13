@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Clock, Users, Flame, ChefHat, UtensilsCrossed, Image as ImageIcon } from 'lucide-react';
 import { Recipe } from '@/types';
 
@@ -74,15 +75,13 @@ export default function RecipeDetailPage() {
           <div className="dark-card overflow-hidden">
             {recipe.imageUrl ? (
               <div className="relative w-full h-80 lg:h-96">
-                <img
+                <Image
                   src={recipe.imageUrl}
                   alt={recipe.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
             ) : (

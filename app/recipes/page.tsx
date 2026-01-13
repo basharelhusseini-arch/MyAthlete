@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Plus, Search, Filter, UtensilsCrossed, Clock, Users, Flame } from 'lucide-react';
 import { Recipe } from '@/types';
 
@@ -116,14 +117,12 @@ export default function RecipesPage() {
               {/* Recipe Image */}
               {recipe.imageUrl ? (
                 <div className="relative w-full h-48 bg-gray-800">
-                  <img
+                  <Image
                     src={recipe.imageUrl}
                     alt={recipe.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
               ) : (
