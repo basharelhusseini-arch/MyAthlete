@@ -1777,6 +1777,320 @@ class DataStore {
         tags: ['breakfast', 'vegetarian', 'vegan', 'high-fiber', 'quick'],
         imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop'
       },
+      {
+        id: 'r46',
+        name: 'Grilled Ribeye Steak',
+        description: 'Juicy ribeye steak with herb butter',
+        instructions: [
+          'Remove steak from fridge 30 minutes before cooking',
+          'Season generously with salt and pepper',
+          'Heat grill or cast iron pan to high heat',
+          'Sear steak 4-5 minutes per side for medium-rare',
+          'Let rest 5 minutes, top with herb butter'
+        ],
+        ingredients: [
+          { name: 'Ribeye steak', amount: 250, unit: 'g' },
+          { name: 'Salt', amount: 1, unit: 'tsp' },
+          { name: 'Black pepper', amount: 0.5, unit: 'tsp' },
+          { name: 'Butter', amount: 20, unit: 'g' },
+          { name: 'Fresh herbs', amount: 10, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 5,
+        cookTime: 12,
+        calories: 580,
+        protein: 52,
+        carbohydrates: 1,
+        fats: 40,
+        fiber: 0,
+        tags: ['high-protein', 'low-carb', 'keto', 'gluten-free', 'dinner'],
+        imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r47',
+        name: 'Classic Beef Burger',
+        description: 'Homemade beef burger with lean ground beef',
+        instructions: [
+          'Form ground beef into patties, season with salt and pepper',
+          'Grill or pan-fry patties 4-5 minutes per side',
+          'Toast burger buns on the grill',
+          'Assemble with lettuce, tomato, onion, and pickles',
+          'Add your favorite condiments'
+        ],
+        ingredients: [
+          { name: 'Ground beef (90% lean)', amount: 150, unit: 'g' },
+          { name: 'Whole wheat bun', amount: 1, unit: 'piece' },
+          { name: 'Lettuce', amount: 30, unit: 'g' },
+          { name: 'Tomato', amount: 50, unit: 'g' },
+          { name: 'Onion', amount: 30, unit: 'g' },
+          { name: 'Pickles', amount: 20, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 10,
+        calories: 450,
+        protein: 38,
+        carbohydrates: 32,
+        fats: 18,
+        fiber: 5,
+        tags: ['high-protein', 'lunch', 'dinner'],
+        imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r48',
+        name: 'Beef Tacos',
+        description: 'Seasoned ground beef tacos with fresh toppings',
+        instructions: [
+          'Brown ground beef in a pan over medium heat',
+          'Add taco seasoning and water, simmer 5 minutes',
+          'Warm taco shells according to package',
+          'Fill shells with beef, lettuce, tomatoes, cheese',
+          'Top with salsa and sour cream'
+        ],
+        ingredients: [
+          { name: 'Ground beef (90% lean)', amount: 120, unit: 'g' },
+          { name: 'Taco shells', amount: 3, unit: 'pieces' },
+          { name: 'Taco seasoning', amount: 1, unit: 'tbsp' },
+          { name: 'Shredded lettuce', amount: 40, unit: 'g' },
+          { name: 'Diced tomatoes', amount: 50, unit: 'g' },
+          { name: 'Cheddar cheese', amount: 30, unit: 'g' },
+          { name: 'Salsa', amount: 30, unit: 'g' },
+          { name: 'Sour cream', amount: 20, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 12,
+        calories: 520,
+        protein: 35,
+        carbohydrates: 38,
+        fats: 24,
+        fiber: 5,
+        tags: ['high-protein', 'dinner', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r49',
+        name: 'Spaghetti Bolognese',
+        description: 'Classic Italian pasta with rich beef sauce',
+        instructions: [
+          'Brown ground beef with diced onions and garlic',
+          'Add crushed tomatoes, tomato paste, Italian herbs',
+          'Simmer sauce for 20 minutes, stirring occasionally',
+          'Cook spaghetti according to package directions',
+          'Serve sauce over pasta, garnish with parmesan'
+        ],
+        ingredients: [
+          { name: 'Ground beef (85% lean)', amount: 150, unit: 'g' },
+          { name: 'Whole wheat spaghetti', amount: 100, unit: 'g' },
+          { name: 'Crushed tomatoes', amount: 200, unit: 'g' },
+          { name: 'Onion', amount: 50, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Tomato paste', amount: 2, unit: 'tbsp' },
+          { name: 'Italian herbs', amount: 1, unit: 'tsp' },
+          { name: 'Parmesan cheese', amount: 15, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 25,
+        calories: 580,
+        protein: 42,
+        carbohydrates: 62,
+        fats: 18,
+        fiber: 8,
+        tags: ['high-protein', 'dinner', 'comfort-food'],
+        imageUrl: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r50',
+        name: 'Beef Stir-Fry',
+        description: 'Quick Asian-style beef with vegetables',
+        instructions: [
+          'Slice beef thinly against the grain',
+          'Marinate beef in soy sauce and ginger for 10 minutes',
+          'Stir-fry beef in hot wok until browned, remove',
+          'Stir-fry vegetables until tender-crisp',
+          'Add beef back, toss with sauce, serve over rice'
+        ],
+        ingredients: [
+          { name: 'Sirloin steak', amount: 180, unit: 'g' },
+          { name: 'Mixed vegetables', amount: 200, unit: 'g' },
+          { name: 'Soy sauce', amount: 2, unit: 'tbsp' },
+          { name: 'Ginger', amount: 1, unit: 'tsp' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' },
+          { name: 'Sesame oil', amount: 1, unit: 'tbsp' },
+          { name: 'White rice', amount: 150, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 10,
+        calories: 520,
+        protein: 45,
+        carbohydrates: 48,
+        fats: 14,
+        fiber: 4,
+        tags: ['high-protein', 'dinner', 'quick', 'asian'],
+        imageUrl: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r51',
+        name: 'Italian Beef Meatballs',
+        description: 'Tender beef meatballs in marinara sauce',
+        instructions: [
+          'Mix ground beef with breadcrumbs, egg, parmesan, herbs',
+          'Form into 8-10 meatballs',
+          'Brown meatballs in oven at 400°F for 15 minutes',
+          'Simmer in marinara sauce for 10 minutes',
+          'Serve with pasta or as a sub sandwich'
+        ],
+        ingredients: [
+          { name: 'Ground beef (85% lean)', amount: 180, unit: 'g' },
+          { name: 'Breadcrumbs', amount: 30, unit: 'g' },
+          { name: 'Egg', amount: 1, unit: 'piece' },
+          { name: 'Parmesan cheese', amount: 20, unit: 'g' },
+          { name: 'Italian herbs', amount: 1, unit: 'tsp' },
+          { name: 'Marinara sauce', amount: 150, unit: 'g' },
+          { name: 'Garlic', amount: 2, unit: 'cloves' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 25,
+        calories: 480,
+        protein: 45,
+        carbohydrates: 22,
+        fats: 24,
+        fiber: 3,
+        tags: ['high-protein', 'dinner', 'italian', 'comfort-food'],
+        imageUrl: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r52',
+        name: 'Beef Chili',
+        description: 'Hearty beef chili with beans and spices',
+        instructions: [
+          'Brown ground beef with onions and garlic',
+          'Add diced tomatoes, kidney beans, and spices',
+          'Simmer for 30 minutes, stirring occasionally',
+          'Adjust seasoning with salt and chili powder',
+          'Top with cheese, sour cream, and green onions'
+        ],
+        ingredients: [
+          { name: 'Ground beef (85% lean)', amount: 150, unit: 'g' },
+          { name: 'Kidney beans', amount: 100, unit: 'g' },
+          { name: 'Diced tomatoes', amount: 200, unit: 'g' },
+          { name: 'Onion', amount: 60, unit: 'g' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Chili powder', amount: 2, unit: 'tbsp' },
+          { name: 'Cumin', amount: 1, unit: 'tsp' },
+          { name: 'Cheddar cheese', amount: 30, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 35,
+        calories: 520,
+        protein: 44,
+        carbohydrates: 38,
+        fats: 22,
+        fiber: 12,
+        tags: ['high-protein', 'high-fiber', 'dinner', 'comfort-food'],
+        imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r53',
+        name: 'Korean Beef Bowl',
+        description: 'Sweet and savory Korean-style beef with rice',
+        instructions: [
+          'Cook ground beef until browned, drain excess fat',
+          'Mix soy sauce, brown sugar, sesame oil, ginger, garlic',
+          'Add sauce to beef, simmer until thickened',
+          'Serve over white rice with sesame seeds',
+          'Garnish with green onions and sriracha'
+        ],
+        ingredients: [
+          { name: 'Ground beef (90% lean)', amount: 160, unit: 'g' },
+          { name: 'White rice', amount: 150, unit: 'g' },
+          { name: 'Soy sauce', amount: 3, unit: 'tbsp' },
+          { name: 'Brown sugar', amount: 2, unit: 'tbsp' },
+          { name: 'Sesame oil', amount: 1, unit: 'tbsp' },
+          { name: 'Ginger', amount: 1, unit: 'tsp' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Green onions', amount: 20, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 10,
+        cookTime: 15,
+        calories: 560,
+        protein: 42,
+        carbohydrates: 58,
+        fats: 16,
+        fiber: 2,
+        tags: ['high-protein', 'dinner', 'asian', 'quick'],
+        imageUrl: 'https://images.unsplash.com/photo-1598511726623-d2e9996892f0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r54',
+        name: 'Beef and Broccoli',
+        description: 'Classic Chinese takeout made healthier at home',
+        instructions: [
+          'Slice beef thinly, marinate in soy sauce and cornstarch',
+          'Blanch broccoli florets until bright green',
+          'Stir-fry beef in hot wok until seared, remove',
+          'Make sauce with soy sauce, oyster sauce, garlic',
+          'Combine beef, broccoli, and sauce, serve over rice'
+        ],
+        ingredients: [
+          { name: 'Flank steak', amount: 200, unit: 'g' },
+          { name: 'Broccoli', amount: 200, unit: 'g' },
+          { name: 'Soy sauce', amount: 3, unit: 'tbsp' },
+          { name: 'Oyster sauce', amount: 2, unit: 'tbsp' },
+          { name: 'Garlic', amount: 3, unit: 'cloves' },
+          { name: 'Cornstarch', amount: 1, unit: 'tbsp' },
+          { name: 'Vegetable oil', amount: 2, unit: 'tbsp' },
+          { name: 'White rice', amount: 150, unit: 'g' }
+        ],
+        servings: 1,
+        prepTime: 15,
+        cookTime: 12,
+        calories: 540,
+        protein: 48,
+        carbohydrates: 52,
+        fats: 14,
+        fiber: 6,
+        tags: ['high-protein', 'dinner', 'asian'],
+        imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&h=600&fit=crop'
+      },
+      {
+        id: 'r55',
+        name: 'Beef Cottage Pie',
+        description: 'Comforting beef mince topped with mashed potatoes',
+        instructions: [
+          'Brown ground beef with onions, carrots, and peas',
+          'Add beef broth and tomato paste, simmer until thick',
+          'Transfer to baking dish',
+          'Top with creamy mashed potatoes',
+          'Bake at 375°F for 25 minutes until golden'
+        ],
+        ingredients: [
+          { name: 'Ground beef (85% lean)', amount: 180, unit: 'g' },
+          { name: 'Potatoes', amount: 250, unit: 'g' },
+          { name: 'Carrots', amount: 60, unit: 'g' },
+          { name: 'Peas', amount: 50, unit: 'g' },
+          { name: 'Onion', amount: 60, unit: 'g' },
+          { name: 'Beef broth', amount: 150, unit: 'ml' },
+          { name: 'Tomato paste', amount: 2, unit: 'tbsp' },
+          { name: 'Butter', amount: 20, unit: 'g' },
+          { name: 'Milk', amount: 50, unit: 'ml' }
+        ],
+        servings: 1,
+        prepTime: 20,
+        cookTime: 40,
+        calories: 620,
+        protein: 46,
+        carbohydrates: 58,
+        fats: 22,
+        fiber: 8,
+        tags: ['high-protein', 'dinner', 'comfort-food', 'british'],
+        imageUrl: 'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=800&h=600&fit=crop'
+      },
     ];
   }
 
