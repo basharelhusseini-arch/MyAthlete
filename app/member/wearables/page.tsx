@@ -217,7 +217,7 @@ export default function WearablesPage() {
                   {isConnected ? (
                     <div className="space-y-3">
                       <div className="text-xs text-gray-500">
-                        Last synced: {connection.lastSynced ? new Date(connection.lastSynced).toLocaleString() : 'Never'}
+                        Last synced: {connection?.lastSynced ? new Date(connection.lastSynced).toLocaleString() : 'Never'}
                       </div>
                       <button
                         onClick={() => handleConnect(wearable.id)}
