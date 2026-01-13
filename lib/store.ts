@@ -392,7 +392,7 @@ class DataStore {
       },
     ];
 
-    // Phase 3: Sample recipes
+    // Phase 3: Sample recipes (45 total recipes)
     this.recipes = [
       {
         id: 'r1',
