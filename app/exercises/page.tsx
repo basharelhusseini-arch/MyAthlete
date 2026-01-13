@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Search, Filter, Dumbbell, Target, TrendingUp } from 'lucide-react';
 import { Exercise } from '@/types';
@@ -18,26 +18,7 @@ export default function ExercisesPage() {
     fetchExercises();
   }, []);
 
-  useEffect(() => {
-    filterExercises();
-  }, [exercises, searchTerm, categoryFilter, difficultyFilter, equipmentFilter]);
-
-  const fetchExercises = async () => {
-    try {
-      const response = await fetch('/api/exercises');
-      if (response.ok) {
-        const data = await response.json();
-        setExercises(data);
-        setFilteredExercises(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch exercises:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filterExercises = () => {
+  const filterExercises = useCallback(() => {
     let filtered = [...exercises];
 
     // Search filter
@@ -65,6 +46,25 @@ export default function ExercisesPage() {
     }
 
     setFilteredExercises(filtered);
+  }, [exercises, searchTerm, categoryFilter, difficultyFilter, equipmentFilter]);
+
+  useEffect(() => {
+    filterExercises();
+  }, [filterExercises]);
+
+  const fetchExercises = async () => {
+    try {
+      const response = await fetch('/api/exercises');
+      if (response.ok) {
+        const data = await response.json();
+        setExercises(data);
+        setFilteredExercises(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch exercises:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const categories = ['all', 'strength', 'cardio', 'flexibility', 'balance', 'plyometric', 'endurance'];
