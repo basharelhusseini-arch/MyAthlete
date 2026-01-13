@@ -2803,10 +2803,10 @@ class DataStore {
       w.status === 'completed'
     );
 
-    // Calculate workout score (0-25 points)
+    // Calculate workout score (0-30 points, 30% of total)
     const workoutCount = memberWorkouts.length;
     const targetWorkouts = 12; // 3 per week * 4 weeks
-    const workoutFrequencyScore = Math.min(25, (workoutCount / targetWorkouts) * 25);
+    const workoutFrequencyScore = Math.min(15, (workoutCount / targetWorkouts) * 15);
     
     // Calculate workout intensity (average duration and exercise count)
     let totalIntensity = 0;
@@ -2820,11 +2820,11 @@ class DataStore {
       totalIntensity = intensities.reduce((sum, i) => sum + i, 0);
       avgIntensity = totalIntensity / memberWorkouts.length;
     }
-    const workoutIntensityScore = Math.min(25, (avgIntensity / 100) * 25);
+    const workoutIntensityScore = Math.min(15, (avgIntensity / 100) * 15);
     const workoutScore = workoutFrequencyScore + workoutIntensityScore;
     const workoutIntensity = avgIntensity;
 
-    // Calculate diet score (0-25 points)
+    // Calculate diet score (0-30 points, 30% of total)
     const nutritionPlans = this.getMemberNutritionPlans(memberId);
     const activePlan = nutritionPlans.find(p => p.status === 'active');
     let dietScore = 0;
@@ -2846,15 +2846,15 @@ class DataStore {
           return Math.max(0, 100 - (avgDiff * 100));
         });
         dietQuality = adherenceScores.reduce((sum, s) => sum + s, 0) / adherenceScores.length;
-        dietScore = (dietQuality / 100) * 25;
+        dietScore = (dietQuality / 100) * 30;
       }
     } else {
       // No active plan, give baseline score
-      dietScore = 5;
+      dietScore = 6;
       dietQuality = 20;
     }
 
-    // Calculate habit score (0-25 points)
+    // Calculate habit score (0-15 points, 15% of total)
     const memberHabits = this.getMemberHabits(memberId);
     let habitScore = 0;
     let habitCompletion = 0;
@@ -2871,13 +2871,13 @@ class DataStore {
       habitCompletion = totalPossibleEntries > 0 
         ? (completedEntries / totalPossibleEntries) * 100 
         : 0;
-      habitScore = (habitCompletion / 100) * 25;
+      habitScore = (habitCompletion / 100) * 15;
     } else {
-      habitScore = 5;
+      habitScore = 3;
       habitCompletion = 20;
     }
 
-    // Calculate sleep score (0-25 points) from Whoop data
+    // Calculate sleep score (0-25 points, 25% of total) from Whoop data
     const whoopConnection = this.getWhoopConnection(memberId);
     let sleepScore = 0;
     let sleepQuality = 0;
