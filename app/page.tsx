@@ -86,7 +86,7 @@ export default function LandingPage() {
                 <Sparkles className="w-10 h-10 text-yellow-400 animate-pulse" />
                 <div className="absolute inset-0 bg-yellow-400/20 blur-xl"></div>
               </div>
-              <span className="text-3xl font-bold text-gradient">Thriv</span>
+              <span className="text-3xl font-bold text-gradient">Thrivv</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -96,10 +96,10 @@ export default function LandingPage() {
                 Sign In
               </Link>
               <Link
-                href="/member/login"
+                href="/member/signup"
                 className="px-6 py-2.5 btn-primary group"
               >
-                Get Started
+                Sign Up Free
                 <ArrowRight className="w-4 h-4 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -113,7 +113,7 @@ export default function LandingPage() {
           <div className="animate-fade-in-up">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-6">
               <span className="text-white">Welcome to </span>
-              <span className="text-gradient">Thriv</span>
+              <span className="text-gradient">Thrivv</span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
               The all-in-one fitness platform that unites AI-powered workouts, intelligent nutrition planning, 
@@ -121,7 +121,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Link
-                href="/member/login"
+                href="/member/signup"
                 className="px-8 py-4 btn-primary text-lg group w-full sm:w-auto"
               >
                 Start Your Journey
@@ -161,7 +161,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Everything You Need to <span className="text-gradient">Thrive</span>
+              Everything You Need to <span className="text-gradient">Thrivv</span>
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Powerful features designed to transform your fitness journey and help you achieve your goals.
@@ -200,10 +200,10 @@ export default function LandingPage() {
               Ready to Transform Your Fitness?
             </h2>
             <p className="text-xl text-gray-400 mb-8">
-              Join thousands of members already achieving their goals with Thriv.
+              Join thousands of members already achieving their goals with Thrivv.
             </p>
             <Link
-              href="/member/login"
+              href="/member/signup"
               className="inline-block px-10 py-4 btn-primary text-lg group"
             >
               Get Started Now
@@ -216,7 +216,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-yellow-500/20 py-8 px-4 sm:px-6 lg:px-8 mt-20">
         <div className="max-w-7xl mx-auto text-center text-gray-400">
-          <p>&copy; 2026 Thriv. All rights reserved. Transform your fitness journey today.</p>
+          <p>&copy; 2026 Thrivv. All rights reserved. Transform your fitness journey today.</p>
         </div>
       </footer>
 

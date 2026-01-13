@@ -1,8 +1,8 @@
-# Thriv
+# Thrivv
 
 **The All-in-One Fitness Platform** - Uniting client management, AI-powered workout generation, and AI-driven nutrition planning in one comprehensive ecosystem.
 
-Thriv is a unified platform designed to revolutionize fitness management by combining client relationship management, intelligent workout generation, and personalized nutrition planning. Built as a website first, with plans to expand into a mobile app.
+Thrivv is a unified platform designed to revolutionize fitness management by combining client relationship management, intelligent workout generation, and personalized nutrition planning. Built as a website first, with plans to expand into a mobile app.
 
 ## Core Platform Features
 

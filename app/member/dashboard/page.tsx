@@ -147,7 +147,7 @@ export default function MemberDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Thriv</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Thrivv</h1>
               <p className="text-sm text-gray-300">Welcome back, {member.firstName}!</p>
             </div>
             <button

@@ -1,8 +1,8 @@
-# Thriv Vision & Roadmap
+# Thrivv Vision & Roadmap
 
 ## Platform Vision
 
-Thriv aims to be the **ultimate all-in-one fitness platform** that unites:
+Thrivv aims to be the **ultimate all-in-one fitness platform** that unites:
 1. **Client Management System** - Comprehensive CRM for gyms and trainers
 2. **AI Workout Engine** - Intelligent, personalized workout generation
 3. **AI Nutrition Planner** - Smart macro calculation and meal planning
@@ -182,7 +182,7 @@ All seamlessly integrated in one place, starting as a web application with plans
 
 ## Key Differentiators
 
-1. **All-in-One Platform**: Unlike competitors who offer separate tools, Thriv unites everything
+1. **All-in-One Platform**: Unlike competitors who offer separate tools, Thrivv unites everything
 2. **AI-Powered**: Intelligent recommendations that adapt to each user
 3. **Unified Experience**: Seamless integration between management, workouts, and nutrition
 4. **Scalable**: Built to grow from single trainers to large gym chains

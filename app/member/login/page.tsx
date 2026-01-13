@@ -98,22 +98,31 @@ export default function MemberLoginPage() {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-400">
+            Don&apos;t have an account?{' '}
+            <Link href="/member/signup" className="text-yellow-400 hover:text-yellow-300 font-semibold transition-colors">
+              Sign Up Free
+            </Link>
+          </p>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-yellow-500/20">
+          <p className="text-xs text-gray-500 text-center mb-2">
             Demo: Use any member email from the admin panel
           </p>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 text-center mb-1">
             Example: alice.williams@email.com
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 text-center">
             Default password: password123
           </p>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-gray-800/50">
+        <div className="mt-4 text-center">
           <Link
             href="/"
-            className="block text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-sm text-gray-400 hover:text-yellow-400 transition-colors"
           >
-            ← Back to Admin Portal
+            ← Back to Home
           </Link>
         </div>
       </div>

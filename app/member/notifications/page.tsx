@@ -79,7 +79,7 @@ export default function MemberNotificationsPage() {
           <div className="flex items-center justify-between">
             <div>
               <Link href="/member/dashboard" className="text-2xl font-bold text-gray-900 hover:text-blue-600">
-                Thriv
+                Thrivv
               </Link>
               <p className="text-sm text-gray-600">Notifications</p>
             </div>

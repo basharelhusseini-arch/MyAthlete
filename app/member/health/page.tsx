@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Activity, TrendingUp, Users, Zap, Moon, UtensilsCrossed, Target, Award, Link2, ExternalLink } from 'lucide-react';
+import { Activity, TrendingUp, Users, Zap, Moon, UtensilsCrossed, Target, Award, Link2 } from 'lucide-react';
 
 interface HealthScore {
   total: number;
@@ -24,7 +25,8 @@ interface FriendScore {
   avatar?: string;
 }
 
-export default function HealthStatisticsPage() {
+export default function MemberHealthPage() {
+  const router = useRouter();
   const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
   const [friends, setFriends] = useState<FriendScore[]>([]);
   const [whoopConnected, setWhoopConnected] = useState(false);
@@ -33,15 +35,13 @@ export default function HealthStatisticsPage() {
 
   useEffect(() => {
     const storedMemberId = localStorage.getItem('memberId');
-    // If member is logged in, use their ID, otherwise this is a staff view
-    if (storedMemberId) {
-      setMemberId(storedMemberId);
-      fetchHealthData(storedMemberId);
-    } else {
-      // Staff view - show message or allow member selection
-      setLoading(false);
+    if (!storedMemberId) {
+      router.push('/member/login');
+      return;
     }
-  }, []);
+    setMemberId(storedMemberId);
+    fetchHealthData(storedMemberId);
+  }, [router]);
 
   const fetchHealthData = async (memberId: string) => {
     try {
@@ -108,21 +108,6 @@ export default function HealthStatisticsPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-400">Loading health statistics...</p>
-      </div>
-    );
-  }
-
-  if (!memberId) {
-    return (
-      <div className="text-center py-12">
-        <Activity className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-        <p className="text-gray-400 mb-4">Please log in to view health statistics</p>
-        <Link
-          href="/member/login"
-          className="inline-flex items-center px-4 py-2 btn-primary"
-        >
-          Member Login
-        </Link>
       </div>
     );
   }
@@ -306,7 +291,7 @@ export default function HealthStatisticsPage() {
                 <p className="text-xs text-gray-400">
                   Try to complete at least 3 workouts per week to improve your score.
                 </p>
-                <Link href="/workouts" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
+                <Link href="/member/workouts" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
                   View Workouts →
                 </Link>
               </div>
@@ -318,7 +303,7 @@ export default function HealthStatisticsPage() {
                 <p className="text-xs text-gray-400">
                   Track your meals and follow nutrition plans to boost your diet score.
                 </p>
-                <Link href="/nutrition" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
+                <Link href="/member/nutrition" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
                   View Diet Tracker →
                 </Link>
               </div>
@@ -330,7 +315,7 @@ export default function HealthStatisticsPage() {
                 <p className="text-xs text-gray-400">
                   Complete your daily habits consistently to improve your score.
                 </p>
-                <Link href="/habits" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
+                <Link href="/member/habits" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
                   View Habits →
                 </Link>
               </div>
