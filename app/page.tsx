@@ -1,193 +1,241 @@
-import { Users, CreditCard, Calendar, UserCog, TrendingUp, DollarSign } from 'lucide-react';
+'use client';
+
+import { 
+  Dumbbell, 
+  Utensils, 
+  Calendar, 
+  Trophy, 
+  Activity, 
+  Sparkles, 
+  ArrowRight,
+  Zap,
+  Target,
+  Users,
+  Heart,
+  TrendingUp
+} from 'lucide-react';
 import Link from 'next/link';
-import { store } from '@/lib/store';
 
-export default function DashboardPage() {
-  const members = store.getAllMembers();
-  const memberships = store.getAllMemberships();
-  const classes = store.getAllClasses();
-  const trainers = store.getAllTrainers();
-
-  const activeMembers = members.filter(m => m.status === 'active').length;
-  const upcomingClasses = classes.filter(c => c.status === 'scheduled' && new Date(c.date) >= new Date()).length;
-  const monthlyRevenue = memberships.reduce((sum, membership) => {
-    const memberCount = members.filter(m => m.membershipId === membership.id && m.status === 'active').length;
-    return sum + (membership.price * memberCount);
-  }, 0);
-
-  const stats = [
+export default function LandingPage() {
+  const features = [
     {
-      name: 'Total Members',
-      value: members.length,
-      icon: Users,
-      color: 'bg-blue-500',
-      href: '/members',
+      icon: Dumbbell,
+      title: 'AI-Powered Workouts',
+      description: 'Generate personalized workout plans tailored to your goals, experience level, and available equipment.',
+      color: 'from-yellow-400 to-orange-500',
+      delay: 'delay-100',
     },
     {
-      name: 'Active Members',
-      value: activeMembers,
-      icon: TrendingUp,
-      color: 'bg-green-500',
-      href: '/members',
+      icon: Utensils,
+      title: 'Smart Nutrition Plans',
+      description: 'AI-driven meal plans optimized for your macros, dietary preferences, and fitness objectives.',
+      color: 'from-orange-400 to-yellow-500',
+      delay: 'delay-200',
     },
     {
-      name: 'Memberships',
-      value: memberships.length,
-      icon: CreditCard,
-      color: 'bg-purple-500',
-      href: '/memberships',
+      icon: Activity,
+      title: 'Health Score Tracking',
+      description: 'Comprehensive health & lifestyle score analyzing diet, training, sleep, and habits out of 100.',
+      color: 'from-yellow-500 to-orange-400',
+      delay: 'delay-300',
     },
     {
-      name: 'Upcoming Classes',
-      value: upcomingClasses,
       icon: Calendar,
-      color: 'bg-orange-500',
-      href: '/classes',
+      title: 'Live Classes',
+      description: 'Book and attend fitness classes led by expert trainers. Track attendance and progress.',
+      color: 'from-orange-500 to-yellow-400',
+      delay: 'delay-[400ms]',
     },
     {
-      name: 'Trainers',
-      value: trainers.filter(t => t.status === 'active').length,
-      icon: UserCog,
-      color: 'bg-pink-500',
-      href: '/trainers',
+      icon: Trophy,
+      title: 'Rewards System',
+      description: 'Unlock points based on your health score for discounts on classes, trainers, and partner brands.',
+      color: 'from-yellow-400 to-orange-600',
+      delay: 'delay-[500ms]',
     },
     {
-      name: 'Monthly Revenue',
-      value: `$${monthlyRevenue.toFixed(2)}`,
-      icon: DollarSign,
-      color: 'bg-emerald-500',
-      href: '/memberships',
+      icon: Heart,
+      title: 'Wearable Integration',
+      description: 'Connect Whoop, Garmin, or Apple Health to sync your biometric data automatically.',
+      color: 'from-orange-400 to-yellow-600',
+      delay: 'delay-[600ms]',
     },
   ];
 
-  const recentMembers = members.slice(-5).reverse();
-  const upcomingClassList = classes
-    .filter(c => c.status === 'scheduled' && new Date(c.date) >= new Date())
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 5);
+  const stats = [
+    { value: '10K+', label: 'Active Members', icon: Users },
+    { value: '95%', label: 'Goal Achievement', icon: Target },
+    { value: '24/7', label: 'AI Support', icon: Zap },
+    { value: '4.9★', label: 'User Rating', icon: TrendingUp },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-        <p className="mt-2 text-gray-400">Welcome to your Thriv</p>
+    <div className="min-h-screen bg-black overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Link
-              key={stat.name}
-              href={stat.href}
-              className="glass-effect rounded-xl p-6 card-hover group"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300 transition-colors">{stat.name}</p>
-                  <p className="mt-2 text-3xl font-bold text-white">{stat.value}</p>
-                </div>
-                <div className={`${stat.color} p-3 rounded-full shadow-lg group-hover:scale-110 transition-transform duration-200`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
+      {/* Navigation */}
+      <nav className="relative z-50 glass-effect border-b border-yellow-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Sparkles className="w-10 h-10 text-yellow-400 animate-pulse" />
+                <div className="absolute inset-0 bg-yellow-400/20 blur-xl"></div>
               </div>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Members */}
-        <div className="glass-effect rounded-xl shadow-lg card-hover">
-          <div className="px-6 py-4 border-b border-gray-800/50">
-            <h2 className="text-lg font-semibold text-white">Recent Members</h2>
+              <span className="text-3xl font-bold text-gradient">Thriv</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/member/login"
+                className="px-6 py-2.5 text-white hover:text-yellow-400 transition-colors duration-300"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/member/login"
+                className="px-6 py-2.5 btn-primary group"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
-          <div className="p-6">
-            {recentMembers.length > 0 ? (
-              <ul className="space-y-4">
-                {recentMembers.map((member) => (
-                  <li key={member.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-800/30 transition-colors">
-                    <div>
-                      <p className="font-medium text-white">
-                        {member.firstName} {member.lastName}
-                      </p>
-                      <p className="text-sm text-gray-400">{member.email}</p>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative z-10 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="animate-fade-in-up">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-6">
+              <span className="text-white">Welcome to </span>
+              <span className="text-gradient">Thriv</span>
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
+              The all-in-one fitness platform that unites AI-powered workouts, intelligent nutrition planning, 
+              and comprehensive health tracking in one seamless experience.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+              <Link
+                href="/member/login"
+                className="px-8 py-4 btn-primary text-lg group w-full sm:w-auto"
+              >
+                Start Your Journey
+                <Zap className="w-5 h-5 ml-2 inline-block group-hover:rotate-12 transition-transform" />
+              </Link>
+              <Link
+                href="#features"
+                className="px-8 py-4 glass-effect text-white text-lg rounded-lg hover:bg-white/10 transition-all duration-300 w-full sm:w-auto"
+              >
+                Explore Features
+              </Link>
+            </div>
+
+            {/* Stats Bar */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mt-16">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="glass-effect p-6 rounded-xl hover:scale-105 transition-transform duration-500"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <Icon className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                    <div className="text-3xl font-bold text-gradient mb-1">{stat.value}</div>
+                    <div className="text-sm text-gray-400">{stat.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              Everything You Need to <span className="text-gradient">Thrive</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Powerful features designed to transform your fitness journey and help you achieve your goals.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className={`dark-card card-hover p-8 group animate-fade-in-up ${feature.delay}`}
+                >
+                  <div className="relative mb-6">
+                    <div className={`inline-block p-4 rounded-xl bg-gradient-to-br ${feature.color} shadow-lg`}>
+                      <Icon className="w-8 h-8 text-black" />
                     </div>
-                    <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        member.status === 'active'
-                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                          : member.status === 'suspended'
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                      }`}
-                    >
-                      {member.status}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-400 text-center py-4">No members yet</p>
-            )}
-            <div className="mt-6">
-              <Link
-                href="/members"
-                className="block text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20"
-              >
-                View All Members
-              </Link>
-            </div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}></div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
+      </section>
 
-        {/* Upcoming Classes */}
-        <div className="glass-effect rounded-xl shadow-lg card-hover">
-          <div className="px-6 py-4 border-b border-gray-800/50">
-            <h2 className="text-lg font-semibold text-white">Upcoming Classes</h2>
-          </div>
-          <div className="p-6">
-            {upcomingClassList.length > 0 ? (
-              <ul className="space-y-4">
-                {upcomingClassList.map((gymClass) => {
-                  const trainer = trainers.find(t => t.id === gymClass.trainerId);
-                  const trainerName = trainer
-                    ? `${trainer.firstName} ${trainer.lastName}`
-                    : 'Unknown Trainer';
-                  return (
-                    <li key={gymClass.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-800/30 transition-colors">
-                      <div>
-                        <p className="font-medium text-white">{gymClass.name}</p>
-                        <p className="text-sm text-gray-400">
-                          {new Date(gymClass.date).toLocaleDateString()} at {gymClass.startTime} - {trainerName}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {gymClass.enrolledMembers.length}/{gymClass.capacity} enrolled
-                        </p>
-                      </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                        {gymClass.status}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p className="text-gray-400 text-center py-4">No upcoming classes</p>
-            )}
-            <div className="mt-6">
-              <Link
-                href="/classes"
-                className="block text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20"
-              >
-                View All Classes
-              </Link>
-            </div>
+      {/* CTA Section */}
+      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass-effect rounded-2xl p-12 text-center border-2 border-yellow-500/30 hover:border-yellow-500/50 transition-all duration-500">
+            <Sparkles className="w-16 h-16 text-yellow-400 mx-auto mb-6 animate-pulse" />
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Ready to Transform Your Fitness?
+            </h2>
+            <p className="text-xl text-gray-400 mb-8">
+              Join thousands of members already achieving their goals with Thriv.
+            </p>
+            <Link
+              href="/member/login"
+              className="inline-block px-10 py-4 btn-primary text-lg group"
+            >
+              Get Started Now
+              <ArrowRight className="w-5 h-5 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-yellow-500/20 py-8 px-4 sm:px-6 lg:px-8 mt-20">
+        <div className="max-w-7xl mx-auto text-center text-gray-400">
+          <p>&copy; 2026 Thriv. All rights reserved. Transform your fitness journey today.</p>
+        </div>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
