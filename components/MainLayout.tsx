@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 
@@ -10,9 +10,34 @@ export default function MainLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Show sidebar only for authenticated routes (member portal and admin sections)
-  const showSidebar = 
+  // Check authentication state
+  useEffect(() => {
+    const checkAuth = () => {
+      // Check localStorage for auth (client-side only)
+      if (typeof window !== 'undefined') {
+        const memberId = localStorage.getItem('memberId');
+        setIsAuthenticated(!!memberId);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+    
+    // Re-check on pathname change (in case user logs in/out)
+    checkAuth();
+  }, [pathname]);
+
+  // Public pages that should NEVER show sidebar (even if logged in)
+  const isPublicAuthPage = 
+    pathname === '/member/login' ||
+    pathname === '/member/signup' ||
+    pathname === '/';
+
+  // Protected routes that require authentication
+  const isProtectedRoute = 
     pathname?.startsWith('/member') ||
     pathname?.startsWith('/members') ||
     pathname?.startsWith('/workouts') ||
@@ -25,7 +50,22 @@ export default function MainLayout({
     pathname?.startsWith('/habits') ||
     pathname?.startsWith('/health');
 
-  // Public landing page - no sidebar, no padding
+  // Show sidebar only if:
+  // 1. User is authenticated AND
+  // 2. Not on a public auth page (login/signup/landing) AND
+  // 3. On a protected route
+  const showSidebar = isAuthenticated && !isPublicAuthPage && isProtectedRoute;
+
+  // Show loading state briefly to prevent flash
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-pulse text-yellow-400">Loading...</div>
+      </div>
+    );
+  }
+
+  // Public pages or unauthenticated - no sidebar, no padding
   if (!showSidebar) {
     return (
       <div className="min-h-screen bg-black">

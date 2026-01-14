@@ -25,7 +25,12 @@ export default function MemberLoginPage() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.user) {
+        // Save auth data to localStorage
+        localStorage.setItem('memberId', data.user.id);
+        localStorage.setItem('memberName', `${data.user.firstName} ${data.user.lastName}`);
+        localStorage.setItem('memberEmail', data.user.email);
+        
         // Session cookie is set by the API
         // Redirect to dashboard
         router.push('/member/dashboard');

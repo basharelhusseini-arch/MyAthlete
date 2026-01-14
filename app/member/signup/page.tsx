@@ -70,7 +70,14 @@ export default function MemberSignupPage() {
           setSuccess(data.message || 'Account created! Please check your email to confirm.');
           // Don't redirect - show success message
         } else {
-          // Immediate login - redirect to dashboard
+          // Immediate login - save auth data to localStorage
+          if (data.user) {
+            localStorage.setItem('memberId', data.user.id);
+            localStorage.setItem('memberName', `${data.user.firstName} ${data.user.lastName}`);
+            localStorage.setItem('memberEmail', data.user.email);
+          }
+          
+          // Redirect to dashboard
           setSuccess('Account created successfully! Redirecting...');
           setTimeout(() => router.push('/member/dashboard'), 1500);
         }
