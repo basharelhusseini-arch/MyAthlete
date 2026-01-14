@@ -26,48 +26,57 @@ export default function CheckinPage() {
   });
 
   useEffect(() => {
-    checkAuth();
-    fetchTodayCheckin();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me');
-      if (!response.ok) {
-        router.push('/member/login');
-      }
-    } catch (error) {
-      router.push('/member/login');
-    }
-  };
-
-  const fetchTodayCheckin = async () => {
-    try {
-      const response = await fetch('/api/checkin/today');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.checkin) {
-          setHasCheckedIn(true);
-          setFormData({
-            didWorkout: data.checkin.did_workout,
-            calories: data.checkin.calories?.toString() || '',
-            sleepHours: data.checkin.sleep_hours?.toString() || '',
-          });
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) {
+          router.push('/member/login');
+          return false;
         }
+        return true;
+      } catch (error) {
+        router.push('/member/login');
+        return false;
       }
+    };
 
-      // Also fetch current score
-      const scoreResponse = await fetch('/api/score/today');
-      if (scoreResponse.ok) {
-        const scoreData = await scoreResponse.json();
-        setCurrentScore(scoreData.score);
+    const fetchTodayCheckin = async () => {
+      try {
+        const response = await fetch('/api/checkin/today');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.checkin) {
+            setHasCheckedIn(true);
+            setFormData({
+              didWorkout: data.checkin.did_workout,
+              calories: data.checkin.calories?.toString() || '',
+              sleepHours: data.checkin.sleep_hours?.toString() || '',
+            });
+          }
+        }
+
+        // Also fetch current score
+        const scoreResponse = await fetch('/api/score/today');
+        if (scoreResponse.ok) {
+          const scoreData = await scoreResponse.json();
+          setCurrentScore(scoreData.score);
+        }
+      } catch (error) {
+        console.error('Failed to fetch check-in:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to fetch check-in:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    const initializePage = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        await fetchTodayCheckin();
+      }
+    };
+
+    initializePage();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +149,7 @@ export default function CheckinPage() {
       {/* Current Score */}
       {currentScore && (
         <div className="dark-card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Today's Health Score</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">Today&apos;s Health Score</h3>
             <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="text-5xl font-bold text-gradient">

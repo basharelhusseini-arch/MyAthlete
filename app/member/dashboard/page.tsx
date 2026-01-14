@@ -47,53 +47,53 @@ export default function MemberDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        // Check authentication
+        const authRes = await fetch('/api/auth/me');
+        if (!authRes.ok) {
+          router.push('/member/login');
+          return;
+        }
+        const authData = await authRes.json();
+        setUser(authData.user);
+
+        // Fetch today's health score
+        const scoreRes = await fetch('/api/score/today');
+        if (scoreRes.ok) {
+          const scoreData = await scoreRes.json();
+          setHealthScore(scoreData.healthScore);
+        }
+
+        // Fetch score history (last 7 days)
+        const historyRes = await fetch('/api/score/history?days=7');
+        if (historyRes.ok) {
+          const historyData = await historyRes.json();
+          setScoreHistory(historyData.history || []);
+        }
+
+        // Fetch leaderboard
+        const leaderboardRes = await fetch('/api/leaderboard');
+        if (leaderboardRes.ok) {
+          const leaderboardData = await leaderboardRes.json();
+          setLeaderboard(leaderboardData.leaderboard || []);
+        }
+
+        // Check if today's check-in exists
+        const checkinRes = await fetch('/api/checkin/today');
+        if (checkinRes.ok) {
+          const checkinData = await checkinRes.json();
+          setTodayCheckin(checkinData.checkin);
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      // Check authentication
-      const authRes = await fetch('/api/auth/me');
-      if (!authRes.ok) {
-        router.push('/member/login');
-        return;
-      }
-      const authData = await authRes.json();
-      setUser(authData.user);
-
-      // Fetch today's health score
-      const scoreRes = await fetch('/api/score/today');
-      if (scoreRes.ok) {
-        const scoreData = await scoreRes.json();
-        setHealthScore(scoreData.healthScore);
-      }
-
-      // Fetch score history (last 7 days)
-      const historyRes = await fetch('/api/score/history?days=7');
-      if (historyRes.ok) {
-        const historyData = await historyRes.json();
-        setScoreHistory(historyData.history || []);
-      }
-
-      // Fetch leaderboard
-      const leaderboardRes = await fetch('/api/leaderboard');
-      if (leaderboardRes.ok) {
-        const leaderboardData = await leaderboardRes.json();
-        setLeaderboard(leaderboardData.leaderboard || []);
-      }
-
-      // Check if today's check-in exists
-      const checkinRes = await fetch('/api/checkin/today');
-      if (checkinRes.ok) {
-        const checkinData = await checkinRes.json();
-        setTodayCheckin(checkinData.checkin);
-      }
-    } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [router]);
 
   const handleLogout = async () => {
     try {
@@ -152,9 +152,9 @@ export default function MemberDashboardPage() {
               <div className="flex items-start">
                 <AlertCircle className="w-5 h-5 text-yellow-400 mr-3 mt-0.5" />
                 <div>
-                  <h3 className="text-white font-semibold mb-1">Complete Today's Check-in</h3>
+                  <h3 className="text-white font-semibold mb-1">Complete Today&apos;s Check-in</h3>
                   <p className="text-gray-300 text-sm">
-                    You haven't logged your workout, calories, and sleep for today. Complete your check-in to update your health score!
+                    You haven&apos;t logged your workout, calories, and sleep for today. Complete your check-in to update your health score!
                   </p>
                 </div>
               </div>
