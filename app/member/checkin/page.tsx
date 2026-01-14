@@ -1,0 +1,264 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Activity, Dumbbell, UtensilsCrossed, Moon, CheckCircle, Loader2 } from 'lucide-react';
+
+interface CheckinForm {
+  didWorkout: boolean;
+  calories: string;
+  sleepHours: string;
+}
+
+export default function CheckinPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [hasCheckedIn, setHasCheckedIn] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [currentScore, setCurrentScore] = useState<any>(null);
+
+  const [formData, setFormData] = useState<CheckinForm>({
+    didWorkout: false,
+    calories: '',
+    sleepHours: '',
+  });
+
+  useEffect(() => {
+    checkAuth();
+    fetchTodayCheckin();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (!response.ok) {
+        router.push('/member/login');
+      }
+    } catch (error) {
+      router.push('/member/login');
+    }
+  };
+
+  const fetchTodayCheckin = async () => {
+    try {
+      const response = await fetch('/api/checkin/today');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.checkin) {
+          setHasCheckedIn(true);
+          setFormData({
+            didWorkout: data.checkin.did_workout,
+            calories: data.checkin.calories?.toString() || '',
+            sleepHours: data.checkin.sleep_hours?.toString() || '',
+          });
+        }
+      }
+
+      // Also fetch current score
+      const scoreResponse = await fetch('/api/score/today');
+      if (scoreResponse.ok) {
+        const scoreData = await scoreResponse.json();
+        setCurrentScore(scoreData.score);
+      }
+    } catch (error) {
+      console.error('Failed to fetch check-in:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+
+    try {
+      const response = await fetch('/api/checkin/today', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          didWorkout: formData.didWorkout,
+          calories: formData.calories ? parseInt(formData.calories, 10) : 0,
+          sleepHours: formData.sleepHours ? parseFloat(formData.sleepHours) : 0,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        setCurrentScore(data.score);
+        setHasCheckedIn(true);
+        
+        // Redirect to dashboard after 2 seconds
+        setTimeout(() => {
+          router.push('/member/dashboard');
+        }, 2000);
+      } else {
+        setError(data.error || 'Failed to submit check-in');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gradient">Daily Check-In</h1>
+        <p className="mt-2 text-gray-400">
+          {hasCheckedIn ? 'Update your daily progress' : 'Complete your check-in to update your health score'}
+        </p>
+      </div>
+
+      {/* Success Message */}
+      {success && (
+        <div className="glass-effect p-6 rounded-xl border-2 border-green-500/50 bg-green-500/10">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="w-6 h-6 text-green-400" />
+            <div>
+              <p className="text-lg font-semibold text-white">Check-in Complete!</p>
+              <p className="text-gray-400">Your health score has been updated. Redirecting to dashboard...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Current Score */}
+      {currentScore && (
+        <div className="dark-card p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Today's Health Score</h3>
+            <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="text-5xl font-bold text-gradient">
+                {currentScore.score}
+              </div>
+              <div className="text-sm text-gray-400">
+                <div>Training: {currentScore.training_score}/30</div>
+                <div>Diet: {currentScore.diet_score}/40</div>
+                <div>Sleep: {currentScore.sleep_score}/30</div>
+              </div>
+            </div>
+            <Activity className="w-12 h-12 text-yellow-400" />
+          </div>
+        </div>
+      )}
+
+      {/* Check-in Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="dark-card p-6 space-y-6">
+          {/* Workout */}
+          <div>
+            <label className="flex items-center space-x-3 cursor-pointer group">
+              <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+                formData.didWorkout 
+                  ? 'bg-yellow-500 border-yellow-500' 
+                  : 'border-gray-600 group-hover:border-yellow-400'
+              }`}>
+                {formData.didWorkout && <CheckCircle className="w-4 h-4 text-black" />}
+              </div>
+              <input
+                type="checkbox"
+                checked={formData.didWorkout}
+                onChange={(e) => setFormData({ ...formData, didWorkout: e.target.checked })}
+                className="sr-only"
+              />
+              <Dumbbell className="w-5 h-5 text-yellow-400" />
+              <span className="text-white font-medium">I worked out today</span>
+            </label>
+            <p className="text-sm text-gray-400 mt-2 ml-9">
+              Any physical activity counts! (30 points)
+            </p>
+          </div>
+
+          {/* Calories */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="flex items-center space-x-2">
+                <UtensilsCrossed className="w-5 h-5 text-green-400" />
+                <span>Calories Consumed (optional)</span>
+              </div>
+            </label>
+            <input
+              type="number"
+              value={formData.calories}
+              onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
+              placeholder="e.g., 2200"
+              min="0"
+              max="10000"
+              className="w-full px-4 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+            />
+            <p className="text-sm text-gray-400 mt-2">
+              Target: 2200 ± 300 calories for optimal score (up to 40 points)
+            </p>
+          </div>
+
+          {/* Sleep */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="flex items-center space-x-2">
+                <Moon className="w-5 h-5 text-blue-400" />
+                <span>Hours of Sleep (optional)</span>
+              </div>
+            </label>
+            <input
+              type="number"
+              value={formData.sleepHours}
+              onChange={(e) => setFormData({ ...formData, sleepHours: e.target.value })}
+              placeholder="e.g., 7.5"
+              min="0"
+              max="24"
+              step="0.5"
+              className="w-full px-4 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+            />
+            <p className="text-sm text-gray-400 mt-2">
+              Optimal: 7-9 hours for full 30 points
+            </p>
+          </div>
+
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={submitting || success}
+          className="w-full btn-primary py-4 px-6 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+        >
+          {submitting ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Saving...</span>
+            </>
+          ) : success ? (
+            <>
+              <CheckCircle className="w-5 h-5" />
+              <span>Saved!</span>
+            </>
+          ) : (
+            <span>{hasCheckedIn ? 'Update Check-In' : 'Complete Check-In'}</span>
+          )}
+        </button>
+      </form>
+    </div>
+  );
+}
