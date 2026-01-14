@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { verifyPassword, setSessionCookie } from '@/lib/auth';
+import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv } from '@/lib/env';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,50 +15,94 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user by email
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('id, first_name, last_name, email, password_hash')
-      .eq('email', email)
-      .single();
+    // Get validated environment variables
+    const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
+    // Create Supabase client for Auth
+    const supabase = createClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
 
-    // Verify password
-    const isValid = await verifyPassword(password, user.password_hash);
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-
-    // Set session cookie
-    await setSessionCookie({
-      id: user.id,
-      email: user.email,
-      firstName: user.first_name,
-      lastName: user.last_name,
+    // Sign in with Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
+
+    // Handle authentication errors
+    if (error) {
+      console.error('Supabase Auth login error:', {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      });
+
+      // Return the REAL error message
+      return NextResponse.json(
+        { 
+          error: error.message || 'Invalid email or password',
+          code: error.code,
+        },
+        { status: error.status || 401 }
+      );
+    }
+
+    // Check if login was successful
+    if (!data.user || !data.session) {
+      return NextResponse.json(
+        { error: 'Login failed. Please try again.' },
+        { status: 401 }
+      );
+    }
+
+    // Get user metadata
+    const firstName = data.user.user_metadata?.first_name || '';
+    const lastName = data.user.user_metadata?.last_name || '';
 
     return NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
+        id: data.user.id,
+        email: data.user.email || email,
+        firstName,
+        lastName,
+      },
+      session: {
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
       },
     });
-  } catch (error) {
-    console.error('Login error:', error);
+
+  } catch (error: any) {
+    console.error('Login handler error:', {
+      message: error?.message || 'Unknown error',
+      stack: error?.stack,
+    });
+    
+    // Provide helpful error for missing env vars
+    if (error?.message?.includes('NEXT_PUBLIC_SUPABASE')) {
+      return NextResponse.json(
+        { 
+          error: 'Configuration error: Supabase environment variables are missing. ' +
+                 'Check Vercel → Settings → Environment Variables or .env.local for local development.',
+          type: 'configuration_error',
+        },
+        { status: 500 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to log in' },
+      { 
+        error: error?.message || 'Failed to log in. Please try again.',
+        type: 'server_error',
+      },
       { status: 500 }
     );
   }
