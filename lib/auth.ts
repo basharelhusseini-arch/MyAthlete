@@ -18,23 +18,25 @@ export interface SessionPayload {
   iat?: number;
 }
 
-// Type guard to validate JWT payload structure
-function isSessionPayload(payload: unknown): payload is SessionPayload {
+// Type guard to validate user object structure
+function isValidSessionUser(user: unknown): user is SessionUser {
   return (
-    typeof payload === 'object' &&
-    payload !== null &&
-    'user' in payload &&
-    typeof (payload as any).user === 'object' &&
-    (payload as any).user !== null &&
-    'id' in (payload as any).user &&
-    'email' in (payload as any).user &&
-    typeof (payload as any).user.id === 'string' &&
-    typeof (payload as any).user.email === 'string' &&
-    'firstName' in (payload as any).user &&
-    'lastName' in (payload as any).user &&
-    typeof (payload as any).user.firstName === 'string' &&
-    typeof (payload as any).user.lastName === 'string'
+    typeof user === 'object' &&
+    user !== null &&
+    'id' in user &&
+    'email' in user &&
+    'firstName' in user &&
+    'lastName' in user &&
+    typeof user.id === 'string' &&
+    typeof user.email === 'string' &&
+    typeof user.firstName === 'string' &&
+    typeof user.lastName === 'string'
   );
+}
+
+// Type guard to check if payload has a user property
+function hasUserProperty(payload: JWTPayload): payload is JWTPayload & { user: unknown } {
+  return 'user' in payload && typeof payload.user === 'object' && payload.user !== null;
 }
 
 // Hash password
@@ -63,9 +65,15 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     
-    // Validate payload structure at runtime
-    if (!isSessionPayload(payload as unknown)) {
-      console.error('Invalid session payload structure');
+    // Check if payload has user property
+    if (!hasUserProperty(payload)) {
+      console.error('Invalid session payload: missing user property');
+      return null;
+    }
+    
+    // Validate user object structure at runtime
+    if (!isValidSessionUser(payload.user)) {
+      console.error('Invalid session user structure');
       return null;
     }
     
