@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv, getSupabaseServiceKey } from '@/lib/env';
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,16 +29,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate and extract environment variables
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl) {
-      throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_URL');
-    }
-    if (!supabaseAnonKey) {
-      throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_ANON_KEY');
-    }
+    // Get validated environment variables
+    const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
     // Create Supabase client for Auth (uses anon key, not service role)
     const supabase = createClient(
@@ -108,7 +101,7 @@ export async function POST(request: NextRequest) {
       // Try to create profile record in users table (if it exists)
       // This is OPTIONAL and should not fail the signup
       try {
-        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const supabaseServiceKey = getSupabaseServiceKey();
         
         if (supabaseServiceKey) {
           const supabaseService = createClient(
@@ -164,6 +157,20 @@ export async function POST(request: NextRequest) {
       message: error?.message || 'Unknown error',
       stack: error?.stack,
     });
+    
+    // Provide helpful error message for missing env vars
+    if (error?.message?.includes('NEXT_PUBLIC_SUPABASE')) {
+      return NextResponse.json(
+        { 
+          error: 'Configuration error: Supabase environment variables are missing. ' +
+                 'In production, check Vercel → Settings → Environment Variables. ' +
+                 'For local development, copy .env.example to .env.local and fill in your Supabase credentials.',
+          type: 'configuration_error',
+          details: error.message,
+        },
+        { status: 500 }
+      );
+    }
     
     return NextResponse.json(
       { 

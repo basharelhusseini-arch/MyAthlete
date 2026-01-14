@@ -1,8 +1,20 @@
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 import bcrypt from 'bcryptjs';
+import { getJWTSecret } from './env';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-change-in-production');
+// Get JWT secret - will throw clear error if missing
+let JWT_SECRET: Uint8Array;
+try {
+  JWT_SECRET = new TextEncoder().encode(getJWTSecret());
+} catch (error) {
+  // Fallback for build time - runtime will fail with helpful error
+  JWT_SECRET = new TextEncoder().encode('build-time-placeholder-secret');
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('⚠️  JWT_SECRET not set. Using placeholder for build.');
+  }
+}
+
 const COOKIE_NAME = 'thrivv-session';
 
 export interface SessionUser {

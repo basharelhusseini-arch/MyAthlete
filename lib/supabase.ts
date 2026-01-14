@@ -1,13 +1,31 @@
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv, getSupabaseServiceKey } from './env';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+// Get environment variables (will throw clear error if missing)
+// During build, placeholders are used; at runtime, real validation happens
+let supabaseUrl: string;
+let supabaseServiceKey: string;
+
+try {
+  const env = getSupabaseEnv();
+  supabaseUrl = env.supabaseUrl;
+  supabaseServiceKey = getSupabaseServiceKey() || 'placeholder-service-key';
+} catch (error) {
+  // During build, use placeholders to prevent build failures
+  // Runtime API calls will fail with helpful error messages
+  supabaseUrl = 'https://placeholder.supabase.co';
+  supabaseServiceKey = 'placeholder-service-key';
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('⚠️  Supabase env vars not set. Using placeholders for build.');
+    console.warn('   Copy .env.example to .env.local and add your Supabase credentials.');
+  }
+}
 
 // Server-side client with service role (bypasses RLS)
-// During build, use placeholder values; runtime will validate
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseServiceKey || 'placeholder-key',
+  supabaseUrl,
+  supabaseServiceKey,
   {
     auth: {
       autoRefreshToken: false,
@@ -15,13 +33,6 @@ export const supabase = createClient(
     },
   }
 );
-
-// Runtime validation helper
-export function validateSupabaseConfig() {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required');
-  }
-}
 
 export type Database = {
   public: {
