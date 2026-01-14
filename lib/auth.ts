@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-change-in-production');
@@ -14,7 +14,27 @@ export interface SessionUser {
 
 export interface SessionPayload {
   user: SessionUser;
-  exp: number;
+  exp?: number;
+  iat?: number;
+}
+
+// Type guard to validate JWT payload structure
+function isValidSessionPayload(payload: JWTPayload): payload is SessionPayload {
+  return (
+    typeof payload === 'object' &&
+    payload !== null &&
+    'user' in payload &&
+    typeof payload.user === 'object' &&
+    payload.user !== null &&
+    'id' in payload.user &&
+    'email' in payload.user &&
+    typeof payload.user.id === 'string' &&
+    typeof payload.user.email === 'string' &&
+    'firstName' in payload.user &&
+    'lastName' in payload.user &&
+    typeof payload.user.firstName === 'string' &&
+    typeof payload.user.lastName === 'string'
+  );
 }
 
 // Hash password
@@ -42,7 +62,14 @@ export async function createSession(user: SessionUser): Promise<string> {
 export async function verifySession(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as SessionPayload;
+    
+    // Validate payload structure at runtime
+    if (!isValidSessionPayload(payload)) {
+      console.error('Invalid session payload structure');
+      return null;
+    }
+    
+    return payload;
   } catch (error) {
     return null;
   }
