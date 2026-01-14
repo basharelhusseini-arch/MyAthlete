@@ -19,21 +19,21 @@ export interface SessionPayload {
 }
 
 // Type guard to validate JWT payload structure
-function isValidSessionPayload(payload: JWTPayload): payload is SessionPayload {
+function isSessionPayload(payload: unknown): payload is SessionPayload {
   return (
     typeof payload === 'object' &&
     payload !== null &&
     'user' in payload &&
-    typeof payload.user === 'object' &&
-    payload.user !== null &&
-    'id' in payload.user &&
-    'email' in payload.user &&
-    typeof payload.user.id === 'string' &&
-    typeof payload.user.email === 'string' &&
-    'firstName' in payload.user &&
-    'lastName' in payload.user &&
-    typeof payload.user.firstName === 'string' &&
-    typeof payload.user.lastName === 'string'
+    typeof (payload as any).user === 'object' &&
+    (payload as any).user !== null &&
+    'id' in (payload as any).user &&
+    'email' in (payload as any).user &&
+    typeof (payload as any).user.id === 'string' &&
+    typeof (payload as any).user.email === 'string' &&
+    'firstName' in (payload as any).user &&
+    'lastName' in (payload as any).user &&
+    typeof (payload as any).user.firstName === 'string' &&
+    typeof (payload as any).user.lastName === 'string'
   );
 }
 
@@ -64,12 +64,23 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
     const { payload } = await jwtVerify(token, JWT_SECRET);
     
     // Validate payload structure at runtime
-    if (!isValidSessionPayload(payload)) {
+    if (!isSessionPayload(payload as unknown)) {
       console.error('Invalid session payload structure');
       return null;
     }
     
-    return payload;
+    // Build a properly typed SessionPayload object
+    const { id, email, firstName, lastName } = payload.user;
+    return {
+      user: {
+        id,
+        email,
+        firstName,
+        lastName,
+      },
+      iat: payload.iat,
+      exp: payload.exp,
+    };
   } catch (error) {
     return null;
   }
