@@ -22,18 +22,47 @@ export async function GET(request: NextRequest) {
     }
 
     if (days === 1) {
-      // Today's leaderboard - use the view for efficiency
-      const { data, error } = await supabase
+      // Today's leaderboard - try view first, fallback to direct query
+      let { data, error } = await supabase
         .from('leaderboard_today')
         .select('*')
         .limit(100);
 
+      // Fallback: If view doesn't exist or errors, query directly
       if (error) {
-        console.error('Leaderboard error:', error);
-        return NextResponse.json(
-          { error: 'Failed to get leaderboard' },
-          { status: 500 }
-        );
+        console.warn('leaderboard_today view not available, using fallback query:', error.message);
+        
+        const fallbackResult = await supabase
+          .from('health_scores')
+          .select(`
+            user_id,
+            score,
+            users (
+              id,
+              first_name,
+              last_name
+            )
+          `)
+          .eq('date', dateFilter)
+          .order('score', { ascending: false })
+          .limit(100);
+
+        if (fallbackResult.error) {
+          console.error('Leaderboard fallback error:', fallbackResult.error);
+          return NextResponse.json(
+            { error: 'Failed to get leaderboard' },
+            { status: 500 }
+          );
+        }
+
+        // Transform to match view structure and add ranks
+        data = fallbackResult.data?.map((item: any, index: number) => ({
+          id: item.user_id,
+          first_name: item.users?.first_name || '',
+          last_name: item.users?.last_name || '',
+          score: item.score,
+          rank: index + 1,
+        })) || [];
       }
 
       return NextResponse.json({
