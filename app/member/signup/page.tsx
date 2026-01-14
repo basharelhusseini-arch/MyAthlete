@@ -15,6 +15,7 @@ export default function MemberSignupPage() {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -28,6 +29,7 @@ export default function MemberSignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
@@ -55,21 +57,32 @@ export default function MemberSignupPage() {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
+          phone: formData.phone,
           password: formData.password,
         }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        // Session cookie is set by the API
-        // Redirect to dashboard
-        router.push('/member/dashboard');
+      if (response.ok && data.success) {
+        // Check if email confirmation is required
+        if (data.requiresEmailConfirmation) {
+          setSuccess(data.message || 'Account created! Please check your email to confirm.');
+          // Don't redirect - show success message
+        } else {
+          // Immediate login - redirect to dashboard
+          setSuccess('Account created successfully! Redirecting...');
+          setTimeout(() => router.push('/member/dashboard'), 1500);
+        }
       } else {
-        setError(data.error || 'Registration failed');
+        // Show the REAL error from Supabase
+        const errorMessage = data.error || 'Registration failed';
+        const errorDetails = data.details ? ` (${data.details})` : '';
+        setError(errorMessage + errorDetails);
       }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
+    } catch (error: any) {
+      console.error('Signup request failed:', error);
+      setError(error?.message || 'Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -217,6 +230,12 @@ export default function MemberSignupPage() {
           {error && (
             <div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/20 border border-green-500/30 text-green-400 px-4 py-3 rounded-lg text-sm">
+              {success}
             </div>
           )}
 
