@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Defensive check for required environment variables
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_URL');
-}
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_ANON_KEY');
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -36,10 +28,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate and extract environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl) {
+      throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_URL');
+    }
+    if (!supabaseAnonKey) {
+      throw new Error('Missing env variable: NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    }
+
     // Create Supabase client for Auth (uses anon key, not service role)
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl,
+      supabaseAnonKey,
       {
         auth: {
           autoRefreshToken: false,
@@ -105,24 +108,30 @@ export async function POST(request: NextRequest) {
       // Try to create profile record in users table (if it exists)
       // This is OPTIONAL and should not fail the signup
       try {
-        const supabaseService = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL,
-          process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-          {
-            auth: {
-              autoRefreshToken: false,
-              persistSession: false,
-            },
-          }
-        );
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        
+        if (supabaseServiceKey) {
+          const supabaseService = createClient(
+            supabaseUrl,
+            supabaseServiceKey,
+            {
+              auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+              },
+            }
+          );
 
-        await supabaseService.from('users').insert({
-          id: data.user.id,
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone: phone || null,
-        });
+          await supabaseService.from('users').insert({
+            id: data.user.id,
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            phone: phone || null,
+          });
+        } else {
+          console.warn('SUPABASE_SERVICE_ROLE_KEY not set, skipping profile creation');
+        }
       } catch (profileError: any) {
         // Log but don't fail - auth signup succeeded
         console.warn('Profile creation failed (non-critical):', profileError.message);
