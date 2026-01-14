@@ -48,14 +48,13 @@ export default function MemberSignupPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/member/signup', {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phone: formData.phone,
           password: formData.password,
         }),
       });
@@ -63,10 +62,8 @@ export default function MemberSignupPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Auto-login after successful registration
-        localStorage.setItem('memberId', data.memberId);
-        localStorage.setItem('memberName', `${data.firstName} ${data.lastName}`);
-        localStorage.setItem('memberEmail', data.email);
+        // Session cookie is set by the API
+        // Redirect to dashboard
         router.push('/member/dashboard');
       } else {
         setError(data.error || 'Registration failed');

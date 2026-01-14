@@ -1,0 +1,100 @@
+import { cookies } from 'next/headers';
+import { SignJWT, jwtVerify } from 'jose';
+import bcrypt from 'bcryptjs';
+
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-change-in-production');
+const COOKIE_NAME = 'thrivv-session';
+
+export interface SessionUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface SessionPayload {
+  user: SessionUser;
+  exp: number;
+}
+
+// Hash password
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 12);
+}
+
+// Verify password
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
+// Create JWT session token
+export async function createSession(user: SessionUser): Promise<string> {
+  const token = await new SignJWT({ user })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('7d') // 7 days
+    .setIssuedAt()
+    .sign(JWT_SECRET);
+
+  return token;
+}
+
+// Verify JWT session token
+export async function verifySession(token: string): Promise<SessionPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload as SessionPayload;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Set session cookie
+export async function setSessionCookie(user: SessionUser): Promise<void> {
+  const token = await createSession(user);
+  const cookieStore = await cookies();
+  
+  cookieStore.set(COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  });
+}
+
+// Get current user from session cookie
+export async function getCurrentUser(): Promise<SessionUser | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(COOKIE_NAME)?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    const session = await verifySession(token);
+    if (!session || !session.user) {
+      return null;
+    }
+
+    return session.user;
+  } catch (error) {
+    console.error('Error getting current user:', error);
+    return null;
+  }
+}
+
+// Clear session cookie
+export async function clearSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_NAME);
+}
+
+// Require authentication middleware
+export async function requireAuth(): Promise<SessionUser> {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error('Unauthorized');
+  }
+  return user;
+}

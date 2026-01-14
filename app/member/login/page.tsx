@@ -17,7 +17,7 @@ export default function MemberLoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/member/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -26,11 +26,8 @@ export default function MemberLoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Store member ID and info in localStorage for session
-        localStorage.setItem('memberId', data.memberId);
-        localStorage.setItem('memberName', `${data.firstName} ${data.lastName}`);
-        localStorage.setItem('memberEmail', data.email || email);
-        localStorage.setItem('completedSessions', data.completedSessions?.toString() || '0');
+        // Session cookie is set by the API
+        // Redirect to dashboard
         router.push('/member/dashboard');
       } else {
         setError(data.error || 'Login failed');
@@ -106,14 +103,8 @@ export default function MemberLoginPage() {
         </div>
 
         <div className="mt-6 pt-6 border-t border-yellow-500/20">
-          <p className="text-xs text-gray-500 text-center mb-2">
-            Demo: Use any member email from the admin panel
-          </p>
-          <p className="text-xs text-gray-500 text-center mb-1">
-            Example: alice.williams@email.com
-          </p>
-          <p className="text-xs text-gray-500 text-center">
-            Default password: password123
+          <p className="text-xs text-gray-400 text-center">
+            Sign up to create your account and start tracking your health journey
           </p>
         </div>
 

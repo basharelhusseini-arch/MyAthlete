@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { store } from '@/lib/store';
 
+// This route is deprecated and replaced by /api/score/today
+// Kept for backwards compatibility but returns empty data
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const memberId = searchParams.get('memberId');
-
-    if (!memberId) {
-      return NextResponse.json({ error: 'Member ID is required' }, { status: 400 });
-    }
-
-    const healthScore = store.calculateHealthScore(memberId);
-    return NextResponse.json(healthScore);
-  } catch (error) {
-    console.error('Failed to calculate health score:', error);
-    return NextResponse.json({ error: 'Failed to calculate health score' }, { status: 500 });
-  }
+  return NextResponse.json({
+    total: 0,
+    workoutScore: 0,
+    dietScore: 0,
+    habitScore: 0,
+    sleepScore: 0,
+    workoutCount: 0,
+    workoutIntensity: 0,
+    dietQuality: 0,
+    habitCompletion: 0,
+    sleepQuality: 0,
+    message: 'This endpoint is deprecated. Use /api/score/today instead.'
+  }, { status: 410 }); // 410 Gone status
 }

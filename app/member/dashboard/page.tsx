@@ -3,51 +3,22 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity, Watch, Trophy } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity, Watch, Trophy, AlertCircle } from 'lucide-react';
 
-interface MemberData {
+interface UserData {
   id: string;
-  firstName: string;
-  lastName: string;
   email: string;
-  phone: string;
-  membershipId: string | null;
-  status: string;
-  completedSessions: number;
-}
-
-interface MembershipData {
-  id: string;
-  name: string;
-  price: number;
-  features: string[];
-}
-
-interface ClassData {
-  id: string;
-  name: string;
-  description: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  capacity: number;
-  enrolledMembers: string[];
-  checkedInMembers: string[];
-  waitlist: string[];
-  status: string;
 }
 
 interface HealthScore {
-  total: number;
-  workoutScore: number;
-  dietScore: number;
-  habitScore: number;
-  sleepScore: number;
-  workoutCount: number;
-  workoutIntensity: number;
-  dietQuality: number;
-  habitCompletion: number;
-  sleepQuality: number;
+  id: string;
+  user_id: string;
+  date: string;
+  score: number;
+  training_score: number;
+  diet_score: number;
+  sleep_score: number;
+  created_at: string;
 }
 
 interface LeaderboardEntry {
@@ -56,89 +27,101 @@ interface LeaderboardEntry {
   score: number;
 }
 
+interface CheckinData {
+  id: string;
+  user_id: string;
+  date: string;
+  did_workout: boolean;
+  calories: number;
+  sleep_hours: number;
+  created_at: string;
+}
+
 export default function MemberDashboardPage() {
   const router = useRouter();
-  const [member, setMember] = useState<MemberData | null>(null);
-  const [membership, setMembership] = useState<MembershipData | null>(null);
-  const [upcomingClasses, setUpcomingClasses] = useState<ClassData[]>([]);
-  const [completedSessions, setCompletedSessions] = useState(0);
+  const [user, setUser] = useState<UserData | null>(null);
   const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [scoreHistory, setScoreHistory] = useState<HealthScore[]>([]);
+  const [todayCheckin, setTodayCheckin] = useState<CheckinData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const memberId = localStorage.getItem('memberId');
-    if (!memberId) {
-      router.push('/member/login');
-      return;
-    }
+    fetchDashboardData();
+  }, []);
 
-    fetchMemberData(memberId);
-  }, [router]);
-
-  const fetchMemberData = async (memberId: string) => {
+  const fetchDashboardData = async () => {
     try {
-      // Fetch member data
-      const memberRes = await fetch(`/api/members/${memberId}`);
-      const memberData = await memberRes.json();
-      setMember(memberData);
-      setCompletedSessions(memberData.completedSessions || 0);
+      // Check authentication
+      const authRes = await fetch('/api/auth/me');
+      if (!authRes.ok) {
+        router.push('/member/login');
+        return;
+      }
+      const authData = await authRes.json();
+      setUser(authData.user);
 
-      // Fetch session count
-      const sessionsRes = await fetch(`/api/member/${memberId}/sessions`);
-      const sessionsData = await sessionsRes.json();
-      setCompletedSessions(sessionsData.completedSessions || 0);
-
-      // Fetch membership if exists
-      if (memberData.membershipId) {
-        const membershipRes = await fetch(`/api/memberships/${memberData.membershipId}`);
-        const membershipData = await membershipRes.json();
-        setMembership(membershipData);
+      // Fetch today's health score
+      const scoreRes = await fetch('/api/score/today');
+      if (scoreRes.ok) {
+        const scoreData = await scoreRes.json();
+        setHealthScore(scoreData.healthScore);
       }
 
-      // Fetch all classes and filter enrolled ones
-      const classesRes = await fetch('/api/classes');
-      const allClasses = await classesRes.json();
-      const enrolled = allClasses.filter((c: ClassData) => 
-        c.enrolledMembers.includes(memberId) && 
-        c.status === 'scheduled' &&
-        new Date(`${c.date}T${c.startTime}`) >= new Date()
-      );
-      setUpcomingClasses(enrolled);
-
-      // Fetch health score
-      const healthScoreRes = await fetch(`/api/health/score?memberId=${memberId}`);
-      const healthScoreData = await healthScoreRes.json();
-      setHealthScore(healthScoreData);
+      // Fetch score history (last 7 days)
+      const historyRes = await fetch('/api/score/history?days=7');
+      if (historyRes.ok) {
+        const historyData = await historyRes.json();
+        setScoreHistory(historyData.history || []);
+      }
 
       // Fetch leaderboard
-      const leaderboardRes = await fetch(`/api/health/friends?memberId=${memberId}`);
-      const leaderboardData = await leaderboardRes.json();
-      setLeaderboard(leaderboardData);
+      const leaderboardRes = await fetch('/api/leaderboard');
+      if (leaderboardRes.ok) {
+        const leaderboardData = await leaderboardRes.json();
+        setLeaderboard(leaderboardData.leaderboard || []);
+      }
+
+      // Check if today's check-in exists
+      const checkinRes = await fetch('/api/checkin/today');
+      if (checkinRes.ok) {
+        const checkinData = await checkinRes.json();
+        setTodayCheckin(checkinData.checkin);
+      }
     } catch (error) {
-      console.error('Failed to fetch member data:', error);
+      console.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('memberId');
-    localStorage.removeItem('memberName');
-    router.push('/member/login');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/member/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.push('/member/login');
+    }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
-        <p className="text-gray-400">Loading...</p>
+        <div className="text-center">
+          <Activity className="w-12 h-12 text-blue-400 mx-auto mb-4 animate-pulse" />
+          <p className="text-gray-400">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
-  if (!member) {
+  if (!user) {
     return null;
   }
+
+  const userDisplayName = user.email.split('@')[0];
 
   return (
     <div className="min-h-screen bg-gray-950">
@@ -148,7 +131,7 @@ export default function MemberDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Thrivv</h1>
-              <p className="text-sm text-gray-300">Welcome back, {member.firstName}!</p>
+              <p className="text-sm text-gray-300">Welcome back, {userDisplayName}!</p>
             </div>
             <button
               onClick={handleLogout}
@@ -162,6 +145,29 @@ export default function MemberDashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Check-in Alert */}
+        {!todayCheckin && (
+          <div className="mb-6 dark-card border-l-4 border-yellow-400 bg-yellow-500/10">
+            <div className="p-4 flex items-start justify-between">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-yellow-400 mr-3 mt-0.5" />
+                <div>
+                  <h3 className="text-white font-semibold mb-1">Complete Today's Check-in</h3>
+                  <p className="text-gray-300 text-sm">
+                    You haven't logged your workout, calories, and sleep for today. Complete your check-in to update your health score!
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/member/checkin"
+                className="ml-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-300 transition-colors whitespace-nowrap"
+              >
+                Check In
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Health Score & Leaderboard Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Large Health Score Display */}
@@ -198,12 +204,12 @@ export default function MemberDashboardPage() {
                           strokeWidth="12"
                           fill="none"
                           strokeDasharray={`${2 * Math.PI * 88}`}
-                          strokeDashoffset={`${2 * Math.PI * 88 * (1 - healthScore.total / 100)}`}
+                          strokeDashoffset={`${2 * Math.PI * 88 * (1 - healthScore.score / 100)}`}
                           className={`transition-all duration-1000 ${
-                            healthScore.total >= 90 ? 'text-green-400' :
-                            healthScore.total >= 80 ? 'text-blue-400' :
-                            healthScore.total >= 70 ? 'text-yellow-400' :
-                            healthScore.total >= 60 ? 'text-orange-400' :
+                            healthScore.score >= 90 ? 'text-green-400' :
+                            healthScore.score >= 80 ? 'text-blue-400' :
+                            healthScore.score >= 70 ? 'text-yellow-400' :
+                            healthScore.score >= 60 ? 'text-orange-400' :
                             'text-red-400'
                           }`}
                           strokeLinecap="round"
@@ -212,13 +218,13 @@ export default function MemberDashboardPage() {
                       {/* Score Number */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <div className={`text-6xl font-bold ${
-                          healthScore.total >= 90 ? 'text-green-400' :
-                          healthScore.total >= 80 ? 'text-blue-400' :
-                          healthScore.total >= 70 ? 'text-yellow-400' :
-                          healthScore.total >= 60 ? 'text-orange-400' :
+                          healthScore.score >= 90 ? 'text-green-400' :
+                          healthScore.score >= 80 ? 'text-blue-400' :
+                          healthScore.score >= 70 ? 'text-yellow-400' :
+                          healthScore.score >= 60 ? 'text-orange-400' :
                           'text-red-400'
                         }`}>
-                          {healthScore.total}
+                          {healthScore.score}
                         </div>
                         <div className="text-gray-400 text-sm font-medium">/ 100</div>
                       </div>
@@ -227,16 +233,16 @@ export default function MemberDashboardPage() {
                     {/* Score Category */}
                     <div className="text-center mb-6">
                       <p className={`text-xl font-bold mb-1 ${
-                        healthScore.total >= 90 ? 'text-green-400' :
-                        healthScore.total >= 80 ? 'text-blue-400' :
-                        healthScore.total >= 70 ? 'text-yellow-400' :
-                        healthScore.total >= 60 ? 'text-orange-400' :
+                        healthScore.score >= 90 ? 'text-green-400' :
+                        healthScore.score >= 80 ? 'text-blue-400' :
+                        healthScore.score >= 70 ? 'text-yellow-400' :
+                        healthScore.score >= 60 ? 'text-orange-400' :
                         'text-red-400'
                       }`}>
-                        {healthScore.total >= 90 ? '🏆 Elite Lifestyle' :
-                         healthScore.total >= 80 ? '💪 Very Strong' :
-                         healthScore.total >= 70 ? '✅ Healthy' :
-                         healthScore.total >= 60 ? '⚠️ Suboptimal' :
+                        {healthScore.score >= 90 ? '🏆 Elite Lifestyle' :
+                         healthScore.score >= 80 ? '💪 Very Strong' :
+                         healthScore.score >= 70 ? '✅ Healthy' :
+                         healthScore.score >= 60 ? '⚠️ Suboptimal' :
                          '🚨 Risk Zone'}
                       </p>
                       <p className="text-gray-500 text-sm">Keep up the great work!</p>
@@ -249,35 +255,34 @@ export default function MemberDashboardPage() {
                           <Dumbbell className="w-4 h-4 mr-2 text-orange-400" />
                           Training
                         </span>
-                        <span className="text-white font-semibold">{healthScore.workoutScore}/30</span>
+                        <span className="text-white font-semibold">{healthScore.training_score}/30</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-400 flex items-center">
                           <UtensilsCrossed className="w-4 h-4 mr-2 text-green-400" />
                           Diet
                         </span>
-                        <span className="text-white font-semibold">{healthScore.dietScore.toFixed(1)}/30</span>
+                        <span className="text-white font-semibold">{healthScore.diet_score}/40</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-400 flex items-center">
                           <Activity className="w-4 h-4 mr-2 text-blue-400" />
                           Sleep
                         </span>
-                        <span className="text-white font-semibold">{healthScore.sleepScore.toFixed(1)}/25</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-400 flex items-center">
-                          <Target className="w-4 h-4 mr-2 text-purple-400" />
-                          Habits
-                        </span>
-                        <span className="text-white font-semibold">{healthScore.habitScore.toFixed(1)}/15</span>
+                        <span className="text-white font-semibold">{healthScore.sleep_score}/30</span>
                       </div>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-8">
                     <Activity className="w-12 h-12 text-gray-500 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-400">Calculating your score...</p>
+                    <p className="text-gray-400 mb-2">No score yet</p>
+                    <Link
+                      href="/member/checkin"
+                      className="text-blue-400 hover:text-blue-300 text-sm font-medium"
+                    >
+                      Complete your first check-in →
+                    </Link>
                   </div>
                 )}
               </div>
@@ -289,7 +294,7 @@ export default function MemberDashboardPage() {
             <div className="dark-card">
               <div className="px-6 py-4 border-b border-gray-800/50 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white flex items-center">
-                  <Activity className="w-5 h-5 mr-2 text-blue-400" />
+                  <Trophy className="w-5 h-5 mr-2 text-yellow-400" />
                   Health Score Leaderboard
                 </h2>
                 <span className="text-sm text-gray-400">Top Athletes</span>
@@ -298,7 +303,7 @@ export default function MemberDashboardPage() {
                 {leaderboard.length > 0 ? (
                   <div className="space-y-3">
                     {leaderboard.slice(0, 10).map((entry, index) => {
-                      const isCurrentUser = entry.id === member?.id;
+                      const isCurrentUser = entry.id === user?.id;
                       const rank = index + 1;
                       return (
                         <div
@@ -360,7 +365,8 @@ export default function MemberDashboardPage() {
                 ) : (
                   <div className="text-center py-8">
                     <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400">Loading leaderboard...</p>
+                    <p className="text-gray-400 text-sm mb-2">No leaderboard data yet</p>
+                    <p className="text-gray-500 text-xs">Complete your check-in to appear on the leaderboard!</p>
                   </div>
                 )}
               </div>
@@ -370,331 +376,154 @@ export default function MemberDashboardPage() {
 
         {/* Main Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* Book a Class */}
+          {/* Daily Check-in */}
           <Link
-            href="/member/classes"
+            href="/member/checkin"
             className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
           >
             <div className="p-8">
               <div className="flex items-start justify-between mb-4">
                 <div className="p-4 bg-blue-500/20 rounded-xl">
-                  <Calendar className="w-8 h-8 text-blue-400" />
+                  <CheckCircle className="w-8 h-8 text-blue-400" />
                 </div>
                 <div className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <BookOpen className="w-5 h-5" />
+                  <CheckCircle className="w-5 h-5" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Book a Class</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">Daily Check-in</h2>
               <p className="text-gray-400 mb-4">
-                Browse and enroll in fitness classes. You have {upcomingClasses.length} upcoming {upcomingClasses.length === 1 ? 'class' : 'classes'}.
+                Log your workout, calories, and sleep to track your health score every day.
               </p>
               <div className="flex items-center text-blue-400 font-medium">
-                Browse Classes
-                <BookOpen className="w-4 h-4 ml-2" />
+                {todayCheckin ? 'Update Check-in' : 'Complete Check-in'}
+                <CheckCircle className="w-4 h-4 ml-2" />
               </div>
             </div>
           </Link>
 
-          {/* Diet / Nutrition */}
-          <Link
-            href="/member/nutrition"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
-          >
+          {/* Score History */}
+          <div className="dark-card">
             <div className="p-8">
               <div className="flex items-start justify-between mb-4">
                 <div className="p-4 bg-green-500/20 rounded-xl">
-                  <UtensilsCrossed className="w-8 h-8 text-green-400" />
-                </div>
-                <div className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <UtensilsCrossed className="w-5 h-5" />
+                  <Activity className="w-8 h-8 text-green-400" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Diet & Nutrition</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">7-Day Trend</h2>
               <p className="text-gray-400 mb-4">
-                Get personalized nutrition plans and meal recommendations tailored to your fitness goals.
+                {scoreHistory.length > 0 
+                  ? `${scoreHistory.length} day${scoreHistory.length !== 1 ? 's' : ''} of data tracked` 
+                  : 'Start tracking your daily progress'}
               </p>
-              <div className="flex items-center text-green-400 font-medium">
-                View Nutrition Plans
-                <UtensilsCrossed className="w-4 h-4 ml-2" />
-              </div>
+              {scoreHistory.length > 0 && (
+                <div className="flex items-center space-x-2">
+                  {scoreHistory.map((score, idx) => (
+                    <div
+                      key={idx}
+                      className="flex-1 bg-gray-800 rounded-full h-2 overflow-hidden"
+                      title={`${new Date(score.date).toLocaleDateString()}: ${score.score}`}
+                    >
+                      <div
+                        className={`h-full ${
+                          score.score >= 90 ? 'bg-green-400' :
+                          score.score >= 80 ? 'bg-blue-400' :
+                          score.score >= 70 ? 'bg-yellow-400' :
+                          score.score >= 60 ? 'bg-orange-400' :
+                          'bg-red-400'
+                        }`}
+                        style={{ width: `${score.score}%` }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </Link>
+          </div>
 
-          {/* Workout */}
-          <Link
-            href="/member/workouts"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
-          >
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-orange-500/20 rounded-xl">
-                  <Dumbbell className="w-8 h-8 text-orange-400" />
-                </div>
-                <div className="text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Dumbbell className="w-5 h-5" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Workouts</h2>
-              <p className="text-gray-400 mb-4">
-                Track your workouts, view progress, and access personalized workout plans designed for you.
-              </p>
-              <div className="flex items-center text-orange-400 font-medium">
-                View Workouts
-                <Dumbbell className="w-4 h-4 ml-2" />
-              </div>
-            </div>
-          </Link>
-
-          {/* Habit Tracking */}
-          <Link
-            href="/member/habits"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
-          >
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-purple-500/20 rounded-xl">
-                  <Target className="w-8 h-8 text-purple-400" />
-                </div>
-                <div className="text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Target className="w-5 h-5" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Habit Tracking</h2>
-              <p className="text-gray-400 mb-4">
-                Build and track healthy habits. Monitor your progress and maintain consistency with your goals.
-              </p>
-              <div className="flex items-center text-purple-400 font-medium">
-                Manage Habits
-                <Target className="w-4 h-4 ml-2" />
-              </div>
-            </div>
-          </Link>
-
-          {/* Connect Wearable */}
-          <Link
-            href="/member/wearables"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
-          >
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-pink-500/20 rounded-xl">
-                  <Watch className="w-8 h-8 text-pink-400" />
-                </div>
-                <div className="text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Watch className="w-5 h-5" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Connect Wearable</h2>
-              <p className="text-gray-400 mb-4">
-                Sync your Whoop, Garmin, or Apple Health data for automatic tracking and personalized insights.
-              </p>
-              <div className="flex items-center text-pink-400 font-medium">
-                Connect Device
-                <Watch className="w-4 h-4 ml-2" />
-              </div>
-            </div>
-          </Link>
-
-          {/* Rewards */}
-          <Link
-            href="/member/rewards"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20"
-          >
+          {/* Leaderboard Rank */}
+          <div className="dark-card bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
             <div className="p-8">
               <div className="flex items-start justify-between mb-4">
                 <div className="p-4 bg-yellow-500/20 rounded-xl">
                   <Trophy className="w-8 h-8 text-yellow-400" />
                 </div>
-                <div className="text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Trophy className="w-5 h-5" />
-                </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Rewards</h2>
-              <p className="text-gray-400 mb-4">
-                Earn points with your health score and unlock exclusive discounts, free classes, and premium perks.
-              </p>
-              <div className="flex items-center text-yellow-400 font-medium">
-                View Rewards
-                <Trophy className="w-4 h-4 ml-2" />
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        {/* Stats and Additional Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Upcoming Classes */}
-          <div className="lg:col-span-2">
-            <div className="dark-card">
-              <div className="px-6 py-4 border-b border-gray-800/50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">My Upcoming Classes</h2>
-                <Link
-                  href="/member/classes"
-                  className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
-                >
-                  View All
-                </Link>
-              </div>
-              <div className="p-6">
-                {upcomingClasses.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Calendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 mb-4">No upcoming classes</p>
-                    <Link
-                      href="/member/classes"
-                      className="inline-flex items-center px-4 py-2 btn-primary"
-                    >
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      Browse Classes
-                    </Link>
+              <h2 className="text-2xl font-bold text-white mb-2">Your Rank</h2>
+              {leaderboard.length > 0 ? (
+                <>
+                  <p className="text-gray-400 mb-4">
+                    {leaderboard.findIndex(e => e.id === user?.id) !== -1
+                      ? `#${leaderboard.findIndex(e => e.id === user?.id) + 1} of ${leaderboard.length}`
+                      : 'Complete check-in to rank'}
+                  </p>
+                  <div className="flex items-center text-yellow-400 font-medium">
+                    View Leaderboard
+                    <Trophy className="w-4 h-4 ml-2" />
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {upcomingClasses.map((classItem) => {
-                      const isCheckedIn = classItem.checkedInMembers?.includes(member?.id || '');
-                      const canCheckIn = new Date(`${classItem.date}T${classItem.startTime}`) <= new Date() && 
-                                        !isCheckedIn && 
-                                        classItem.enrolledMembers.includes(member?.id || '');
-                      
-                      return (
-                        <div
-                          key={classItem.id}
-                          className="border border-gray-800/50 rounded-lg p-4 hover:bg-gray-800/30 transition-all duration-200"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-white mb-1">
-                                {classItem.name}
-                              </h3>
-                              <p className="text-sm text-gray-400 mb-2">
-                                {classItem.description}
-                              </p>
-                              <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                                <div className="flex items-center">
-                                  <Calendar className="w-4 h-4 mr-1" />
-                                  {new Date(classItem.date).toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center">
-                                  <Clock className="w-4 h-4 mr-1" />
-                                  {classItem.startTime} - {classItem.endTime}
-                                </div>
-                                <div className="flex items-center">
-                                  <Users className="w-4 h-4 mr-1" />
-                                  {classItem.enrolledMembers.length}/{classItem.capacity}
-                                </div>
-                              </div>
-                              {isCheckedIn && (
-                                <div className="flex items-center text-green-400 text-sm">
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  Checked in
-                                </div>
-                              )}
-                              {canCheckIn && (
-                                <button
-                                  onClick={async (e) => {
-                                    e.preventDefault();
-                                    try {
-                                      const res = await fetch(`/api/classes/${classItem.id}/checkin`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ memberId: member?.id }),
-                                      });
-                                      if (res.ok) {
-                                        const data = await res.json();
-                                        setCompletedSessions(data.sessionsCompleted);
-                                        fetchMemberData(member?.id || '');
-                                        alert('Successfully checked in!');
-                                      }
-                                    } catch (error) {
-                                      alert('Failed to check in');
-                                    }
-                                  }}
-                                  className="mt-2 px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
-                                >
-                                  Check In
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <p className="text-gray-400 mb-4">
+                  No rankings yet. Be the first!
+                </p>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Membership Info & Quick Stats */}
-          <div className="space-y-6">
-            {/* Quick Stats */}
-            <div className="dark-card">
-              <div className="px-6 py-4 border-b border-gray-800/50">
-                <h2 className="text-lg font-semibold text-white">Quick Stats</h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-400">Completed Sessions</p>
-                      <p className="text-xl font-bold text-white">{completedSessions}</p>
-                    </div>
-                  </div>
-                </div>
-                {membership && (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <CreditCard className="w-5 h-5 text-blue-400 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-400">Membership</p>
-                        <p className="text-xl font-bold text-white">{membership.name}</p>
+        {/* Score History Detail */}
+        {scoreHistory.length > 0 && (
+          <div className="dark-card">
+            <div className="px-6 py-4 border-b border-gray-800/50">
+              <h2 className="text-lg font-semibold text-white flex items-center">
+                <Calendar className="w-5 h-5 mr-2 text-blue-400" />
+                Recent Health Scores
+              </h2>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
+                {scoreHistory.slice().reverse().map((score) => (
+                  <div
+                    key={score.id}
+                    className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-800/50"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="text-gray-400 text-sm">
+                        {new Date(score.date).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </div>
+                      <div className="flex items-center space-x-3 text-xs text-gray-500">
+                        <span className="flex items-center">
+                          <Dumbbell className="w-3 h-3 mr-1 text-orange-400" />
+                          {score.training_score}
+                        </span>
+                        <span className="flex items-center">
+                          <UtensilsCrossed className="w-3 h-3 mr-1 text-green-400" />
+                          {score.diet_score}
+                        </span>
+                        <span className="flex items-center">
+                          <Activity className="w-3 h-3 mr-1 text-blue-400" />
+                          {score.sleep_score}
+                        </span>
                       </div>
                     </div>
-                  </div>
-                )}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <User className="w-5 h-5 text-purple-400 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-400">Status</p>
-                      <p className="text-xl font-bold text-white capitalize">{member.status}</p>
+                    <div className={`text-2xl font-bold ${
+                      score.score >= 90 ? 'text-green-400' :
+                      score.score >= 80 ? 'text-blue-400' :
+                      score.score >= 70 ? 'text-yellow-400' :
+                      score.score >= 60 ? 'text-orange-400' :
+                      'text-red-400'
+                    }`}>
+                      {score.score}
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
-
-            {/* Membership Card */}
-            {membership && (
-              <div className="dark-card">
-                <div className="px-6 py-4 border-b border-gray-800/50">
-                  <h2 className="text-lg font-semibold text-white">My Membership</h2>
-                </div>
-                <div className="p-6">
-                  <div className="mb-4">
-                    <p className="text-2xl font-bold text-white">{membership.name}</p>
-                    <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mt-2">
-                      ${membership.price.toFixed(2)}
-                      <span className="text-sm font-normal text-gray-400">/month</span>
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-300">Features:</p>
-                    <ul className="space-y-1">
-                      {membership.features.map((feature, index) => (
-                        <li key={index} className="text-sm text-gray-400 flex items-center">
-                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

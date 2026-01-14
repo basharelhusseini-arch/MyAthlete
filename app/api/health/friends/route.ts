@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { store } from '@/lib/store';
 
+// This route is deprecated and replaced by /api/leaderboard
+// Kept for backwards compatibility but returns empty data
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const memberId = searchParams.get('memberId');
-
-    if (!memberId) {
-      return NextResponse.json({ error: 'Member ID is required' }, { status: 400 });
-    }
-
-    const friendsScores = store.getFriendsHealthScores(memberId);
-    return NextResponse.json(friendsScores);
-  } catch (error) {
-    console.error('Failed to fetch friends scores:', error);
-    return NextResponse.json({ error: 'Failed to fetch friends scores' }, { status: 500 });
-  }
+  return NextResponse.json([], { status: 410 }); // 410 Gone status with empty array
 }
