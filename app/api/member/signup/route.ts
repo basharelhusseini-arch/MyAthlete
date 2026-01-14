@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingMember = store.getAllMembers().find(m => m.email === email);
+    const existingMember = store.getMemberByEmail(email);
     if (existingMember) {
       return NextResponse.json(
         { error: 'Email already registered' },
@@ -30,24 +30,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new member
-    const newMember = store.createMember({
+    // Create new member using addMember
+    const newMember = store.addMember({
       firstName,
       lastName,
       email,
       phone,
+      password, // Store password (in production, this should be hashed!)
       dateOfBirth: new Date().toISOString().split('T')[0], // Default to today, can be updated later
-      emergencyContact: phone, // Default to their phone
+      joinDate: new Date().toISOString(),
       membershipId: null, // No membership initially
       status: 'active',
       notes: 'Self-registered account',
+      completedSessions: 0,
     });
-
-    // Store password (in production, this should be hashed!)
-    // For demo purposes, we're storing it in a simple way
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(`member_password_${newMember.id}`, password);
-    }
 
     return NextResponse.json({
       success: true,

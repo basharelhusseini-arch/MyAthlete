@@ -2702,6 +2702,10 @@ class DataStore {
     return this.members.find(m => m.id === id);
   }
 
+  getMemberByEmail(email: string): Member | undefined {
+    return this.members.find(m => m.email === email);
+  }
+
   addMember(member: Omit<Member, 'id'>): Member {
     const newMember: Member = {
       ...member,
