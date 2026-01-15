@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const user = await requireAuth();
 
     const body = await request.json();
-    const { didWorkout, calories, sleepHours, protein, carbs, fat } = body;
+    const { didWorkout, calories, sleepHours } = body;
 
     // Validation
     if (typeof didWorkout !== 'boolean') {
@@ -22,24 +22,21 @@ export async function POST(request: NextRequest) {
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
 
+    // Construct payload explicitly with only existing columns
+    const checkinPayload = {
+      user_id: user.id,
+      date: today,
+      did_workout: didWorkout,
+      calories: calories || 0,
+      sleep_hours: sleepHours || 0,
+    };
+
     // Upsert check-in (insert or update if exists)
     const { data: checkin, error: checkinError } = await supabase
       .from('daily_checkins')
-      .upsert(
-        {
-          user_id: user.id,
-          date: today,
-          did_workout: didWorkout,
-          calories: calories || 0,
-          sleep_hours: sleepHours || 0,
-          protein_g: protein || 0,
-          carbs_g: carbs || 0,
-          fat_g: fat || 0,
-        },
-        {
-          onConflict: 'user_id,date',
-        }
-      )
+      .upsert(checkinPayload, {
+        onConflict: 'user_id,date',
+      })
       .select()
       .single();
 
@@ -58,19 +55,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate health score with macro data if provided
-    const consumed = protein && carbs && fat ? {
-      calories: calories || 0,
-      protein_g: protein,
-      carbs_g: carbs,
-      fat_g: fat,
-    } : undefined;
-
+    // Calculate health score (macros would come from nutrition logs if needed)
     const score = calculateHealthScore({
       didWorkout,
       calories,
       sleepHours,
-    }, undefined, consumed);
+    });
 
     // Upsert health score
     const { data: healthScore, error: scoreError } = await supabase

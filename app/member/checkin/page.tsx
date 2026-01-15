@@ -56,9 +56,9 @@ export default function CheckinPage() {
             setFormData({
               didWorkout: data.checkin.did_workout,
               calories: data.checkin.calories?.toString() || '',
-              protein: data.checkin.protein_g?.toString() || '',
-              carbs: data.checkin.carbs_g?.toString() || '',
-              fat: data.checkin.fat_g?.toString() || '',
+              protein: '', // Keep UI fields but don't load from check-ins
+              carbs: '',
+              fat: '',
               sleepHours: data.checkin.sleep_hours?.toString() || '',
             });
           }
@@ -93,17 +93,17 @@ export default function CheckinPage() {
     setSubmitting(true);
 
     try {
+      // Construct payload with only fields that exist in daily_checkins table
+      const payload = {
+        didWorkout: formData.didWorkout,
+        calories: formData.calories ? parseInt(formData.calories, 10) : 0,
+        sleepHours: formData.sleepHours ? parseFloat(formData.sleepHours) : 0,
+      };
+
       const response = await fetch('/api/checkin/today', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          didWorkout: formData.didWorkout,
-          calories: formData.calories ? parseInt(formData.calories, 10) : 0,
-          protein: formData.protein ? parseFloat(formData.protein) : 0,
-          carbs: formData.carbs ? parseFloat(formData.carbs) : 0,
-          fat: formData.fat ? parseFloat(formData.fat) : 0,
-          sleepHours: formData.sleepHours ? parseFloat(formData.sleepHours) : 0,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
