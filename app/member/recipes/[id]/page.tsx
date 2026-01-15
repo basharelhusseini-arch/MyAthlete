@@ -3,54 +3,62 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Clock, Users, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Clock, Users, CheckCircle, X } from 'lucide-react';
 import { getRecipeById, type Recipe } from '@/lib/recipes';
+import { addMealToToday, getTodayLog, computeTotals, type DailyLog } from '@/lib/nutrition-log';
 
 export default function RecipeDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [addedToToday, setAddedToToday] = useState(false);
+  const [servings, setServings] = useState(1);
+  const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [memberId, setMemberId] = useState<string | null>(null);
 
   useEffect(() => {
+    const id = localStorage.getItem('memberId');
+    if (!id) {
+      router.push('/member/login');
+      return;
+    }
+    setMemberId(id);
+
     const foundRecipe = getRecipeById(params.id);
     if (!foundRecipe) {
       router.push('/member/recipes');
       return;
     }
     setRecipe(foundRecipe);
+    setServings(foundRecipe.servings);
 
-    // Check if already added to today
-    const todayMeals = localStorage.getItem('today_meals');
-    if (todayMeals) {
-      const meals = JSON.parse(todayMeals);
-      setAddedToToday(meals.some((m: any) => m.recipeId === params.id));
-    }
+    // Load today's log
+    loadTodayLog(id);
   }, [params.id, router]);
 
-  const handleAddToToday = () => {
-    if (!recipe) return;
+  const loadTodayLog = async (userId: string) => {
+    const log = await getTodayLog(userId);
+    setTodayLog(log);
+    setAddedToToday(log.meals.some(m => m.recipeId === params.id));
+  };
 
-    const todayMeals = localStorage.getItem('today_meals');
-    const meals = todayMeals ? JSON.parse(todayMeals) : [];
-    
-    const newMeal = {
-      recipeId: recipe.id,
-      recipeName: recipe.name,
-      calories: recipe.calories,
-      protein_g: recipe.protein_g,
-      carbs_g: recipe.carbs_g,
-      fat_g: recipe.fat_g,
-      addedAt: new Date().toISOString(),
-    };
+  const handleAddToToday = async () => {
+    if (!recipe || !memberId) return;
 
-    meals.push(newMeal);
-    localStorage.setItem('today_meals', JSON.stringify(meals));
-    setAddedToToday(true);
+    try {
+      await addMealToToday(memberId, recipe.id, servings);
+      setAddedToToday(true);
+      setShowToast(true);
+      
+      // Reload today's log
+      await loadTodayLog(memberId);
 
-    // Show feedback
-    setTimeout(() => {
-      alert('Recipe added to today\'s meals!');
-    }, 100);
+      // Hide toast after 3 seconds
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      console.error('Failed to add meal:', error);
+      alert('Failed to add recipe to today. Please try again.');
+    }
   };
 
   if (!recipe) {
@@ -218,6 +226,34 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
               </div>
             </div>
 
+            {/* Servings Selector */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-thrivv-text-secondary mb-2">
+                Servings to Add
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setServings(Math.max(1, servings - 1))}
+                  className="w-10 h-10 rounded-xl bg-thrivv-bg-card border border-thrivv-gold-500/20 text-thrivv-text-primary hover:bg-thrivv-gold-500/10 transition-colors"
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={servings}
+                  onChange={(e) => setServings(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="input-premium text-center w-20 px-3 py-2"
+                />
+                <button
+                  onClick={() => setServings(servings + 1)}
+                  className="w-10 h-10 rounded-xl bg-thrivv-bg-card border border-thrivv-gold-500/20 text-thrivv-text-primary hover:bg-thrivv-gold-500/10 transition-colors"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
             {/* Add to Today Button */}
             <button
               onClick={handleAddToToday}
@@ -234,7 +270,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
                   Added to Today
                 </>
               ) : (
-                'Add to Today\'s Meals'
+                `Add ${servings} ${servings === 1 ? 'Serving' : 'Servings'} to Today`
               )}
             </button>
             {addedToToday && (
@@ -242,9 +278,61 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
                 This recipe has been added to your daily log
               </p>
             )}
+
+            {/* Today's Summary */}
+            {todayLog && todayLog.meals.length > 0 && (
+              <div className="mt-6 p-4 bg-thrivv-bg-card/50 rounded-xl">
+                <h4 className="text-sm font-semibold text-thrivv-text-primary mb-3">Today&apos;s Total</h4>
+                {(() => {
+                  const totals = computeTotals(todayLog);
+                  return (
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="text-thrivv-text-muted">Calories:</span>
+                        <span className="ml-2 text-thrivv-gold-500 font-semibold">{totals.calories}</span>
+                      </div>
+                      <div>
+                        <span className="text-thrivv-text-muted">Protein:</span>
+                        <span className="ml-2 text-thrivv-text-primary font-semibold">{totals.protein_g}g</span>
+                      </div>
+                      <div>
+                        <span className="text-thrivv-text-muted">Carbs:</span>
+                        <span className="ml-2 text-thrivv-text-primary font-semibold">{totals.carbs_g}g</span>
+                      </div>
+                      <div>
+                        <span className="text-thrivv-text-muted">Fat:</span>
+                        <span className="ml-2 text-thrivv-text-primary font-semibold">{totals.fat_g}g</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+                <Link
+                  href="/member/nutrition"
+                  className="block mt-3 text-center text-xs text-thrivv-gold-500 hover:text-thrivv-gold-400 transition-colors"
+                >
+                  View Full Diet Log →
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Success Toast */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
+          <div className="success-badge px-6 py-4 flex items-center gap-3 shadow-lg">
+            <CheckCircle className="w-5 h-5" />
+            <span className="font-medium">Added to today&apos;s meals!</span>
+            <button
+              onClick={() => setShowToast(false)}
+              className="ml-2 text-thrivv-neon-green/70 hover:text-thrivv-neon-green"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
