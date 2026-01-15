@@ -118,10 +118,28 @@ export default function CheckinPage() {
           router.push('/member/dashboard');
         }, 2000);
       } else {
-        setError(data.error || 'Failed to submit check-in');
+        // Handle specific error cases
+        if (response.status === 401) {
+          setError('Session expired. Please sign in again.');
+          setTimeout(() => router.push('/member/login'), 2000);
+        } else {
+          const errorMsg = data.error || `Failed to save check-in (HTTP ${response.status})`;
+          const codeMsg = data.code ? ` [Code: ${data.code}]` : '';
+          setError(`${errorMsg}${codeMsg}`);
+        }
+        // Log full error for debugging
+        console.error('Check-in failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: data.error,
+          code: data.code,
+          details: data.details,
+          supabaseError: data.supabaseError
+        });
       }
     } catch (error) {
-      setError('An error occurred. Please try again.');
+      console.error('Check-in exception:', error);
+      setError(`Network error: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setSubmitting(false);
     }

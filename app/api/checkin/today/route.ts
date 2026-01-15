@@ -45,8 +45,15 @@ export async function POST(request: NextRequest) {
 
     if (checkinError) {
       console.error('Check-in error:', checkinError);
+      const errorMessage = checkinError.message || 'Failed to save check-in';
+      const errorDetails = checkinError.details ? ` Details: ${checkinError.details}` : '';
+      const errorHint = checkinError.hint ? ` Hint: ${checkinError.hint}` : '';
       return NextResponse.json(
-        { error: 'Failed to save check-in' },
+        { 
+          error: `${errorMessage}${errorDetails}${errorHint}`,
+          code: checkinError.code,
+          supabaseError: checkinError
+        },
         { status: 500 }
       );
     }
@@ -87,8 +94,15 @@ export async function POST(request: NextRequest) {
 
     if (scoreError) {
       console.error('Score error:', scoreError);
+      const errorMessage = scoreError.message || 'Failed to save health score';
+      const errorDetails = scoreError.details ? ` Details: ${scoreError.details}` : '';
+      const errorHint = scoreError.hint ? ` Hint: ${scoreError.hint}` : '';
       return NextResponse.json(
-        { error: 'Failed to save health score' },
+        { 
+          error: `${errorMessage}${errorDetails}${errorHint}`,
+          code: scoreError.code,
+          supabaseError: scoreError
+        },
         { status: 500 }
       );
     }
@@ -101,13 +115,16 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     if (error.message === 'Unauthorized') {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Session expired. Please sign in again.' },
         { status: 401 }
       );
     }
-    console.error('Check-in error:', error);
+    console.error('Check-in error (full):', error);
     return NextResponse.json(
-      { error: 'Failed to process check-in' },
+      { 
+        error: error.message || 'Failed to process check-in',
+        details: error.toString()
+      },
       { status: 500 }
     );
   }
