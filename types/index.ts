@@ -209,17 +209,23 @@ export interface Recipe {
   description: string;
   imageUrl: string;
   imageId: string; // Unsplash photo ID for stable images
-  calories: number;
-  protein_g: number; // Canonical field from recipes.ts
-  carbs_g: number; // Canonical field from recipes.ts
-  fat_g: number; // Canonical field from recipes.ts
+  calories: number; // Per serving (computed from ingredients)
+  protein_g: number; // Per serving - Canonical field from recipes.ts
+  carbs_g: number; // Per serving - Canonical field from recipes.ts
+  fat_g: number; // Per serving - Canonical field from recipes.ts
   prepMinutes: number; // Canonical field from recipes.ts
   cookMinutes: number; // Canonical field from recipes.ts
-  servings: number;
+  servings: number; // Number of servings this recipe yields
   ingredients: Ingredient[];
   instructions: string[];
   tags: string[]; // e.g., ['high-protein', 'low-carb', 'vegetarian', 'meal-prep']
-  fiber?: number; // Optional fiber content in grams
+  fiber?: number; // Optional fiber content in grams per serving
+  // Optional: Nutrition metadata
+  totalCalories?: number; // Total for entire batch (calories * servings)
+  totalProtein?: number; // Total for entire batch
+  totalCarbs?: number; // Total for entire batch
+  totalFats?: number; // Total for entire batch
+  missingNutritionData?: boolean; // Flag if some ingredients lack nutrition data
   // Backwards compatibility fields (mapped from canonical fields)
   prepTime?: number;
   cookTime?: number;

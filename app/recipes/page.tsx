@@ -162,7 +162,7 @@ export default function RecipesPage() {
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span className="font-medium">Macros:</span>
+                  <span className="font-medium">Per serving:</span>
                   <span>P: {recipe.protein ?? recipe.protein_g}g</span>
                   <span>C: {recipe.carbohydrates ?? recipe.carbs_g}g</span>
                   <span>F: {recipe.fats ?? recipe.fat_g}g</span>
