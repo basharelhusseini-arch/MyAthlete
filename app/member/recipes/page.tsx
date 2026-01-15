@@ -19,6 +19,18 @@ export default function MemberRecipesPage() {
     mealPrep: false,
   });
 
+  // DEV: Log first 3 recipe URLs to verify uniqueness
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    const logged = (window as any).__recipeUrlsLogged;
+    if (!logged) {
+      console.log('🖼️ First 3 recipe image URLs:');
+      recipesData.slice(0, 3).forEach((r, i) => {
+        console.log(`  ${i + 1}. ${r.name}: ${r.imageUrl}`);
+      });
+      (window as any).__recipeUrlsLogged = true;
+    }
+  }
+
   const toggleFilter = (filter: keyof typeof filters) => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
   };
