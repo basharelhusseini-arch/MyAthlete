@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Target, User, Scale, Activity } from 'lucide-react';
+import { ArrowLeft, Sparkles, Target, User, Scale, Activity, Loader2 } from 'lucide-react';
 import { NutritionPlan } from '@/types';
 
 export default function GenerateNutritionPlanPage() {
@@ -22,12 +22,12 @@ export default function GenerateNutritionPlanPage() {
     preferences: [] as string[],
   });
 
-  const goals: { value: NutritionPlan['goal']; label: string }[] = [
-    { value: 'weight_loss', label: 'Weight Loss' },
-    { value: 'muscle_gain', label: 'Muscle Gain' },
-    { value: 'maintenance', label: 'Maintenance' },
-    { value: 'performance', label: 'Performance' },
-    { value: 'general_health', label: 'General Health' },
+  const goals: { value: NutritionPlan['goal']; label: string; desc: string }[] = [
+    { value: 'weight_loss', label: 'Weight Loss', desc: 'Calorie deficit for fat loss' },
+    { value: 'muscle_gain', label: 'Muscle Gain', desc: 'Calorie surplus with high protein' },
+    { value: 'maintenance', label: 'Maintenance', desc: 'Maintain current weight' },
+    { value: 'performance', label: 'Performance', desc: 'Optimize athletic performance' },
+    { value: 'general_health', label: 'General Health', desc: 'Balanced nutrition' },
   ];
 
   const activityLevels: { value: typeof formData.activityLevel; label: string }[] = [
@@ -107,31 +107,39 @@ export default function GenerateNutritionPlanPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-4">
+    <div className="min-h-screen bg-thrivv-bg-dark">
+      {/* Header */}
+      <div className="mb-8 animate-fade-in">
         <Link
           href="/nutrition"
-          className="flex items-center text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors mb-6"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Nutrition Plans
         </Link>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-8">
-        <div className="flex items-center mb-6">
-          <Sparkles className="w-8 h-8 text-blue-600 mr-3" />
+        
+        <div className="flex items-center gap-4">
+          <div className="icon-badge">
+            <Sparkles className="w-8 h-8 text-thrivv-gold-500" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Generate Nutrition Plan</h1>
-            <p className="mt-1 text-gray-600">Create a personalized AI-powered nutrition plan</p>
+            <h1 className="text-4xl font-semibold text-thrivv-text-primary">
+              Generate Nutrition Plan
+            </h1>
+            <p className="text-thrivv-text-secondary mt-1">
+              AI-powered personalized meal planning
+            </p>
           </div>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Form */}
+      <div className="premium-card p-8 animate-slide-up">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Member ID */}
           <div>
-            <label htmlFor="memberId" className="block text-sm font-medium text-gray-700 mb-2">
-              Member ID <span className="text-red-500">*</span>
+            <label htmlFor="memberId" className="block text-sm font-medium text-thrivv-text-primary mb-2">
+              Member ID <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
@@ -139,44 +147,49 @@ export default function GenerateNutritionPlanPage() {
               value={formData.memberId}
               onChange={(e) => setFormData({ ...formData, memberId: e.target.value })}
               placeholder="Enter member ID"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-premium"
               required
             />
+            <p className="text-xs text-thrivv-text-muted mt-1">The member this plan will be created for</p>
           </div>
 
-          {/* Goal */}
+          {/* Goal Selection */}
           <div>
-            <label htmlFor="goal" className="flex items-center text-sm font-medium text-gray-700 mb-2">
-              <Target className="w-4 h-4 mr-2" />
-              Goal <span className="text-red-500">*</span>
+            <label htmlFor="goal" className="flex items-center text-sm font-medium text-thrivv-text-primary mb-3">
+              <Target className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+              Fitness Goal <span className="text-red-400 ml-1">*</span>
             </label>
-            <select
-              id="goal"
-              value={formData.goal}
-              onChange={(e) => setFormData({ ...formData, goal: e.target.value as NutritionPlan['goal'] })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {goals.map((goal) => (
-                <option key={goal.value} value={goal.value}>
-                  {goal.label}
-                </option>
+                <button
+                  key={goal.value}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, goal: goal.value })}
+                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                    formData.goal === goal.value
+                      ? 'border-thrivv-gold-500 bg-thrivv-gold-500/10'
+                      : 'border-thrivv-gold-500/20 bg-thrivv-bg-card hover:border-thrivv-gold-500/40'
+                  }`}
+                >
+                  <div className="font-semibold text-thrivv-text-primary">{goal.label}</div>
+                  <div className="text-xs text-thrivv-text-muted mt-1">{goal.desc}</div>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
-          {/* Personal Info */}
+          {/* Personal Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="gender" className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <User className="w-4 h-4 mr-2" />
-                Gender <span className="text-red-500">*</span>
+              <label htmlFor="gender" className="flex items-center text-sm font-medium text-thrivv-text-primary mb-2">
+                <User className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                Gender <span className="text-red-400 ml-1">*</span>
               </label>
               <select
                 id="gender"
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'male' | 'female' })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="input-premium"
                 required
               >
                 <option value="male">Male</option>
@@ -185,8 +198,8 @@ export default function GenerateNutritionPlanPage() {
             </div>
 
             <div>
-              <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-2">
-                Age <span className="text-red-500">*</span>
+              <label htmlFor="age" className="block text-sm font-medium text-thrivv-text-primary mb-2">
+                Age <span className="text-red-400">*</span>
               </label>
               <input
                 type="number"
@@ -195,15 +208,15 @@ export default function GenerateNutritionPlanPage() {
                 onChange={(e) => setFormData({ ...formData, age: parseInt(e.target.value) || 0 })}
                 min="1"
                 max="120"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="input-premium"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="height" className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <Scale className="w-4 h-4 mr-2" />
-                Height (cm) <span className="text-red-500">*</span>
+              <label htmlFor="height" className="flex items-center text-sm font-medium text-thrivv-text-primary mb-2">
+                <Scale className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                Height (cm) <span className="text-red-400 ml-1">*</span>
               </label>
               <input
                 type="number"
@@ -212,14 +225,14 @@ export default function GenerateNutritionPlanPage() {
                 onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) || 0 })}
                 min="50"
                 max="250"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="input-premium"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
-                Weight (kg) <span className="text-red-500">*</span>
+              <label htmlFor="weight" className="block text-sm font-medium text-thrivv-text-primary mb-2">
+                Weight (kg) <span className="text-red-400">*</span>
               </label>
               <input
                 type="number"
@@ -229,7 +242,7 @@ export default function GenerateNutritionPlanPage() {
                 min="20"
                 max="300"
                 step="0.1"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="input-premium"
                 required
               />
             </div>
@@ -237,15 +250,15 @@ export default function GenerateNutritionPlanPage() {
 
           {/* Activity Level */}
           <div>
-            <label htmlFor="activityLevel" className="flex items-center text-sm font-medium text-gray-700 mb-2">
-              <Activity className="w-4 h-4 mr-2" />
-              Activity Level <span className="text-red-500">*</span>
+            <label htmlFor="activityLevel" className="flex items-center text-sm font-medium text-thrivv-text-primary mb-2">
+              <Activity className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+              Activity Level <span className="text-red-400 ml-1">*</span>
             </label>
             <select
               id="activityLevel"
               value={formData.activityLevel}
               onChange={(e) => setFormData({ ...formData, activityLevel: e.target.value as typeof formData.activityLevel })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-premium"
               required
             >
               {activityLevels.map((level) => (
@@ -258,8 +271,8 @@ export default function GenerateNutritionPlanPage() {
 
           {/* Duration */}
           <div>
-            <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-              Plan Duration (days) <span className="text-red-500">*</span>
+            <label htmlFor="duration" className="block text-sm font-medium text-thrivv-text-primary mb-2">
+              Plan Duration (days) <span className="text-red-400">*</span>
             </label>
             <input
               type="number"
@@ -268,14 +281,15 @@ export default function GenerateNutritionPlanPage() {
               onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || 7 })}
               min="1"
               max="90"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-premium"
               required
             />
+            <p className="text-xs text-thrivv-text-muted mt-1">Recommended: 7-30 days</p>
           </div>
 
           {/* Dietary Restrictions */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-thrivv-text-primary mb-3">
               Dietary Restrictions
             </label>
             <div className="flex flex-wrap gap-2">
@@ -284,10 +298,10 @@ export default function GenerateNutritionPlanPage() {
                   key={restriction}
                   type="button"
                   onClick={() => toggleRestriction(restriction)}
-                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                  className={`px-4 py-2 rounded-lg border-2 transition-all font-medium text-sm ${
                     formData.dietaryRestrictions.includes(restriction)
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      ? 'border-thrivv-gold-500 bg-thrivv-gold-500/20 text-thrivv-gold-500'
+                      : 'border-thrivv-gold-500/20 bg-thrivv-bg-card text-thrivv-text-secondary hover:border-thrivv-gold-500/40'
                   }`}
                 >
                   {restriction.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -298,8 +312,8 @@ export default function GenerateNutritionPlanPage() {
 
           {/* Preferences */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Preferences
+            <label className="block text-sm font-medium text-thrivv-text-primary mb-3">
+              Nutrition Preferences
             </label>
             <div className="flex flex-wrap gap-2">
               {preferenceOptions.map((preference) => (
@@ -307,10 +321,10 @@ export default function GenerateNutritionPlanPage() {
                   key={preference}
                   type="button"
                   onClick={() => togglePreference(preference)}
-                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                  className={`px-4 py-2 rounded-lg border-2 transition-all font-medium text-sm ${
                     formData.preferences.includes(preference)
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      ? 'border-thrivv-gold-500 bg-thrivv-gold-500/20 text-thrivv-gold-500'
+                      : 'border-thrivv-gold-500/20 bg-thrivv-bg-card text-thrivv-text-secondary hover:border-thrivv-gold-500/40'
                   }`}
                 >
                   {preference.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -319,20 +333,30 @@ export default function GenerateNutritionPlanPage() {
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="flex items-center justify-end space-x-4 pt-4">
+          {/* Action Buttons */}
+          <div className="flex items-center justify-end gap-4 pt-6 border-t border-thrivv-gold-500/10">
             <Link
               href="/nutrition"
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="btn-ghost px-6 py-3"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="btn-primary px-8 py-3 flex items-center gap-2"
             >
-              {loading ? 'Generating...' : 'Generate Plan'}
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating Plan...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generate Nutrition Plan
+                </>
+              )}
             </button>
           </div>
         </form>
