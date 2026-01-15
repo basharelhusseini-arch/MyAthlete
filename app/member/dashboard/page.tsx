@@ -108,10 +108,10 @@ export default function MemberDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+      <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark">
         <div className="text-center">
-          <Activity className="w-12 h-12 text-blue-400 mx-auto mb-4 animate-pulse" />
-          <p className="text-gray-400">Loading your dashboard...</p>
+          <Activity className="w-12 h-12 text-thrivv-gold-500 mx-auto mb-4 animate-pulse" />
+          <p className="text-thrivv-text-secondary">Loading...</p>
         </div>
       </div>
     );
@@ -124,239 +124,183 @@ export default function MemberDashboardPage() {
   const userDisplayName = user.email.split('@')[0];
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="glass-effect border-b border-gray-800/50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Thrivv</h1>
-              <p className="text-sm text-gray-300">Welcome back, {userDisplayName}!</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800/50 rounded-lg transition-all duration-200 hover:text-white"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-thrivv-bg-dark">
+      {/* Hero Section */}
+      <div className="mb-12 animate-fade-in-up">
+        <h1 className="text-4xl font-semibold text-thrivv-text-primary mb-2">
+          Welcome back, {userDisplayName}
+        </h1>
+        <p className="text-thrivv-text-secondary">Here&apos;s your health snapshot</p>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="space-y-8">
         {/* Check-in Alert */}
         {!todayCheckin && (
-          <div className="mb-6 dark-card border-l-4 border-yellow-400 bg-yellow-500/10">
-            <div className="p-4 flex items-start justify-between">
-              <div className="flex items-start">
-                <AlertCircle className="w-5 h-5 text-yellow-400 mr-3 mt-0.5" />
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Complete Today&apos;s Check-in</h3>
-                  <p className="text-gray-300 text-sm">
-                    You haven&apos;t logged your workout, calories, and sleep for today. Complete your check-in to update your health score!
-                  </p>
-                </div>
+          <div className="premium-card bg-thrivv-gold-500/5 border-thrivv-gold-500/30 p-6 flex items-center justify-between animate-fade-in">
+            <div className="flex items-center space-x-4">
+              <div className="icon-badge">
+                <AlertCircle className="w-5 h-5 text-thrivv-gold-500" />
               </div>
-              <Link
-                href="/member/checkin"
-                className="ml-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-300 transition-colors whitespace-nowrap"
-              >
-                Check In
-              </Link>
+              <div>
+                <h3 className="text-thrivv-text-primary font-semibold mb-1">Complete Today&apos;s Check-in</h3>
+                <p className="text-thrivv-text-secondary text-sm">
+                  Log your workout, calories, and sleep
+                </p>
+              </div>
             </div>
+            <Link
+              href="/member/checkin"
+              className="btn-primary px-6 py-3 whitespace-nowrap"
+            >
+              Check In
+            </Link>
           </div>
         )}
 
         {/* Health Score & Leaderboard Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Large Health Score Display */}
           <div className="lg:col-span-1">
-            <div className="dark-card overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-800/50">
-                <h2 className="text-lg font-semibold text-white flex items-center">
-                  <Activity className="w-5 h-5 mr-2 text-blue-400" />
-                  Your Health Score
-                </h2>
-              </div>
-              <div className="p-8 flex flex-col items-center justify-center">
+            <div className="premium-card p-8 flex flex-col items-center justify-center">
                 {healthScore ? (
                   <>
                     {/* Circular Score Display */}
-                    <div className="relative w-48 h-48 mb-6">
+                    <div className="relative w-40 h-40 mb-8">
                       {/* Background Circle */}
-                      <svg className="transform -rotate-90 w-48 h-48">
+                      <svg className="transform -rotate-90 w-40 h-40">
                         <circle
-                          cx="96"
-                          cy="96"
-                          r="88"
+                          cx="80"
+                          cy="80"
+                          r="72"
                           stroke="currentColor"
-                          strokeWidth="12"
+                          strokeWidth="10"
                           fill="none"
-                          className="text-gray-800"
+                          className="text-thrivv-bg-card"
                         />
                         {/* Progress Circle */}
                         <circle
-                          cx="96"
-                          cy="96"
-                          r="88"
+                          cx="80"
+                          cy="80"
+                          r="72"
                           stroke="currentColor"
-                          strokeWidth="12"
+                          strokeWidth="10"
                           fill="none"
-                          strokeDasharray={`${2 * Math.PI * 88}`}
-                          strokeDashoffset={`${2 * Math.PI * 88 * (1 - healthScore.score / 100)}`}
+                          strokeDasharray={`${2 * Math.PI * 72}`}
+                          strokeDashoffset={`${2 * Math.PI * 72 * (1 - healthScore.score / 100)}`}
                           className={`transition-all duration-1000 ${
-                            healthScore.score >= 90 ? 'text-green-400' :
-                            healthScore.score >= 80 ? 'text-blue-400' :
-                            healthScore.score >= 70 ? 'text-yellow-400' :
-                            healthScore.score >= 60 ? 'text-orange-400' :
-                            'text-red-400'
+                            healthScore.score >= 80 ? 'text-thrivv-neon-green' : 'text-thrivv-gold-500'
                           }`}
                           strokeLinecap="round"
                         />
                       </svg>
                       {/* Score Number */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <div className={`text-6xl font-bold ${
-                          healthScore.score >= 90 ? 'text-green-400' :
-                          healthScore.score >= 80 ? 'text-blue-400' :
-                          healthScore.score >= 70 ? 'text-yellow-400' :
-                          healthScore.score >= 60 ? 'text-orange-400' :
-                          'text-red-400'
+                        <div className={`text-5xl font-semibold ${
+                          healthScore.score >= 80 ? 'text-thrivv-neon-green' : 'text-thrivv-gold-500'
                         }`}>
                           {healthScore.score}
                         </div>
-                        <div className="text-gray-400 text-sm font-medium">/ 100</div>
+                        <div className="text-thrivv-text-muted text-xs font-medium">Health Score</div>
                       </div>
-                    </div>
-
-                    {/* Score Category */}
-                    <div className="text-center mb-6">
-                      <p className={`text-xl font-bold mb-1 ${
-                        healthScore.score >= 90 ? 'text-green-400' :
-                        healthScore.score >= 80 ? 'text-blue-400' :
-                        healthScore.score >= 70 ? 'text-yellow-400' :
-                        healthScore.score >= 60 ? 'text-orange-400' :
-                        'text-red-400'
-                      }`}>
-                        {healthScore.score >= 90 ? '🏆 Elite Lifestyle' :
-                         healthScore.score >= 80 ? '💪 Very Strong' :
-                         healthScore.score >= 70 ? '✅ Healthy' :
-                         healthScore.score >= 60 ? '⚠️ Suboptimal' :
-                         '🚨 Risk Zone'}
-                      </p>
-                      <p className="text-gray-500 text-sm">Keep up the great work!</p>
                     </div>
 
                     {/* Score Breakdown */}
-                    <div className="w-full space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-400 flex items-center">
-                          <Dumbbell className="w-4 h-4 mr-2 text-orange-400" />
+                    <div className="w-full space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-thrivv-text-secondary text-sm flex items-center">
+                          <Dumbbell className="w-4 h-4 mr-2 text-thrivv-gold-500" />
                           Training
                         </span>
-                        <span className="text-white font-semibold">{healthScore.training_score}/30</span>
+                        <span className="text-thrivv-text-primary font-semibold">{healthScore.training_score}/30</span>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-400 flex items-center">
-                          <UtensilsCrossed className="w-4 h-4 mr-2 text-green-400" />
+                      <div className="flex items-center justify-between">
+                        <span className="text-thrivv-text-secondary text-sm flex items-center">
+                          <UtensilsCrossed className="w-4 h-4 mr-2 text-thrivv-neon-green" />
                           Diet
                         </span>
-                        <span className="text-white font-semibold">{healthScore.diet_score}/40</span>
+                        <span className="text-thrivv-text-primary font-semibold">{healthScore.diet_score}/40</span>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-400 flex items-center">
-                          <Activity className="w-4 h-4 mr-2 text-blue-400" />
+                      <div className="flex items-center justify-between">
+                        <span className="text-thrivv-text-secondary text-sm flex items-center">
+                          <Activity className="w-4 h-4 mr-2 text-thrivv-gold-400" />
                           Sleep
                         </span>
-                        <span className="text-white font-semibold">{healthScore.sleep_score}/30</span>
+                        <span className="text-thrivv-text-primary font-semibold">{healthScore.sleep_score}/30</span>
                       </div>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-8">
-                    <Activity className="w-12 h-12 text-gray-500 mx-auto mb-4 animate-pulse" />
-                    <p className="text-gray-400 mb-2">No score yet</p>
+                    <Activity className="w-12 h-12 text-thrivv-text-muted mx-auto mb-4 animate-pulse" />
+                    <p className="text-thrivv-text-secondary mb-4">No score yet</p>
                     <Link
                       href="/member/checkin"
-                      className="text-blue-400 hover:text-blue-300 text-sm font-medium"
+                      className="text-thrivv-gold-500 hover:text-thrivv-gold-400 text-sm font-medium"
                     >
                       Complete your first check-in →
                     </Link>
                   </div>
                 )}
-              </div>
             </div>
           </div>
 
           {/* Leaderboard */}
           <div className="lg:col-span-2">
-            <div className="dark-card">
-              <div className="px-6 py-4 border-b border-gray-800/50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white flex items-center">
-                  <Trophy className="w-5 h-5 mr-2 text-yellow-400" />
-                  Health Score Leaderboard
+            <div className="premium-card">
+              <div className="px-6 py-5 flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-thrivv-text-primary flex items-center">
+                  <Trophy className="w-5 h-5 mr-3 text-thrivv-gold-500" />
+                  Leaderboard
                 </h2>
-                <span className="text-sm text-gray-400">Top Athletes</span>
+                <span className="text-sm text-thrivv-text-muted">Top 10</span>
               </div>
+              <div className="divider" />
               <div className="p-6">
                 {leaderboard.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {leaderboard.slice(0, 10).map((entry, index) => {
                       const isCurrentUser = entry.id === user?.id;
                       const rank = index + 1;
                       return (
                         <div
                           key={entry.id}
-                          className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+                          className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
                             isCurrentUser 
-                              ? 'bg-blue-500/20 border-2 border-blue-500/50 shadow-lg shadow-blue-500/10' 
-                              : 'bg-gray-800/30 hover:bg-gray-800/50 border border-gray-800/50'
+                              ? 'bg-thrivv-gold-500/10 border border-thrivv-gold-500/30 glow-gold' 
+                              : 'bg-thrivv-bg-card/30 hover:bg-thrivv-bg-card/60 border border-transparent'
                           }`}
                         >
                           <div className="flex items-center space-x-4">
                             {/* Rank Badge */}
-                            <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
-                              rank === 1 ? 'bg-yellow-500/20 text-yellow-400 text-lg' :
-                              rank === 2 ? 'bg-gray-400/20 text-gray-300 text-lg' :
-                              rank === 3 ? 'bg-orange-500/20 text-orange-400 text-lg' :
-                              'bg-gray-700/50 text-gray-400'
+                            <div className={`flex items-center justify-center w-10 h-10 rounded-xl font-semibold ${
+                              rank === 1 ? 'bg-thrivv-gold-500/20 text-thrivv-gold-500' :
+                              rank === 2 ? 'bg-thrivv-text-secondary/20 text-thrivv-text-secondary' :
+                              rank === 3 ? 'bg-thrivv-amber-500/20 text-thrivv-amber-500' :
+                              'bg-thrivv-bg-card text-thrivv-text-muted'
                             }`}>
-                              {rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}
+                              {rank <= 3 ? (rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉') : rank}
                             </div>
                             
                             {/* User Name */}
                             <div>
-                              <p className={`font-semibold ${isCurrentUser ? 'text-blue-300' : 'text-white'}`}>
+                              <p className={`font-medium ${isCurrentUser ? 'text-thrivv-gold-500' : 'text-thrivv-text-primary'}`}>
                                 {entry.name}
                                 {isCurrentUser && (
-                                  <span className="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">
+                                  <span className="ml-2 text-xs bg-thrivv-gold-500/20 text-thrivv-gold-500 px-2 py-0.5 rounded-md">
                                     You
                                   </span>
                                 )}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {entry.score >= 90 ? 'Elite Lifestyle' :
-                                 entry.score >= 80 ? 'Very Strong' :
-                                 entry.score >= 70 ? 'Healthy' :
-                                 entry.score >= 60 ? 'Suboptimal' :
-                                 'Risk Zone'}
                               </p>
                             </div>
                           </div>
 
                           {/* Score */}
                           <div className="text-right">
-                            <div className={`text-2xl font-bold ${
-                              entry.score >= 90 ? 'text-green-400' :
-                              entry.score >= 80 ? 'text-blue-400' :
-                              entry.score >= 70 ? 'text-yellow-400' :
-                              entry.score >= 60 ? 'text-orange-400' :
-                              'text-red-400'
+                            <div className={`text-2xl font-semibold ${
+                              entry.score >= 80 ? 'text-thrivv-neon-green' : 'text-thrivv-gold-500'
                             }`}>
                               {entry.score}
                             </div>
-                            <div className="text-xs text-gray-500">points</div>
                           </div>
                         </div>
                       );
@@ -364,9 +308,8 @@ export default function MemberDashboardPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 text-sm mb-2">No leaderboard data yet</p>
-                    <p className="text-gray-500 text-xs">Complete your check-in to appear on the leaderboard!</p>
+                    <Users className="w-12 h-12 text-thrivv-text-muted mx-auto mb-4" />
+                    <p className="text-thrivv-text-secondary text-sm">No leaderboard data yet</p>
                   </div>
                 )}
               </div>
@@ -375,146 +318,120 @@ export default function MemberDashboardPage() {
         </div>
 
         {/* Main Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Daily Check-in */}
           <Link
             href="/member/checkin"
-            className="dark-card group hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+            className="premium-card p-8 group cursor-pointer"
           >
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-blue-500/20 rounded-xl">
-                  <CheckCircle className="w-8 h-8 text-blue-400" />
-                </div>
-                <div className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <CheckCircle className="w-5 h-5" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Daily Check-in</h2>
-              <p className="text-gray-400 mb-4">
-                Log your workout, calories, and sleep to track your health score every day.
-              </p>
-              <div className="flex items-center text-blue-400 font-medium">
-                {todayCheckin ? 'Update Check-in' : 'Complete Check-in'}
-                <CheckCircle className="w-4 h-4 ml-2" />
-              </div>
+            <div className="icon-badge mb-6">
+              <CheckCircle className="w-6 h-6 text-thrivv-gold-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-thrivv-text-primary mb-2">Daily Check-in</h3>
+            <p className="text-thrivv-text-secondary text-sm mb-6">
+              Log workout, calories & sleep
+            </p>
+            <div className="flex items-center text-thrivv-gold-500 font-medium text-sm group-hover:translate-x-1 transition-transform">
+              {todayCheckin ? 'Update' : 'Complete'} →
             </div>
           </Link>
 
           {/* Score History */}
-          <div className="dark-card">
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-green-500/20 rounded-xl">
-                  <Activity className="w-8 h-8 text-green-400" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">7-Day Trend</h2>
-              <p className="text-gray-400 mb-4">
-                {scoreHistory.length > 0 
-                  ? `${scoreHistory.length} day${scoreHistory.length !== 1 ? 's' : ''} of data tracked` 
-                  : 'Start tracking your daily progress'}
-              </p>
-              {scoreHistory.length > 0 && (
-                <div className="flex items-center space-x-2">
-                  {scoreHistory.map((score, idx) => (
-                    <div
-                      key={idx}
-                      className="flex-1 bg-gray-800 rounded-full h-2 overflow-hidden"
-                      title={`${new Date(score.date).toLocaleDateString()}: ${score.score}`}
-                    >
-                      <div
-                        className={`h-full ${
-                          score.score >= 90 ? 'bg-green-400' :
-                          score.score >= 80 ? 'bg-blue-400' :
-                          score.score >= 70 ? 'bg-yellow-400' :
-                          score.score >= 60 ? 'bg-orange-400' :
-                          'bg-red-400'
-                        }`}
-                        style={{ width: `${score.score}%` }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+          <div className="premium-card p-8">
+            <div className="icon-badge mb-6">
+              <Activity className="w-6 h-6 text-thrivv-neon-green" />
             </div>
+            <h3 className="text-xl font-semibold text-thrivv-text-primary mb-2">7-Day Trend</h3>
+            <p className="text-thrivv-text-secondary text-sm mb-6">
+              {scoreHistory.length > 0 
+                ? `${scoreHistory.length} day${scoreHistory.length !== 1 ? 's' : ''} tracked` 
+                : 'Start tracking progress'}
+            </p>
+            {scoreHistory.length > 0 && (
+              <div className="flex items-center space-x-1.5">
+                {scoreHistory.map((score, idx) => (
+                  <div
+                    key={idx}
+                    className="flex-1 bg-thrivv-bg-card rounded-full h-2 overflow-hidden"
+                    title={`${new Date(score.date).toLocaleDateString()}: ${score.score}`}
+                  >
+                    <div
+                      className={`h-full ${
+                        score.score >= 80 ? 'bg-thrivv-neon-green' : 'bg-thrivv-gold-500'
+                      }`}
+                      style={{ width: `${score.score}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Leaderboard Rank */}
-          <div className="dark-card bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
-            <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-4 bg-yellow-500/20 rounded-xl">
-                  <Trophy className="w-8 h-8 text-yellow-400" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Your Rank</h2>
-              {leaderboard.length > 0 ? (
-                <>
-                  <p className="text-gray-400 mb-4">
-                    {leaderboard.findIndex(e => e.id === user?.id) !== -1
-                      ? `#${leaderboard.findIndex(e => e.id === user?.id) + 1} of ${leaderboard.length}`
-                      : 'Complete check-in to rank'}
-                  </p>
-                  <div className="flex items-center text-yellow-400 font-medium">
-                    View Leaderboard
-                    <Trophy className="w-4 h-4 ml-2" />
-                  </div>
-                </>
-              ) : (
-                <p className="text-gray-400 mb-4">
-                  No rankings yet. Be the first!
-                </p>
-              )}
+          <div className="premium-card p-8 bg-thrivv-gold-500/5 border-thrivv-gold-500/20">
+            <div className="icon-badge mb-6">
+              <Trophy className="w-6 h-6 text-thrivv-gold-500" />
             </div>
+            <h3 className="text-xl font-semibold text-thrivv-text-primary mb-2">Your Rank</h3>
+            {leaderboard.length > 0 ? (
+              <>
+                <p className="text-thrivv-text-secondary text-sm mb-6">
+                  {leaderboard.findIndex(e => e.id === user?.id) !== -1
+                    ? `#${leaderboard.findIndex(e => e.id === user?.id) + 1} of ${leaderboard.length}`
+                    : 'Complete check-in to rank'}
+                </p>
+                <div className="flex items-center text-thrivv-gold-500 font-medium text-sm">
+                  View leaderboard →
+                </div>
+              </>
+            ) : (
+              <p className="text-thrivv-text-secondary text-sm">
+                No rankings yet
+              </p>
+            )}
           </div>
         </div>
 
         {/* Score History Detail */}
         {scoreHistory.length > 0 && (
-          <div className="dark-card">
-            <div className="px-6 py-4 border-b border-gray-800/50">
-              <h2 className="text-lg font-semibold text-white flex items-center">
-                <Calendar className="w-5 h-5 mr-2 text-blue-400" />
-                Recent Health Scores
-              </h2>
+          <div className="premium-card">
+            <div className="px-6 py-5 flex items-center">
+              <Calendar className="w-5 h-5 mr-3 text-thrivv-gold-500" />
+              <h2 className="text-xl font-semibold text-thrivv-text-primary">Recent Scores</h2>
             </div>
+            <div className="divider" />
             <div className="p-6">
               <div className="space-y-3">
                 {scoreHistory.slice().reverse().map((score) => (
                   <div
                     key={score.id}
-                    className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-800/50"
+                    className="flex items-center justify-between p-4 bg-thrivv-bg-card/30 rounded-xl"
                   >
-                    <div className="flex items-center space-x-4">
-                      <div className="text-gray-400 text-sm">
+                    <div className="flex items-center space-x-6">
+                      <div className="text-thrivv-text-secondary text-sm min-w-[100px]">
                         {new Date(score.date).toLocaleDateString('en-US', { 
                           weekday: 'short', 
                           month: 'short', 
                           day: 'numeric' 
                         })}
                       </div>
-                      <div className="flex items-center space-x-3 text-xs text-gray-500">
+                      <div className="flex items-center space-x-4 text-xs text-thrivv-text-muted">
                         <span className="flex items-center">
-                          <Dumbbell className="w-3 h-3 mr-1 text-orange-400" />
+                          <Dumbbell className="w-3 h-3 mr-1.5 text-thrivv-gold-500" />
                           {score.training_score}
                         </span>
                         <span className="flex items-center">
-                          <UtensilsCrossed className="w-3 h-3 mr-1 text-green-400" />
+                          <UtensilsCrossed className="w-3 h-3 mr-1.5 text-thrivv-neon-green" />
                           {score.diet_score}
                         </span>
                         <span className="flex items-center">
-                          <Activity className="w-3 h-3 mr-1 text-blue-400" />
+                          <Activity className="w-3 h-3 mr-1.5 text-thrivv-gold-400" />
                           {score.sleep_score}
                         </span>
                       </div>
                     </div>
-                    <div className={`text-2xl font-bold ${
-                      score.score >= 90 ? 'text-green-400' :
-                      score.score >= 80 ? 'text-blue-400' :
-                      score.score >= 70 ? 'text-yellow-400' :
-                      score.score >= 60 ? 'text-orange-400' :
-                      'text-red-400'
+                    <div className={`text-2xl font-semibold ${
+                      score.score >= 80 ? 'text-thrivv-neon-green' : 'text-thrivv-gold-500'
                     }`}>
                       {score.score}
                     </div>

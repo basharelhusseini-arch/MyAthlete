@@ -59,8 +59,8 @@ export default function MainLayout({
   // Show loading state briefly to prevent flash
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-pulse text-yellow-400">Loading...</div>
+      <div className="min-h-screen bg-thrivv-bg-dark flex items-center justify-center">
+        <div className="animate-pulse text-thrivv-gold-500">Loading...</div>
       </div>
     );
   }
@@ -68,7 +68,7 @@ export default function MainLayout({
   // Public pages or unauthenticated - no sidebar, no padding
   if (!showSidebar) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-thrivv-bg-dark">
         {children}
       </div>
     );
@@ -76,9 +76,9 @@ export default function MainLayout({
 
   // Authenticated pages - show sidebar with padding
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-thrivv-bg-dark">
       <Sidebar />
-      <main className="lg:ml-64 p-4 lg:p-8 transition-all duration-300">
+      <main className="lg:ml-20 p-6 lg:p-12 transition-all duration-300">
         {children}
       </main>
     </div>

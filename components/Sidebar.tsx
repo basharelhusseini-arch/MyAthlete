@@ -91,84 +91,79 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div
         className={`
-          fixed inset-y-0 left-0 z-40 w-64 bg-black border-r border-yellow-500/20 text-white transform transition-transform duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-40 w-20 lg:w-20 bg-thrivv-bg-darker border-r border-thrivv-gold-500/10 text-white transform transition-all duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b border-yellow-500/30">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              Thrivv
-            </h1>
+          <div className="flex items-center justify-center h-20 px-3 border-b border-thrivv-gold-500/10">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center font-bold text-black text-lg">
+              T
+            </div>
           </div>
 
-          {/* Member Info (if logged in) */}
+          {/* Member Avatar (if logged in) */}
           {memberData && (
-            <div className="px-4 py-4 border-b border-yellow-500/30">
-              <div className="flex items-center space-x-3 p-3 rounded-lg bg-yellow-500/10">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center">
-                  <User className="w-5 h-5 text-black" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">
-                    {memberData.name}
-                  </p>
-                  <p className="text-xs text-gray-400 truncate">
-                    {memberData.email}
-                  </p>
-                </div>
+            <div className="px-3 py-4 border-b border-thrivv-gold-500/10">
+              <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center transition-all duration-200 hover:scale-105 glow-gold">
+                <User className="w-5 h-5 text-black" />
               </div>
             </div>
           )}
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="flex-1 px-3 py-6 space-y-3 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
               return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`
-                    flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
-                    ${
-                      isActive
-                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg shadow-yellow-500/30 font-bold'
-                        : 'text-gray-300 hover:bg-yellow-500/10 hover:text-yellow-400 hover:translate-x-1'
-                    }
-                  `}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {item.name}
-                </Link>
+                <div key={item.name} className="relative group">
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`
+                      flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300 relative
+                      ${
+                        isActive
+                          ? 'bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 text-black glow-gold'
+                          : 'text-thrivv-text-secondary hover:text-thrivv-gold-500 hover:bg-thrivv-gold-500/10'
+                      }
+                    `}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {isActive && (
+                      <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-thrivv-gold-500 rounded-r-full" />
+                    )}
+                  </Link>
+                  {/* Tooltip on hover */}
+                  <div className="absolute left-full ml-4 px-3 py-2 bg-thrivv-bg-card border border-thrivv-gold-500/20 rounded-lg text-sm text-thrivv-text-primary whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 top-1/2 -translate-y-1/2">
+                    {item.name}
+                  </div>
+                </div>
               );
             })}
           </nav>
 
           {/* Footer Actions */}
-          <div className="px-4 py-4 border-t border-yellow-500/30">
+          <div className="px-3 py-4 border-t border-thrivv-gold-500/10">
             {memberData ? (
               // Sign Out Button (when logged in)
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:translate-x-1"
+                className="w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-red-400 hover:bg-red-500/10"
               >
-                <LogOut className="w-5 h-5 mr-3" />
-                Sign Out
+                <LogOut className="w-5 h-5" />
               </button>
             ) : (
               // Member Portal Link (when not logged in, and not already in member portal)
               !isInMemberPortal && (
                 <Link
                   href="/member/login"
-                  className="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 text-gray-300 hover:bg-yellow-500/10 hover:text-yellow-400 hover:translate-x-1"
+                  className="w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-thrivv-gold-500 hover:bg-thrivv-gold-500/10"
                 >
-                  <LogIn className="w-5 h-5 mr-3" />
-                  Member Portal
+                  <LogIn className="w-5 h-5" />
                 </Link>
               )
             )}

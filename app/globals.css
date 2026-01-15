@@ -4,11 +4,11 @@
 
 @layer base {
   * {
-    @apply transition-colors duration-200;
+    @apply transition-all duration-200;
   }
   
   body {
-    @apply bg-black text-white;
+    @apply bg-[#0B0D10] text-thrivv-text-primary antialiased;
   }
   
   html {
@@ -17,203 +17,87 @@
 }
 
 @layer utilities {
+  /* Premium gradient text */
   .text-gradient {
-    @apply bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent;
-    background-size: 200% auto;
-    animation: gradient-shift 3s ease infinite;
+    @apply bg-gradient-to-r from-thrivv-gold-400 via-thrivv-amber-500 to-thrivv-gold-500 bg-clip-text text-transparent;
   }
   
-  .glass-effect {
-    @apply bg-black/90 backdrop-blur-xl border border-yellow-500/20;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(10, 10, 10, 0.8) 100%
-    );
+  /* Glass morphism card */
+  .glass-card {
+    @apply bg-thrivv-bg-card/40 backdrop-blur-xl border border-thrivv-gold-500/10 rounded-2xl;
   }
   
-  .card-hover {
-    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-yellow-500/20;
-    transform-origin: center;
+  /* Premium card with subtle glow */
+  .premium-card {
+    @apply bg-thrivv-bg-card rounded-2xl border border-thrivv-gold-500/10 transition-all duration-300;
   }
   
+  .premium-card:hover {
+    @apply border-thrivv-gold-500/30 scale-[1.01];
+    box-shadow: 0 0 30px rgba(255, 195, 0, 0.08);
+  }
+  
+  /* Primary button with gold gradient */
   .btn-primary {
-    @apply bg-gradient-to-r from-yellow-500 to-orange-500 text-black rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 shadow-lg shadow-yellow-500/30 hover:shadow-xl hover:shadow-yellow-500/40 font-semibold;
-    position: relative;
-    overflow: hidden;
+    @apply relative bg-gradient-to-r from-thrivv-gold-500 to-thrivv-amber-500 text-black rounded-xl font-semibold transition-all duration-300 overflow-hidden;
   }
   
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+  .btn-primary:hover {
+    @apply from-thrivv-gold-400 to-thrivv-amber-500 scale-[1.02];
+    box-shadow: 0 8px 30px rgba(255, 195, 0, 0.25);
   }
   
-  .btn-primary:hover::before {
-    width: 300px;
-    height: 300px;
+  /* Ghost button */
+  .btn-ghost {
+    @apply border border-thrivv-gold-500/20 text-thrivv-text-primary rounded-xl font-medium transition-all duration-300 hover:border-thrivv-gold-500/40 hover:bg-thrivv-gold-500/5;
   }
   
-  .dark-card {
-    @apply glass-effect rounded-xl shadow-lg card-hover;
+  /* Input styles */
+  .input-premium {
+    @apply bg-thrivv-bg-card/50 border border-thrivv-gold-500/10 rounded-xl text-thrivv-text-primary placeholder:text-thrivv-text-muted transition-all duration-200;
   }
   
-  .dark-text-primary {
-    @apply text-white;
+  .input-premium:focus {
+    @apply outline-none border-thrivv-gold-500/40 bg-thrivv-bg-card;
+    box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.08);
   }
   
-  .dark-text-secondary {
-    @apply text-gray-300;
+  /* Glow effect for active states */
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(255, 195, 0, 0.15);
   }
   
-  .dark-text-muted {
-    @apply text-gray-400;
+  .glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
   }
   
-  .dark-border {
-    @apply border-yellow-500/20;
+  /* Minimal divider */
+  .divider {
+    @apply border-t border-thrivv-gold-500/10;
   }
-
-  /* Futuristic Animations */
-  @keyframes gradient-shift {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
+  
+  /* Icon badge */
+  .icon-badge {
+    @apply p-3 rounded-xl bg-thrivv-gold-500/10;
   }
-
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  
+  /* Stat display */
+  .stat-value {
+    @apply text-3xl font-semibold text-thrivv-text-primary;
   }
-
-  @keyframes fade-in-down {
-    from {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  
+  .stat-label {
+    @apply text-sm text-thrivv-text-secondary;
   }
-
-  @keyframes slide-in-left {
-    from {
-      opacity: 0;
-      transform: translateX(-50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  
+  /* Success state */
+  .success-badge {
+    @apply bg-thrivv-neon-green/10 text-thrivv-neon-green border border-thrivv-neon-green/20 rounded-lg;
   }
-
-  @keyframes slide-in-right {
-    from {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
-  }
-
-  .animate-fade-in-down {
-    animation: fade-in-down 0.8s ease-out forwards;
-  }
-
-  .animate-slide-in-left {
-    animation: slide-in-left 0.8s ease-out forwards;
-  }
-
-  .animate-slide-in-right {
-    animation: slide-in-right 0.8s ease-out forwards;
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  /* Smooth Page Transitions */
-  .page-transition {
-    animation: fade-in-up 0.5s ease-out;
-  }
-
-  /* Hover glow effects */
-  .hover-glow {
-    transition: all 0.3s ease;
-  }
-
-  .hover-glow:hover {
-    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.5));
-  }
-
-  /* Delay utilities for staggered animations */
-  .delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .delay-300 {
-    animation-delay: 300ms;
-  }
-
-  .delay-400 {
-    animation-delay: 400ms;
-  }
-
-  .delay-500 {
-    animation-delay: 500ms;
-  }
-
-  .delay-600 {
-    animation-delay: 600ms;
+  
+  /* Error state */
+  .error-badge {
+    @apply bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg;
   }
 }
 

@@ -45,78 +45,80 @@ export default function MemberLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <div className="max-w-md w-full glass-effect rounded-xl shadow-2xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">Thrivv</h1>
-          <p className="text-gray-400">Member Portal</p>
+    <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark p-6">
+      {/* Subtle background glow */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-thrivv-gold-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-thrivv-amber-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative max-w-md w-full">
+        {/* Logo */}
+        <div className="text-center mb-12 animate-fade-in-up">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 mb-6 glow-gold">
+            <span className="text-2xl font-bold text-black">T</span>
+          </div>
+          <h1 className="text-3xl font-semibold text-gradient mb-2">Welcome Back</h1>
+          <p className="text-thrivv-text-secondary">Sign in to continue your journey</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              placeholder="Enter your password"
-            />
-          </div>
-
-          {error && (
-            <div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+        {/* Form Card */}
+        <div className="glass-card p-8 animate-slide-up">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="input-premium w-full px-5 py-4 text-base"
+                placeholder="Email address"
+              />
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full btn-primary py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
+            <div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="input-premium w-full px-5 py-4 text-base"
+                placeholder="Password"
+              />
+            </div>
 
+            {error && (
+              <div className="error-badge px-4 py-3 text-sm">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-primary py-4 px-6 disabled:opacity-50 disabled:cursor-not-allowed text-base"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-thrivv-text-secondary">
+              Don&apos;t have an account?{' '}
+              <Link href="/member/signup" className="text-thrivv-gold-500 hover:text-thrivv-gold-400 font-medium transition-colors">
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Back link */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">
-            Don&apos;t have an account?{' '}
-            <Link href="/member/signup" className="text-yellow-400 hover:text-yellow-300 font-semibold transition-colors">
-              Sign Up Free
-            </Link>
-          </p>
-        </div>
-
-        <div className="mt-6 pt-6 border-t border-yellow-500/20">
-          <p className="text-xs text-gray-400 text-center">
-            Sign up to create your account and start tracking your health journey
-          </p>
-        </div>
-
-        <div className="mt-4 text-center">
           <Link
             href="/"
-            className="text-sm text-gray-400 hover:text-yellow-400 transition-colors"
+            className="text-sm text-thrivv-text-muted hover:text-thrivv-gold-500 transition-colors inline-flex items-center"
           >
             ← Back to Home
           </Link>
