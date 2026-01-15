@@ -252,7 +252,7 @@ export default function MemberRecipesPage() {
               {/* Recipe Image */}
               <div className="relative h-48 overflow-hidden bg-thrivv-bg-card">
                 <img
-                  src={recipe.imageUrl}
+                  src={`${recipe.imageUrl}&v=2`}
                   alt={recipe.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"

@@ -88,7 +88,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
       <div className="premium-card p-0 overflow-hidden mb-8 animate-slide-up">
         <div className="relative h-80 md:h-96 overflow-hidden bg-thrivv-bg-card">
           <img
-            src={recipe.imageUrl}
+            src={`${recipe.imageUrl}&v=2`}
             alt={recipe.name}
             className="w-full h-full object-cover"
             loading="eager"
