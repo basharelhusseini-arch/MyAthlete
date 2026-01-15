@@ -38,7 +38,7 @@ const memberNavigation = [
   { name: 'My Workouts', label: 'Workouts', href: '/member/workouts', icon: Dumbbell },
   { name: 'My Nutrition', label: 'Nutrition', href: '/member/nutrition', icon: UtensilsCrossed },
   { name: 'Recipes', label: 'Recipes', href: '/member/recipes', icon: ChefHat },
-  { name: 'My Classes', label: 'Classes', href: '/member/classes', icon: Calendar },
+  { name: 'Bookings', label: 'Bookings', href: '/member/bookings', icon: Calendar },
   { name: 'Health Score', label: 'Health', href: '/member/health', icon: Activity },
   { name: 'Habits', label: 'Habits', href: '/member/habits', icon: Target },
   { name: 'Rewards', label: 'Rewards', href: '/member/rewards', icon: Trophy },
@@ -118,7 +118,9 @@ export default function Sidebar() {
           {/* Navigation */}
           <nav className="flex-1 px-2 py-6 space-y-2 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = pathname === item.href;
+              // Handle active state - also match /member/classes to Bookings
+              const isActive = pathname === item.href || 
+                (item.href === '/member/bookings' && pathname === '/member/classes');
               const Icon = item.icon;
               const displayLabel = item.label;
               

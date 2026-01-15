@@ -38,43 +38,27 @@ export default function MemberNutritionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
-        <p className="text-gray-400">Loading nutrition plans...</p>
+      <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark">
+        <p className="text-thrivv-text-secondary">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="glass-effect border-b border-gray-800/50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/member/dashboard"
-                className="flex items-center text-gray-400 hover:text-white transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back to Dashboard
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-white">My Nutrition Plans</h1>
-                <p className="text-sm text-gray-400">View and manage your nutrition plans</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-thrivv-bg-dark">
+      {/* Hero Section */}
+      <div className="mb-12 animate-fade-in-up">
+        <h1 className="text-4xl font-semibold text-thrivv-text-primary mb-2">
+          My Nutrition
+        </h1>
+        <p className="text-thrivv-text-secondary">Personalized meal plans tailored to your goals</p>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-semibold text-white">Your Nutrition Plans</h2>
-            <p className="text-gray-400 mt-1">Personalized meal plans tailored to your goals</p>
-          </div>
+      <main className="space-y-8">
+        <div className="flex items-center justify-end mb-8">
           <Link
             href="/nutrition/new"
-            className="flex items-center px-4 py-2 btn-primary"
+            className="flex items-center btn-primary px-6 py-3"
           >
             <Plus className="w-5 h-5 mr-2" />
             Generate New Plan
@@ -82,13 +66,15 @@ export default function MemberNutritionPage() {
         </div>
 
         {plans.length === 0 ? (
-          <div className="glass-effect p-12 text-center">
-            <UtensilsCrossed className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">No nutrition plans yet</h3>
-            <p className="text-gray-400 mb-6">Get started by generating a personalized nutrition plan</p>
+          <div className="premium-card p-12 text-center">
+            <div className="icon-badge w-20 h-20 mx-auto mb-6">
+              <UtensilsCrossed className="w-10 h-10 text-thrivv-gold-500" />
+            </div>
+            <h3 className="text-2xl font-semibold text-thrivv-text-primary mb-2">No nutrition plans yet</h3>
+            <p className="text-thrivv-text-secondary mb-8">Generate a personalized AI-powered meal plan</p>
             <Link
               href="/nutrition/new"
-              className="inline-flex items-center px-4 py-2 btn-primary"
+              className="inline-flex items-center btn-primary px-6 py-3"
             >
               <Plus className="w-5 h-5 mr-2" />
               Generate Your First Plan
@@ -100,36 +86,36 @@ export default function MemberNutritionPage() {
               <Link
                 key={plan.id}
                 href={`/nutrition/${plan.id}`}
-                className="dark-card card-hover p-6"
+                className="premium-card p-6 group cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
-                  <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                    plan.status === 'active' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
-                    plan.status === 'completed' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
-                    'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                  <h3 className="text-lg font-semibold text-thrivv-text-primary">{plan.name}</h3>
+                  <span className={`px-3 py-1 text-xs font-medium rounded-lg ${
+                    plan.status === 'active' ? 'success-badge' :
+                    plan.status === 'completed' ? 'bg-thrivv-gold-500/10 text-thrivv-gold-500 border border-thrivv-gold-500/20' :
+                    'bg-thrivv-bg-card text-thrivv-text-muted border border-thrivv-gold-500/10'
                   }`}>
                     {plan.status}
                   </span>
                 </div>
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">{plan.description}</p>
+                <p className="text-thrivv-text-secondary text-sm mb-6 line-clamp-2">{plan.description}</p>
                 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-400">
-                    <Target className="w-4 h-4 mr-2 text-yellow-400" />
-                    Goal: <span className="font-medium ml-1 capitalize text-white">{plan.goal.replace('_', ' ')}</span>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center text-sm text-thrivv-text-secondary">
+                    <Target className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                    <span className="capitalize">{plan.goal.replace('_', ' ')}</span>
                   </div>
-                  <div className="flex items-center text-sm text-gray-400">
-                    <TrendingUp className="w-4 h-4 mr-2 text-yellow-400" />
-                    Calories: <span className="font-medium ml-1 text-white">{plan.macroTargets.calories}</span>
+                  <div className="flex items-center text-sm text-thrivv-text-secondary">
+                    <TrendingUp className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                    {plan.macroTargets.calories} calories/day
                   </div>
-                  <div className="flex items-center text-sm text-gray-400">
-                    <Calendar className="w-4 h-4 mr-2 text-yellow-400" />
-                    Duration: <span className="font-medium ml-1 text-white">{plan.duration} days</span>
+                  <div className="flex items-center text-sm text-thrivv-text-secondary">
+                    <Calendar className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                    {plan.duration} days
                   </div>
                 </div>
 
-                <div className="flex items-center text-gradient text-sm font-medium mt-4">
+                <div className="flex items-center text-thrivv-gold-500 text-sm font-medium group-hover:translate-x-1 transition-transform">
                   View Details →
                 </div>
               </Link>
