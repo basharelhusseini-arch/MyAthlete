@@ -8,25 +8,31 @@ export default function BackgroundWordmark({ className = '' }: BackgroundWordmar
   return (
     <div 
       className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ zIndex: 10 }}
+      style={{ 
+        zIndex: 10,
+        overflow: 'visible',
+        width: '100%',
+        height: '100%',
+      }}
       aria-hidden="true"
     >
       <svg
         className="wordmark-svg"
         width="100%"
         height="100%"
-        viewBox="0 0 1200 400"
+        viewBox="0 0 1600 600"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
+        style={{ overflow: 'visible' }}
       >
         <text
           x="50%"
-          y="50%"
+          y="62%"
           textAnchor="middle"
           dominantBaseline="middle"
           className="wordmark-text"
           style={{
-            fontSize: '80px',
+            fontSize: '90px',
             fontWeight: 900,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
@@ -42,34 +48,49 @@ export default function BackgroundWordmark({ className = '' }: BackgroundWordmar
 
       <style jsx>{`
         .wordmark-svg {
-          opacity: 0.55; /* Desktop default */
+          opacity: 0.5; /* Desktop default */
         }
 
         /* Mobile: Increase opacity for better visibility */
         @media (max-width: 768px) {
           .wordmark-svg {
-            opacity: 0.7;
+            opacity: 0.65;
           }
         }
 
         /* Responsive font sizing */
+        @media (max-width: 1200px) {
+          .wordmark-text {
+            font-size: 75px;
+            letter-spacing: 0.25em;
+          }
+        }
+
         @media (max-width: 1024px) {
           .wordmark-text {
-            font-size: 60px;
+            font-size: 65px;
+            letter-spacing: 0.22em;
           }
         }
 
         @media (max-width: 768px) {
           .wordmark-text {
-            font-size: 45px;
-            letter-spacing: 0.2em;
+            font-size: 50px;
+            letter-spacing: 0.18em;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .wordmark-text {
+            font-size: 38px;
+            letter-spacing: 0.15em;
           }
         }
 
         @media (max-width: 480px) {
           .wordmark-text {
-            font-size: 32px;
-            letter-spacing: 0.15em;
+            font-size: 28px;
+            letter-spacing: 0.12em;
           }
         }
       `}</style>
