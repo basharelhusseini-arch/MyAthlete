@@ -92,6 +92,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
             alt={recipe.name}
             className="w-full h-full object-cover"
             loading="eager"
+            key={recipe.id}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80&auto=format&fit=crop';
