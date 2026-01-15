@@ -89,9 +89,19 @@ export interface Exercise {
   muscleGroups: string[]; // e.g., ['chest', 'triceps', 'shoulders']
   equipment: 'bodyweight' | 'dumbbells' | 'barbell' | 'machine' | 'cable' | 'kettlebell' | 'resistance_bands' | 'cardio_machine' | 'other';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  instructions: string[];
-  videoUrl?: string;
-  imageUrl?: string;
+  instructions: string[]; // Step-by-step instructions (numbered, beginner-friendly)
+  tips: string[]; // 2-4 coaching cues (form tips, common mistakes to avoid)
+  breathing: string; // How to breathe during the movement
+  tempo: string; // e.g. "2-1-2" (eccentric-pause-concentric)
+  rest: string; // Recommended rest time between sets
+  videoUrl?: string; // Optional YouTube embed-safe URL
+  imageUrl?: string; // Optional static image
+  // Suggested sets/reps for different levels
+  recommendedSets: {
+    beginner: { sets: number; reps?: string; duration?: string }; // reps as string to support ranges like "8-12"
+    intermediate: { sets: number; reps?: string; duration?: string };
+    advanced: { sets: number; reps?: string; duration?: string };
+  };
   // Cardio-specific fields
   mets?: number; // Metabolic Equivalent of Task (e.g., running at 6mph = 9.8 METs)
   caloriesPerMinute?: number; // Average calories burned per minute (at average intensity)
