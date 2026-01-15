@@ -1,10 +1,20 @@
-// Health Score Calculation - Integrated with Nutrition Tracking
-// Simple, explainable algorithm that uses real meal data
+// Health Score Calculation - Integrated with Nutrition and Habit Tracking
+// Simple, explainable algorithm that uses real meal data and wellness habits
 
 export interface CheckinData {
   didWorkout: boolean;
   calories: number | null; // From logged meals or manual entry
   sleepHours: number | null;
+  habits?: HabitData; // Wellness habits
+}
+
+export interface HabitData {
+  sauna?: boolean;
+  steamRoom?: boolean;
+  iceBath?: boolean;
+  coldShower?: boolean;
+  meditation?: boolean;
+  stretching?: boolean;
 }
 
 export interface NutritionTarget {
@@ -26,7 +36,12 @@ export interface HealthScoreResult {
   trainingScore: number;
   dietScore: number;
   sleepScore: number;
-  macroAdherenceBonus?: number;
+  habitScore: number;
+  breakdown?: {
+    calorieScore: number;
+    macroScore: number;
+    habitsCompleted: number;
+  };
 }
 
 // Default calorie target (used if no nutrition plan exists)
@@ -35,10 +50,11 @@ const CALORIE_TOLERANCE = 300; // ±300 calories is good
 
 /**
  * Calculate health score from daily check-in data
- * Total: 0-100 points
+ * Total: 0-110 points
  * - Training: 0-30 points
- * - Diet: 0-40 points (with macro adherence bonus)
+ * - Diet: 0-40 points (includes calorie + macro scoring)
  * - Sleep: 0-30 points
+ * - Habits: 0-10 points (wellness habits)
  */
 export function calculateHealthScore(
   data: CheckinData,
@@ -48,9 +64,9 @@ export function calculateHealthScore(
   // Training Score (0-30 points)
   const trainingScore = data.didWorkout ? 30 : 0;
 
-  // Diet Score (0-40 points)
-  let dietScore = 0;
-  let macroAdherenceBonus = 0;
+  // Diet Score (0-40 points) - Includes calories AND macros
+  let calorieScore = 0;
+  let macroScore = 0;
 
   const calories = data.calories !== null ? data.calories : (consumed?.calories || 0);
   const calorieTarget = target?.calories || DEFAULT_CALORIE_TARGET;
@@ -58,47 +74,52 @@ export function calculateHealthScore(
   if (calories > 0) {
     const diff = Math.abs(calories - calorieTarget);
     
+    // Calorie Score (0-25 points)
     if (diff <= CALORIE_TOLERANCE) {
       // Perfect range: full points
-      dietScore = 40;
+      calorieScore = 25;
     } else {
       // Deduct points based on how far off target
       // -1 point per 50 calories off (after tolerance)
       const pointsOff = Math.floor((diff - CALORIE_TOLERANCE) / 50);
-      dietScore = Math.max(0, 40 - pointsOff);
+      calorieScore = Math.max(0, 25 - pointsOff);
     }
 
-    // Macro Adherence Bonus (up to +10 points if within targets)
+    // Macro Score (0-15 points) - Only if targets and consumed data available
     if (target && consumed && target.protein_g && target.carbs_g && target.fat_g) {
-      let macroScore = 0;
-
-      // Protein adherence (±15%)
+      // Protein adherence (0-6 points)
       const proteinDiff = Math.abs(consumed.protein_g - target.protein_g);
-      if (proteinDiff <= target.protein_g * 0.15) {
-        macroScore += 4; // Close to target
+      if (proteinDiff <= target.protein_g * 0.10) {
+        macroScore += 6; // Perfect
+      } else if (proteinDiff <= target.protein_g * 0.15) {
+        macroScore += 4; // Good
       } else if (proteinDiff <= target.protein_g * 0.25) {
-        macroScore += 2; // Within 25%
+        macroScore += 2; // Acceptable
       }
 
-      // Carbs adherence (±15%)
+      // Carbs adherence (0-5 points)
       const carbsDiff = Math.abs(consumed.carbs_g - target.carbs_g);
-      if (carbsDiff <= target.carbs_g * 0.15) {
-        macroScore += 3;
+      if (carbsDiff <= target.carbs_g * 0.10) {
+        macroScore += 5; // Perfect
+      } else if (carbsDiff <= target.carbs_g * 0.15) {
+        macroScore += 3; // Good
       } else if (carbsDiff <= target.carbs_g * 0.25) {
-        macroScore += 1;
+        macroScore += 1; // Acceptable
       }
 
-      // Fat adherence (±15%)
+      // Fat adherence (0-4 points)
       const fatDiff = Math.abs(consumed.fat_g - target.fat_g);
-      if (fatDiff <= target.fat_g * 0.15) {
-        macroScore += 3;
+      if (fatDiff <= target.fat_g * 0.10) {
+        macroScore += 4; // Perfect
+      } else if (fatDiff <= target.fat_g * 0.15) {
+        macroScore += 3; // Good
       } else if (fatDiff <= target.fat_g * 0.25) {
-        macroScore += 1;
+        macroScore += 1; // Acceptable
       }
-
-      macroAdherenceBonus = macroScore;
     }
   }
+
+  const dietScore = calorieScore + macroScore;
 
   // Sleep Score (0-30 points)
   let sleepScore = 0;
@@ -124,14 +145,63 @@ export function calculateHealthScore(
     }
   }
 
-  const totalScore = Math.min(100, trainingScore + dietScore + sleepScore + macroAdherenceBonus);
+  // Habit Tracking Score (0-10 points)
+  let habitScore = 0;
+  let habitsCompleted = 0;
+
+  if (data.habits) {
+    // Each wellness habit is worth points when completed
+    const habitScores = {
+      sauna: 2,
+      steamRoom: 2,
+      iceBath: 2,
+      coldShower: 1.5,
+      meditation: 1.5,
+      stretching: 1,
+    };
+
+    if (data.habits.sauna) {
+      habitScore += habitScores.sauna;
+      habitsCompleted++;
+    }
+    if (data.habits.steamRoom) {
+      habitScore += habitScores.steamRoom;
+      habitsCompleted++;
+    }
+    if (data.habits.iceBath) {
+      habitScore += habitScores.iceBath;
+      habitsCompleted++;
+    }
+    if (data.habits.coldShower) {
+      habitScore += habitScores.coldShower;
+      habitsCompleted++;
+    }
+    if (data.habits.meditation) {
+      habitScore += habitScores.meditation;
+      habitsCompleted++;
+    }
+    if (data.habits.stretching) {
+      habitScore += habitScores.stretching;
+      habitsCompleted++;
+    }
+
+    // Cap at 10 points
+    habitScore = Math.min(10, habitScore);
+  }
+
+  const totalScore = Math.min(110, trainingScore + dietScore + sleepScore + habitScore);
 
   return {
     totalScore,
     trainingScore,
     dietScore,
     sleepScore,
-    macroAdherenceBonus: macroAdherenceBonus > 0 ? macroAdherenceBonus : undefined,
+    habitScore,
+    breakdown: {
+      calorieScore,
+      macroScore,
+      habitsCompleted,
+    },
   };
 }
 
