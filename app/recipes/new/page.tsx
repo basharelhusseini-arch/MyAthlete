@@ -13,7 +13,7 @@ export default function NewRecipePage() {
     name: '',
     description: '',
     instructions: [''],
-    ingredients: [{ name: '', amount: 0, unit: '' }] as Ingredient[],
+    ingredients: [{ item: '', quantity: 0, unit: '', name: '', amount: 0 }] as Ingredient[],
     servings: 1,
     prepTime: 0,
     cookTime: 0,
@@ -35,7 +35,7 @@ export default function NewRecipePage() {
       const recipeData = {
         ...formData,
         instructions: formData.instructions.filter(inst => inst.trim() !== ''),
-        ingredients: formData.ingredients.filter(ing => ing.name.trim() !== ''),
+        ingredients: formData.ingredients.filter(ing => (ing.name || ing.item || '').trim() !== ''),
       };
 
       const response = await fetch('/api/recipes', {
@@ -80,7 +80,7 @@ export default function NewRecipePage() {
   const addIngredient = () => {
     setFormData({
       ...formData,
-      ingredients: [...formData.ingredients, { name: '', amount: 0, unit: '' }],
+      ingredients: [...formData.ingredients, { item: '', quantity: 0, unit: '', name: '', amount: 0 }],
     });
   };
 

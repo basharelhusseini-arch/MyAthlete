@@ -235,9 +235,15 @@ export default function NutritionPlanDetailPage() {
                           </div>
                           {recipe && (
                             <div className="mt-3 pt-3 border-t border-gray-200">
-                              <p className="text-xs text-gray-500 mb-1">Prep: {recipe.prepTime} min</p>
-                              {recipe.cookTime > 0 && (
-                                <p className="text-xs text-gray-500">Cook: {recipe.cookTime} min</p>
+                              {(recipe.prepTime ?? recipe.prepMinutes ?? 0) > 0 && (
+                                <p className="text-xs text-gray-500 mb-1">
+                                  Prep: {recipe.prepTime ?? recipe.prepMinutes} min
+                                </p>
+                              )}
+                              {(recipe.cookTime ?? recipe.cookMinutes ?? 0) > 0 && (
+                                <p className="text-xs text-gray-500">
+                                  Cook: {recipe.cookTime ?? recipe.cookMinutes} min
+                                </p>
                               )}
                             </div>
                           )}

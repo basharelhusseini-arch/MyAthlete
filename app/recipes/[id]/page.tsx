@@ -109,21 +109,21 @@ export default function RecipeDetailPage() {
                 <ChefHat className="w-5 h-5 text-blue-400" />
                 <div>
                   <p className="text-sm text-gray-400">Protein</p>
-                  <p className="text-xl font-bold text-white">{recipe.protein}g</p>
+                  <p className="text-xl font-bold text-white">{recipe.protein ?? recipe.protein_g}g</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <UtensilsCrossed className="w-5 h-5 text-green-400" />
                 <div>
                   <p className="text-sm text-gray-400">Carbs</p>
-                  <p className="text-xl font-bold text-white">{recipe.carbohydrates}g</p>
+                  <p className="text-xl font-bold text-white">{recipe.carbohydrates ?? recipe.carbs_g}g</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Flame className="w-5 h-5 text-yellow-400" />
                 <div>
                   <p className="text-sm text-gray-400">Fats</p>
-                  <p className="text-xl font-bold text-white">{recipe.fats}g</p>
+                  <p className="text-xl font-bold text-white">{recipe.fats ?? recipe.fat_g}g</p>
                 </div>
               </div>
             </div>
@@ -144,14 +144,14 @@ export default function RecipeDetailPage() {
                   <Clock className="w-5 h-5 mr-2" />
                   <span>Prep Time</span>
                 </div>
-                <span className="text-white font-medium">{recipe.prepTime} min</span>
+                <span className="text-white font-medium">{recipe.prepTime ?? recipe.prepMinutes ?? 0} min</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center text-gray-400">
                   <Clock className="w-5 h-5 mr-2" />
                   <span>Cook Time</span>
                 </div>
-                <span className="text-white font-medium">{recipe.cookTime} min</span>
+                <span className="text-white font-medium">{recipe.cookTime ?? recipe.cookMinutes ?? 0} min</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center text-gray-400">
@@ -165,7 +165,7 @@ export default function RecipeDetailPage() {
                   <Clock className="w-5 h-5 mr-2" />
                   <span>Total Time</span>
                 </div>
-                <span className="text-white font-medium">{recipe.prepTime + recipe.cookTime} min</span>
+                <span className="text-white font-medium">{(recipe.prepTime ?? recipe.prepMinutes ?? 0) + (recipe.cookTime ?? recipe.cookMinutes ?? 0)} min</span>
               </div>
             </div>
           </div>
@@ -207,9 +207,9 @@ export default function RecipeDetailPage() {
                 <li key={index} className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></div>
                   <span className="text-gray-300">
-                    <span className="font-medium text-white">{ingredient.amount} {ingredient.unit}</span>
+                    <span className="font-medium text-white">{ingredient.amount ?? ingredient.quantity} {ingredient.unit}</span>
                     {' '}
-                    <span>{ingredient.name}</span>
+                    <span>{ingredient.name ?? ingredient.item}</span>
                   </span>
                 </li>
               ))}

@@ -195,9 +195,12 @@ export interface MacroTargets {
 }
 
 export interface Ingredient {
-  item: string; // Matches recipes.ts structure
-  quantity: number;
+  item: string; // Canonical field from recipes.ts
+  quantity: number; // Canonical field from recipes.ts
   unit: string; // e.g., 'g', 'ml', 'cup', 'tbsp'
+  // Backwards compatibility fields
+  name?: string; // Mapped from item
+  amount?: number; // Mapped from quantity
 }
 
 export interface Recipe {
@@ -207,15 +210,23 @@ export interface Recipe {
   imageUrl: string;
   imageId: string; // Unsplash photo ID for stable images
   calories: number;
-  protein_g: number; // Renamed to match recipes.ts
-  carbs_g: number; // Renamed to match recipes.ts
-  fat_g: number; // Renamed to match recipes.ts
-  prepMinutes: number; // Renamed to match recipes.ts
-  cookMinutes: number; // Renamed to match recipes.ts
+  protein_g: number; // Canonical field from recipes.ts
+  carbs_g: number; // Canonical field from recipes.ts
+  fat_g: number; // Canonical field from recipes.ts
+  prepMinutes: number; // Canonical field from recipes.ts
+  cookMinutes: number; // Canonical field from recipes.ts
   servings: number;
   ingredients: Ingredient[];
   instructions: string[];
   tags: string[]; // e.g., ['high-protein', 'low-carb', 'vegetarian', 'meal-prep']
+  fiber?: number; // Optional fiber content in grams
+  // Backwards compatibility fields (mapped from canonical fields)
+  prepTime?: number;
+  cookTime?: number;
+  totalTime?: number;
+  protein?: number; // Mapped from protein_g
+  carbohydrates?: number; // Mapped from carbs_g
+  fats?: number; // Mapped from fat_g
 }
 
 export interface Meal {

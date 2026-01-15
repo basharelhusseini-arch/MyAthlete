@@ -149,7 +149,7 @@ export default function RecipesPage() {
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center text-gray-400">
                     <Clock className="w-4 h-4 mr-2" />
-                    {recipe.prepTime + recipe.cookTime} min
+                    {(recipe.prepTime ?? recipe.prepMinutes ?? 0) + (recipe.cookTime ?? recipe.cookMinutes ?? 0)} min
                   </div>
                   <div className="flex items-center text-gray-400">
                     <Users className="w-4 h-4 mr-2" />
@@ -163,9 +163,9 @@ export default function RecipesPage() {
 
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="font-medium">Macros:</span>
-                  <span>P: {recipe.protein}g</span>
-                  <span>C: {recipe.carbohydrates}g</span>
-                  <span>F: {recipe.fats}g</span>
+                  <span>P: {recipe.protein ?? recipe.protein_g}g</span>
+                  <span>C: {recipe.carbohydrates ?? recipe.carbs_g}g</span>
+                  <span>F: {recipe.fats ?? recipe.fat_g}g</span>
                 </div>
 
                 {recipe.tags.length > 0 && (
