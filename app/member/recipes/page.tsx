@@ -19,15 +19,25 @@ export default function MemberRecipesPage() {
     mealPrep: false,
   });
 
-  // DEV: Log first 3 recipe URLs to verify uniqueness
+  // DEV: Verify no duplicate image URLs
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    const logged = (window as any).__recipeUrlsLogged;
+    const logged = (window as any).__recipeImagesVerified;
     if (!logged) {
-      console.log('🖼️ First 3 recipe image URLs:');
-      recipesData.slice(0, 3).forEach((r, i) => {
-        console.log(`  ${i + 1}. ${r.name}: ${r.imageUrl}`);
-      });
-      (window as any).__recipeUrlsLogged = true;
+      const imageUrls = recipesData.map(r => r.imageUrl);
+      const uniqueUrls = new Set(imageUrls);
+      
+      if (imageUrls.length !== uniqueUrls.size) {
+        console.error('❌ DUPLICATE RECIPE IMAGES DETECTED!');
+        const duplicates = imageUrls.filter((url, index) => imageUrls.indexOf(url) !== index);
+        console.error('Duplicate URLs:', [...new Set(duplicates)]);
+      } else {
+        console.log('✅ All 50 recipe images are unique');
+        console.log('📊 Sample image IDs:');
+        recipesData.slice(0, 3).forEach((r, i) => {
+          console.log(`  ${i + 1}. ${r.name}: imageId="${r.imageId}"`);
+        });
+      }
+      (window as any).__recipeImagesVerified = true;
     }
   }
 
@@ -246,10 +256,9 @@ export default function MemberRecipesPage() {
                   alt={recipe.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
-                  key={recipe.id}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80&auto=format&fit=crop';
+                    target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&auto=format&fit=crop&q=80';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
