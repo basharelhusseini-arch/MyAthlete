@@ -22,27 +22,27 @@ import { useState, useEffect } from 'react';
 
 // Admin/Trainer navigation
 const adminNavigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Health Statistics', href: '/health', icon: Activity },
-  { name: 'Classes', href: '/classes', icon: Calendar },
-  { name: 'Trainers', href: '/trainers', icon: UserCog },
-  { name: 'Workouts', href: '/workouts', icon: Dumbbell },
-  { name: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
-  { name: 'Diet Tracker', href: '/nutrition', icon: Heart },
-  { name: 'Habit Tracker', href: '/habits', icon: Target },
+  { name: 'Dashboard', label: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Health Statistics', label: 'Health', href: '/health', icon: Activity },
+  { name: 'Classes', label: 'Classes', href: '/classes', icon: Calendar },
+  { name: 'Trainers', label: 'Trainers', href: '/trainers', icon: UserCog },
+  { name: 'Workouts', label: 'Workouts', href: '/workouts', icon: Dumbbell },
+  { name: 'Recipes', label: 'Recipes', href: '/recipes', icon: UtensilsCrossed },
+  { name: 'Diet Tracker', label: 'Nutrition', href: '/nutrition', icon: Heart },
+  { name: 'Habit Tracker', label: 'Habits', href: '/habits', icon: Target },
 ];
 
 // Member navigation
 const memberNavigation = [
-  { name: 'Dashboard', href: '/member/dashboard', icon: LayoutDashboard },
-  { name: 'My Workouts', href: '/member/workouts', icon: Dumbbell },
-  { name: 'My Nutrition', href: '/member/nutrition', icon: UtensilsCrossed },
-  { name: 'Recipes', href: '/member/recipes', icon: ChefHat },
-  { name: 'My Classes', href: '/member/classes', icon: Calendar },
-  { name: 'Health Score', href: '/member/health', icon: Activity },
-  { name: 'Habits', href: '/member/habits', icon: Target },
-  { name: 'Rewards', href: '/member/rewards', icon: Trophy },
-  { name: 'Wearables', href: '/member/wearables', icon: Heart },
+  { name: 'Dashboard', label: 'Dashboard', href: '/member/dashboard', icon: LayoutDashboard },
+  { name: 'My Workouts', label: 'Workouts', href: '/member/workouts', icon: Dumbbell },
+  { name: 'My Nutrition', label: 'Nutrition', href: '/member/nutrition', icon: UtensilsCrossed },
+  { name: 'Recipes', label: 'Recipes', href: '/member/recipes', icon: ChefHat },
+  { name: 'My Classes', label: 'Classes', href: '/member/classes', icon: Calendar },
+  { name: 'Health Score', label: 'Health', href: '/member/health', icon: Activity },
+  { name: 'Habits', label: 'Habits', href: '/member/habits', icon: Target },
+  { name: 'Rewards', label: 'Rewards', href: '/member/rewards', icon: Trophy },
+  { name: 'Wearables', label: 'Wearables', href: '/member/wearables', icon: Heart },
 ];
 
 export default function Sidebar() {
@@ -93,7 +93,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div
         className={`
-          fixed inset-y-0 left-0 z-40 w-20 lg:w-20 bg-thrivv-bg-darker border-r border-thrivv-gold-500/10 text-white transform transition-all duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-40 w-24 lg:w-24 bg-thrivv-bg-darker border-r border-thrivv-gold-500/10 text-white transform transition-all duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
@@ -116,56 +116,70 @@ export default function Sidebar() {
           )}
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-6 space-y-3 overflow-y-auto">
+          <nav className="flex-1 px-2 py-6 space-y-2 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
+              const displayLabel = item.label;
+              
               return (
-                <div key={item.name} className="relative group">
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`
-                      flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300 relative
-                      ${
-                        isActive
-                          ? 'bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 text-black glow-gold'
-                          : 'text-thrivv-text-secondary hover:text-thrivv-gold-500 hover:bg-thrivv-gold-500/10'
-                      }
-                    `}
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`
+                    flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all duration-300 relative group
+                    ${
+                      isActive
+                        ? 'bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 glow-gold'
+                        : 'hover:bg-thrivv-gold-500/10'
+                    }
+                  `}
+                >
+                  <Icon 
+                    className={`w-5 h-5 mb-1.5 transition-colors duration-300 ${
+                      isActive
+                        ? 'text-black'
+                        : 'text-thrivv-text-secondary group-hover:text-thrivv-gold-500'
+                    }`}
+                  />
+                  <span 
+                    className={`text-xs font-medium text-center leading-tight truncate w-full transition-colors duration-300 ${
+                      isActive
+                        ? 'text-black'
+                        : 'text-thrivv-text-muted group-hover:text-thrivv-gold-500'
+                    }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    {isActive && (
-                      <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-thrivv-gold-500 rounded-r-full" />
-                    )}
-                  </Link>
-                  {/* Tooltip on hover */}
-                  <div className="absolute left-full ml-4 px-3 py-2 bg-thrivv-bg-card border border-thrivv-gold-500/20 rounded-lg text-sm text-thrivv-text-primary whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 top-1/2 -translate-y-1/2">
-                    {item.name}
-                  </div>
-                </div>
+                    {displayLabel}
+                  </span>
+                  {isActive && (
+                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-10 bg-thrivv-gold-500 rounded-r-full" />
+                  )}
+                </Link>
               );
             })}
           </nav>
 
           {/* Footer Actions */}
-          <div className="px-3 py-4 border-t border-thrivv-gold-500/10">
+          <div className="px-2 py-4 border-t border-thrivv-gold-500/10">
             {memberData ? (
               // Sign Out Button (when logged in)
               <button
                 onClick={handleLogout}
-                className="w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-red-400 hover:bg-red-500/10"
+                className="w-full flex flex-col items-center justify-center py-3 rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-red-400 hover:bg-red-500/10 group"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-5 h-5 mb-1.5" />
+                <span className="text-xs font-medium">Sign Out</span>
               </button>
             ) : (
               // Member Portal Link (when not logged in, and not already in member portal)
               !isInMemberPortal && (
                 <Link
                   href="/member/login"
-                  className="w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-thrivv-gold-500 hover:bg-thrivv-gold-500/10"
+                  className="w-full flex flex-col items-center justify-center py-3 rounded-xl transition-all duration-300 text-thrivv-text-secondary hover:text-thrivv-gold-500 hover:bg-thrivv-gold-500/10 group"
                 >
-                  <LogIn className="w-5 h-5" />
+                  <LogIn className="w-5 h-5 mb-1.5" />
+                  <span className="text-xs font-medium">Sign In</span>
                 </Link>
               )
             )}

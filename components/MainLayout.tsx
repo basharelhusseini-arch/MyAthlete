@@ -78,7 +78,7 @@ export default function MainLayout({
   return (
     <div className="min-h-screen bg-thrivv-bg-dark">
       <Sidebar />
-      <main className="lg:ml-20 p-6 lg:p-12 transition-all duration-300">
+      <main className="lg:ml-24 p-6 lg:p-12 transition-all duration-300">
         {children}
       </main>
     </div>
