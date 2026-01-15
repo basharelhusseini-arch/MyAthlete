@@ -55,7 +55,7 @@ export default function MemberLoginPage() {
 
       {/* Layer B: Background wordmark (z-index: 10) */}
       <div className="fixed inset-0" style={{ zIndex: 10, isolation: 'isolate' }}>
-        <BackgroundWordmark intensity={0.35} position="center" />
+        <BackgroundWordmark />
       </div>
 
       {/* Layer D: Foreground content (z-index: 20) */}
