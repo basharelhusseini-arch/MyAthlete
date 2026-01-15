@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getSupabaseEnv } from '@/lib/env';
+import { setSessionCookie } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Sign in with Supabase Auth
+    // Sign in with Supabase Auth - wait for response
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -54,26 +55,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if login was successful
+    // Check if login was successful - session must exist
     if (!data.user || !data.session) {
+      console.error('Login succeeded but no session returned:', {
+        hasUser: !!data.user,
+        hasSession: !!data.session,
+      });
+      
       return NextResponse.json(
         { error: 'Login failed. Please try again.' },
         { status: 401 }
       );
     }
 
+    // Log successful login
+    console.log('Login successful:', {
+      userId: data.user.id,
+      email: data.user.email,
+      hasSession: !!data.session,
+    });
+
     // Get user metadata
     const firstName = data.user.user_metadata?.first_name || '';
     const lastName = data.user.user_metadata?.last_name || '';
 
+    // Set server-side session cookie
+    const sessionUser = {
+      id: data.user.id,
+      email: data.user.email || email,
+      firstName,
+      lastName,
+    };
+    
+    await setSessionCookie(sessionUser);
+
     return NextResponse.json({
       success: true,
-      user: {
-        id: data.user.id,
-        email: data.user.email || email,
-        firstName,
-        lastName,
-      },
+      user: sessionUser,
       session: {
         access_token: data.session.access_token,
         refresh_token: data.session.refresh_token,
