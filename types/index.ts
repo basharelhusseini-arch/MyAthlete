@@ -266,10 +266,14 @@ export interface DailyMealPlan {
   memberId: string;
   date: string;
   meals: Meal[];
-  totalCalories: number;
-  totalProtein: number;
-  totalCarbohydrates: number;
-  totalFats: number;
+  totalCalories: number; // Computed total (sum of meals) - source of truth for UI
+  totalProtein: number; // Computed total (sum of meals)
+  totalCarbohydrates: number; // Computed total (sum of meals)
+  totalFats: number; // Computed total (sum of meals)
+  targetCalories?: number; // Optional: goal calories for this day
+  targetProtein?: number; // Optional: goal protein for this day
+  targetCarbohydrates?: number; // Optional: goal carbs for this day
+  targetFats?: number; // Optional: goal fats for this day
   status: 'planned' | 'completed';
   notes?: string;
 }

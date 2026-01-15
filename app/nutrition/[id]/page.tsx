@@ -195,19 +195,41 @@ export default function NutritionPlanDetailPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {mealPlans.map((mealPlan) => (
-                <div
-                  key={mealPlan.id}
-                  className="border border-gray-200 rounded-lg p-6"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {new Date(mealPlan.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                    </h3>
-                    <div className="text-sm text-gray-600">
-                      Total: {mealPlan.totalCalories} cal | {mealPlan.totalProtein}g protein | {mealPlan.totalCarbohydrates}g carbs | {mealPlan.totalFats}g fats
+              {mealPlans.map((mealPlan) => {
+                // Compute totals from actual meals displayed (source of truth)
+                const computedCalories = mealPlan.meals.reduce((sum, m) => sum + (m.calories || 0), 0);
+                const computedProtein = mealPlan.meals.reduce((sum, m) => sum + (m.protein || 0), 0);
+                const computedCarbs = mealPlan.meals.reduce((sum, m) => sum + (m.carbohydrates || 0), 0);
+                const computedFats = mealPlan.meals.reduce((sum, m) => sum + (m.fats || 0), 0);
+
+                // Log warning if stored totals don't match computed (development only)
+                if (process.env.NODE_ENV === 'development') {
+                  const calDiff = Math.abs(computedCalories - mealPlan.totalCalories);
+                  if (calDiff > 1) {
+                    console.warn(`Day ${mealPlan.date}: Stored calories (${mealPlan.totalCalories}) != computed (${computedCalories})`);
+                  }
+                }
+
+                return (
+                  <div
+                    key={mealPlan.id}
+                    className="border border-gray-200 rounded-lg p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {new Date(mealPlan.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      </h3>
+                      <div className="text-sm">
+                        <div className="font-semibold text-gray-900">
+                          Total: {Math.round(computedCalories)} cal | {Math.round(computedProtein)}g protein | {Math.round(computedCarbs)}g carbs | {Math.round(computedFats)}g fats
+                        </div>
+                        {mealPlan.targetCalories && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            Target: {mealPlan.targetCalories} cal | {mealPlan.targetProtein}g protein | {mealPlan.targetCarbohydrates}g carbs | {mealPlan.targetFats}g fats
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {mealPlan.meals.map((meal) => {
@@ -252,7 +274,8 @@ export default function NutritionPlanDetailPage() {
                     })}
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>

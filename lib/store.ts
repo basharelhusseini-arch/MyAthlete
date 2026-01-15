@@ -1006,27 +1006,87 @@ class DataStore {
       preferences: params.preferences,
     });
 
+    // Filter available recipes by dietary restrictions
+    const availableRecipes = this.recipes.filter(r => {
+      if (params.dietaryRestrictions) {
+        if (params.dietaryRestrictions.includes('vegetarian') && !r.tags.includes('vegetarian') && !r.tags.includes('vegan')) return false;
+        if (params.dietaryRestrictions.includes('vegan') && !r.tags.includes('vegan')) return false;
+      }
+      return true;
+    });
+
+    // Safety check: ensure we have recipes to work with
+    if (availableRecipes.length === 0) {
+      throw new Error('No recipes available matching the dietary restrictions. Cannot generate meal plan.');
+    }
+
+    // Separate recipes by meal type
+    const breakfastRecipes = availableRecipes.filter(r => r.tags.includes('breakfast'));
+    const lunchDinnerRecipes = availableRecipes.filter(r => 
+      !r.tags.includes('breakfast') && !r.tags.includes('smoothie') && !r.tags.includes('snack')
+    );
+    const snackRecipes = availableRecipes.filter(r => 
+      r.tags.includes('smoothie') || r.tags.includes('snack') || r.tags.includes('quick')
+    );
+
+    // Track used recipes across the week to ensure variety
+    const usedBreakfastIds = new Set<string>();
+    const usedLunchIds = new Set<string>();
+    const usedDinnerIds = new Set<string>();
+    const usedSnackIds = new Set<string>();
+
+    // Helper function to select a unique recipe
+    const selectUniqueRecipe = (
+      pool: typeof availableRecipes,
+      usedIds: Set<string>,
+      excludeIds: Set<string> = new Set()
+    ): typeof availableRecipes[0] | null => {
+      // First try: unused recipes
+      const unused = pool.filter(r => !usedIds.has(r.id) && !excludeIds.has(r.id));
+      if (unused.length > 0) {
+        const selected = unused[Math.floor(Math.random() * unused.length)];
+        usedIds.add(selected.id);
+        return selected;
+      }
+      
+      // Second try: allow repeats but still exclude same-day conflicts
+      const available = pool.filter(r => !excludeIds.has(r.id));
+      if (available.length > 0) {
+        const selected = available[Math.floor(Math.random() * available.length)];
+        // Track it as used even though it's a repeat
+        usedIds.add(selected.id);
+        return selected;
+      }
+      
+      // Last resort: any recipe from pool (even if used today)
+      if (pool.length > 0) {
+        const selected = pool[Math.floor(Math.random() * pool.length)];
+        usedIds.add(selected.id);
+        return selected;
+      }
+      
+      return null;
+    };
+
+    // Macro adjustment helpers (small portions to meet targets)
+    const macroAdjusters = [
+      { name: 'Extra Brown Rice (1/2 cup)', calories: 110, protein: 2, carbs: 23, fats: 1 },
+      { name: 'Olive Oil (1 tbsp)', calories: 120, protein: 0, carbs: 0, fats: 14 },
+      { name: 'Greek Yogurt (100g)', calories: 60, protein: 10, carbs: 4, fats: 0 },
+      { name: 'Banana', calories: 105, protein: 1, carbs: 27, fats: 0 },
+      { name: 'Almonds (1 oz)', calories: 160, protein: 6, carbs: 6, fats: 14 },
+      { name: 'Sweet Potato (100g)', calories: 90, protein: 2, carbs: 21, fats: 0 },
+      { name: 'Protein Shake', calories: 120, protein: 24, carbs: 3, fats: 2 },
+    ];
+
     // Generate daily meal plans for the duration
     const startDate = new Date(plan.startDate);
     for (let i = 0; i < params.duration; i++) {
       const mealPlanDate = new Date(startDate);
       mealPlanDate.setDate(startDate.getDate() + i);
 
-      // Create meals based on goal and available recipes
-      const availableRecipes = this.recipes.filter(r => {
-        // Filter by dietary restrictions
-        if (params.dietaryRestrictions) {
-          if (params.dietaryRestrictions.includes('vegetarian') && !r.tags.includes('vegetarian') && !r.tags.includes('vegan')) return false;
-          if (params.dietaryRestrictions.includes('vegan') && !r.tags.includes('vegan')) return false;
-        }
-        return true;
-      });
-
-      // Select recipes for the day (simplified - in production, use AI to balance macros)
-      const breakfast = availableRecipes.find(r => r.tags.includes('breakfast')) || availableRecipes[1];
-      const lunch = availableRecipes.find(r => !r.tags.includes('breakfast') && !r.tags.includes('smoothie')) || availableRecipes[2];
-      const dinner = availableRecipes.find(r => !r.tags.includes('breakfast') && !r.tags.includes('smoothie')) || availableRecipes[0];
-      const snack = availableRecipes.find(r => r.tags.includes('smoothie') || r.tags.includes('quick')) || availableRecipes[3];
+      // Track recipes used within this day to prevent duplicates
+      const todayRecipeIds = new Set<string>();
 
       const meals: Meal[] = [];
       let totalCalories = 0;
@@ -1034,9 +1094,17 @@ class DataStore {
       let totalCarbs = 0;
       let totalFats = 0;
 
+      // Select breakfast (must be unique within day and prefer unused)
+      const breakfast = selectUniqueRecipe(
+        breakfastRecipes.length > 0 ? breakfastRecipes : availableRecipes,
+        usedBreakfastIds,
+        todayRecipeIds
+      );
+      
       if (breakfast) {
+        todayRecipeIds.add(breakfast.id);
         meals.push({
-          id: `meal-${i}-breakfast`,
+          id: `meal-${plan.id}-${i}-breakfast`,
           name: breakfast.name,
           mealType: 'breakfast' as const,
           recipeId: breakfast.id,
@@ -1050,11 +1118,21 @@ class DataStore {
         totalProtein += breakfast.protein_g;
         totalCarbs += breakfast.carbs_g;
         totalFats += breakfast.fat_g;
+      } else if (process.env.NODE_ENV === 'development') {
+        console.warn(`Day ${i + 1}: No breakfast recipe available`);
       }
 
+      // Select lunch (must be unique within day and different from dinner)
+      const lunch = selectUniqueRecipe(
+        lunchDinnerRecipes.length > 0 ? lunchDinnerRecipes : availableRecipes,
+        usedLunchIds,
+        todayRecipeIds
+      );
+      
       if (lunch) {
+        todayRecipeIds.add(lunch.id);
         meals.push({
-          id: `meal-${i}-lunch`,
+          id: `meal-${plan.id}-${i}-lunch`,
           name: lunch.name,
           mealType: 'lunch' as const,
           recipeId: lunch.id,
@@ -1068,11 +1146,21 @@ class DataStore {
         totalProtein += lunch.protein_g;
         totalCarbs += lunch.carbs_g;
         totalFats += lunch.fat_g;
+      } else if (process.env.NODE_ENV === 'development') {
+        console.warn(`Day ${i + 1}: No lunch recipe available`);
       }
 
+      // Select dinner (must be unique within day, different from lunch)
+      const dinner = selectUniqueRecipe(
+        lunchDinnerRecipes.length > 0 ? lunchDinnerRecipes : availableRecipes,
+        usedDinnerIds,
+        todayRecipeIds
+      );
+      
       if (dinner) {
+        todayRecipeIds.add(dinner.id);
         meals.push({
-          id: `meal-${i}-dinner`,
+          id: `meal-${plan.id}-${i}-dinner`,
           name: dinner.name,
           mealType: 'dinner' as const,
           recipeId: dinner.id,
@@ -1086,43 +1174,85 @@ class DataStore {
         totalProtein += dinner.protein_g;
         totalCarbs += dinner.carbs_g;
         totalFats += dinner.fat_g;
+      } else if (process.env.NODE_ENV === 'development') {
+        console.warn(`Day ${i + 1}: No dinner recipe available`);
       }
 
-      if (snack && totalCalories < macroTargets.calories * 0.9) {
-        meals.push({
-          id: `meal-${i}-snack`,
-          name: snack.name,
-          mealType: 'snack' as const,
-          recipeId: snack.id,
-          calories: snack.calories,
-          protein: snack.protein_g,
-          carbohydrates: snack.carbs_g,
-          fats: snack.fat_g,
-          time: '16:00',
-        });
-        totalCalories += snack.calories;
-        totalProtein += snack.protein_g;
-        totalCarbs += snack.carbs_g;
-        totalFats += snack.fat_g;
+      // Add snacks/adjusters to meet calorie target (within ±2% or ±50 kcal)
+      const calorieTarget = macroTargets.calories;
+      const calorieTolerance = Math.min(calorieTarget * 0.02, 50);
+      const calorieDeficit = calorieTarget - totalCalories;
+
+      if (calorieDeficit > calorieTolerance) {
+        // Need to add calories - add snack or adjusters
+        const snack = selectUniqueRecipe(
+          snackRecipes.length > 0 ? snackRecipes : availableRecipes,
+          usedSnackIds,
+          todayRecipeIds
+        );
+        
+        if (snack && snack.calories <= calorieDeficit + calorieTolerance) {
+          todayRecipeIds.add(snack.id);
+          meals.push({
+            id: `meal-${plan.id}-${i}-snack`,
+            name: snack.name,
+            mealType: 'snack' as const,
+            recipeId: snack.id,
+            calories: snack.calories,
+            protein: snack.protein_g,
+            carbohydrates: snack.carbs_g,
+            fats: snack.fat_g,
+            time: '16:00',
+          });
+          totalCalories += snack.calories;
+          totalProtein += snack.protein_g;
+          totalCarbs += snack.carbs_g;
+          totalFats += snack.fat_g;
+        }
+
+        // Still need more calories? Add small macro adjusters
+        const remainingDeficit = calorieTarget - totalCalories;
+        if (remainingDeficit > calorieTolerance) {
+          // Try to add one adjuster that fits
+          const suitableAdjuster = macroAdjusters.find(adj => 
+            adj.calories <= remainingDeficit + calorieTolerance * 2
+          );
+          
+          if (suitableAdjuster) {
+            meals.push({
+              id: `meal-${plan.id}-${i}-adjuster`,
+              name: suitableAdjuster.name,
+              mealType: 'snack' as const,
+              calories: suitableAdjuster.calories,
+              protein: suitableAdjuster.protein,
+              carbohydrates: suitableAdjuster.carbs,
+              fats: suitableAdjuster.fats,
+              time: '20:00',
+            });
+            totalCalories += suitableAdjuster.calories;
+            totalProtein += suitableAdjuster.protein;
+            totalCarbs += suitableAdjuster.carbs;
+            totalFats += suitableAdjuster.fats;
+          }
+        }
       }
 
-      // Normalize macros to match target calories
-      const normalized = this.normalizeMacros(
-        totalProtein,
-        totalCarbs,
-        totalFats,
-        macroTargets.calories
-      );
-
+      // Store the day with computed totals (source of truth) and target totals
       this.addDailyMealPlan({
         nutritionPlanId: plan.id,
         memberId: params.memberId,
         date: mealPlanDate.toISOString().split('T')[0],
         meals: meals,
-        totalCalories: normalized.calories,
-        totalProtein: normalized.protein,
-        totalCarbohydrates: normalized.carbs,
-        totalFats: normalized.fats,
+        // Computed totals = sum of meals (this is what UI displays)
+        totalCalories: Math.round(totalCalories),
+        totalProtein: Math.round(totalProtein),
+        totalCarbohydrates: Math.round(totalCarbs),
+        totalFats: Math.round(totalFats),
+        // Store targets for reference
+        targetCalories: macroTargets.calories,
+        targetProtein: macroTargets.protein,
+        targetCarbohydrates: macroTargets.carbohydrates,
+        targetFats: macroTargets.fats,
         status: 'planned',
       });
     }
