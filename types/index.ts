@@ -195,8 +195,8 @@ export interface MacroTargets {
 }
 
 export interface Ingredient {
-  name: string;
-  amount: number;
+  item: string; // Matches recipes.ts structure
+  quantity: number;
   unit: string; // e.g., 'g', 'ml', 'cup', 'tbsp'
 }
 
@@ -204,18 +204,18 @@ export interface Recipe {
   id: string;
   name: string;
   description: string;
-  instructions: string[];
-  ingredients: Ingredient[];
-  servings: number;
-  prepTime: number; // in minutes
-  cookTime: number; // in minutes
+  imageUrl: string;
+  imageId: string; // Unsplash photo ID for stable images
   calories: number;
-  protein: number; // in grams per serving
-  carbohydrates: number; // in grams per serving
-  fats: number; // in grams per serving
-  fiber?: number; // in grams per serving
-  tags: string[]; // e.g., 'vegetarian', 'gluten-free', 'high-protein', 'quick'
-  imageUrl?: string;
+  protein_g: number; // Renamed to match recipes.ts
+  carbs_g: number; // Renamed to match recipes.ts
+  fat_g: number; // Renamed to match recipes.ts
+  prepMinutes: number; // Renamed to match recipes.ts
+  cookMinutes: number; // Renamed to match recipes.ts
+  servings: number;
+  ingredients: Ingredient[];
+  instructions: string[];
+  tags: string[]; // e.g., ['high-protein', 'low-carb', 'vegetarian', 'meal-prep']
 }
 
 export interface Meal {
