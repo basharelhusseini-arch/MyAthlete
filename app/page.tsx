@@ -75,6 +75,13 @@ export default function LandingPage() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        {/* Futuristic Background Text "BUILT TO THRIVV" */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-background-text select-none">
+            BUILT TO THRIVV
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -234,6 +241,52 @@ export default function LandingPage() {
 
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        @keyframes text-glow {
+          0%, 100% {
+            text-shadow: 
+              0 0 10px rgba(251, 191, 36, 0.1),
+              0 0 20px rgba(251, 191, 36, 0.1),
+              0 0 30px rgba(251, 191, 36, 0.05);
+          }
+          50% {
+            text-shadow: 
+              0 0 20px rgba(251, 191, 36, 0.15),
+              0 0 30px rgba(251, 191, 36, 0.15),
+              0 0 40px rgba(251, 191, 36, 0.1);
+          }
+        }
+
+        .text-background-text {
+          font-size: clamp(4rem, 15vw, 12rem);
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0.05em;
+          background: linear-gradient(
+            135deg,
+            rgba(251, 191, 36, 0.03) 0%,
+            rgba(249, 115, 22, 0.05) 50%,
+            rgba(251, 191, 36, 0.03) 100%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+          text-align: center;
+          white-space: nowrap;
+          animation: text-glow 4s ease-in-out infinite;
+          opacity: 0.4;
+          transform: translateY(-10%);
+        }
+
+        @media (max-width: 768px) {
+          .text-background-text {
+            font-size: clamp(2rem, 12vw, 6rem);
+            white-space: normal;
+            word-break: break-word;
+            line-height: 0.9;
+          }
         }
       `}</style>
     </div>

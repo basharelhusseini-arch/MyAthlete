@@ -50,6 +50,13 @@ export default function MemberLoginPage() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-thrivv-gold-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-thrivv-amber-500/5 rounded-full blur-3xl" />
+        
+        {/* Futuristic Background Text "BUILT TO THRIVV" */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-background-text select-none">
+            BUILT TO THRIVV
+          </div>
+        </div>
       </div>
 
       <div className="relative max-w-md w-full">
@@ -124,6 +131,54 @@ export default function MemberLoginPage() {
           </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes text-glow {
+          0%, 100% {
+            text-shadow: 
+              0 0 10px rgba(251, 191, 36, 0.1),
+              0 0 20px rgba(251, 191, 36, 0.1),
+              0 0 30px rgba(251, 191, 36, 0.05);
+          }
+          50% {
+            text-shadow: 
+              0 0 20px rgba(251, 191, 36, 0.15),
+              0 0 30px rgba(251, 191, 36, 0.15),
+              0 0 40px rgba(251, 191, 36, 0.1);
+          }
+        }
+
+        .text-background-text {
+          font-size: clamp(4rem, 15vw, 12rem);
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0.05em;
+          background: linear-gradient(
+            135deg,
+            rgba(251, 191, 36, 0.03) 0%,
+            rgba(249, 115, 22, 0.05) 50%,
+            rgba(251, 191, 36, 0.03) 100%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+          text-align: center;
+          white-space: nowrap;
+          animation: text-glow 4s ease-in-out infinite;
+          opacity: 0.4;
+          transform: translateY(-10%);
+        }
+
+        @media (max-width: 768px) {
+          .text-background-text {
+            font-size: clamp(2rem, 12vw, 6rem);
+            white-space: normal;
+            word-break: break-word;
+            line-height: 0.9;
+          }
+        }
+      `}</style>
     </div>
   );
 }
