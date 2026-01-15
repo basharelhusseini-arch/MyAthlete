@@ -71,16 +71,19 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
-      {/* Animated Background - Low z-index */}
+    <div className="min-h-screen bg-black overflow-hidden relative">
+      {/* Layer A: Base background gradient (z-index: 0) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      {/* Futuristic Background Wordmark - Mid z-index */}
-      <BackgroundWordmark intensity={0.45} position="center" />
+      {/* Layer B: Background wordmark (z-index: 10) - Readable, in isolation */}
+      <div className="fixed inset-0" style={{ zIndex: 10, isolation: 'isolate' }}>
+        <BackgroundWordmark intensity={0.45} position="center" />
+      </div>
 
+      {/* Layer D: Foreground content (z-index: 20+) */}
       {/* Navigation */}
       <nav className="relative z-50 glass-effect border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -112,7 +115,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative z-10 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-20 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-6">
@@ -161,7 +164,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+      <section id="features" className="relative z-20 py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
@@ -196,7 +199,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-20 py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="glass-effect rounded-2xl p-12 text-center border-2 border-yellow-500/30 hover:border-yellow-500/50 transition-all duration-500">
             <Sparkles className="w-16 h-16 text-yellow-400 mx-auto mb-6 animate-pulse" />
@@ -218,7 +221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-yellow-500/20 py-8 px-4 sm:px-6 lg:px-8 mt-20">
+      <footer className="relative z-20 border-t border-yellow-500/20 py-8 px-4 sm:px-6 lg:px-8 mt-20">
         <div className="max-w-7xl mx-auto text-center text-gray-400">
           <p>&copy; 2026 Thrivv. All rights reserved. Transform your fitness journey today.</p>
         </div>

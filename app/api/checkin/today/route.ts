@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const user = await requireAuth();
 
     const body = await request.json();
-    const { didWorkout, calories, sleepHours } = body;
+    const { didWorkout, calories, sleepHours, protein, carbs, fat } = body;
 
     // Validation
     if (typeof didWorkout !== 'boolean') {
@@ -32,6 +32,9 @@ export async function POST(request: NextRequest) {
           did_workout: didWorkout,
           calories: calories || 0,
           sleep_hours: sleepHours || 0,
+          protein_g: protein || 0,
+          carbs_g: carbs || 0,
+          fat_g: fat || 0,
         },
         {
           onConflict: 'user_id,date',
@@ -48,12 +51,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate health score
+    // Calculate health score with macro data if provided
+    const consumed = protein && carbs && fat ? {
+      calories: calories || 0,
+      protein_g: protein,
+      carbs_g: carbs,
+      fat_g: fat,
+    } : undefined;
+
     const score = calculateHealthScore({
       didWorkout,
       calories,
       sleepHours,
-    });
+    }, undefined, consumed);
 
     // Upsert health score
     const { data: healthScore, error: scoreError } = await supabase
@@ -66,6 +76,7 @@ export async function POST(request: NextRequest) {
           training_score: score.trainingScore,
           diet_score: score.dietScore,
           sleep_score: score.sleepScore,
+          habit_score: score.habitScore,
         },
         {
           onConflict: 'user_id,date',

@@ -225,7 +225,7 @@ export default function NutritionPlanDetailPage() {
                         </div>
                         {mealPlan.targetCalories && (
                           <div className="text-xs text-gray-500 mt-1">
-                            Target: {mealPlan.targetCalories} cal | {mealPlan.targetProtein}g protein | {mealPlan.targetCarbohydrates}g carbs | {mealPlan.targetFats}g fats
+                            Target: {mealPlan.targetCalories} cal | {mealPlan.targetProtein ?? 0}g protein | {mealPlan.targetCarbohydrates ?? 0}g carbs | {mealPlan.targetFats ?? 0}g fats
                           </div>
                         )}
                       </div>

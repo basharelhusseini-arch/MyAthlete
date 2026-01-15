@@ -14,11 +14,14 @@ export default function BackgroundWordmark({
   className = ''
 }: BackgroundWordmarkProps) {
   
-  // Calculate dynamic values based on intensity
-  const strokeOpacity = intensity * 0.35;
-  const fillOpacity = intensity * 0.05;
-  const glowOpacity = intensity * 0.12;
-  const overallOpacity = Math.min(intensity + 0.1, 0.65);
+  // Fixed opacity values for readability (using gold color: rgb(255, 196, 0))
+  const fillOpacity = 0.10;      // Light fill - visible but subtle
+  const strokeOpacity = 0.55;    // Strong stroke - clearly readable
+  const glowOpacity = 0.18;      // Subtle glow for depth
+  
+  // Overall opacity differs by screen size
+  const desktopOpacity = 0.40;
+  const mobileOpacity = 0.55;
 
   // Position mapping
   const positionClasses = {
@@ -30,12 +33,14 @@ export default function BackgroundWordmark({
   return (
     <div 
       className={`absolute inset-0 flex items-center justify-center pointer-events-none ${className}`}
-      style={{ zIndex: 5 }}
+      style={{ 
+        zIndex: 10,  // Above background (0) but below content (20+)
+        isolation: 'isolate'  // Create stacking context
+      }}
       aria-hidden="true"
     >
       <div 
-        className={`absolute left-1/2 -translate-x-1/2 ${positionClasses[position]}`}
-        style={{ opacity: overallOpacity }}
+        className={`absolute left-1/2 -translate-x-1/2 ${positionClasses[position]} wordmark-container`}
       >
         <h2 
           className="wordmark-text select-none whitespace-nowrap"
@@ -44,12 +49,12 @@ export default function BackgroundWordmark({
             fontWeight: 900,
             letterSpacing: '0.25em',
             textTransform: 'uppercase',
-            color: `rgba(251, 191, 36, ${fillOpacity})`,
-            WebkitTextStroke: `1px rgba(251, 191, 36, ${strokeOpacity})`,
+            color: `rgba(255, 196, 0, ${fillOpacity})`,
+            WebkitTextStroke: `2px rgba(255, 196, 0, ${strokeOpacity})`,
             textShadow: `
-              0 0 24px rgba(251, 191, 36, ${glowOpacity}),
-              0 0 48px rgba(251, 191, 36, ${glowOpacity * 0.5}),
-              0 0 80px rgba(251, 191, 36, ${glowOpacity * 0.25})
+              0 0 28px rgba(255, 196, 0, ${glowOpacity}),
+              0 0 56px rgba(255, 196, 0, ${glowOpacity * 0.5}),
+              0 0 84px rgba(255, 196, 0, ${glowOpacity * 0.3})
             `,
           }}
         >
@@ -67,15 +72,19 @@ export default function BackgroundWordmark({
           }
         }
 
+        .wordmark-container {
+          opacity: ${desktopOpacity};
+        }
+
         .wordmark-text {
           position: relative;
           background: linear-gradient(
             90deg,
-            rgba(251, 191, 36, ${fillOpacity}) 0%,
-            rgba(251, 191, 36, ${fillOpacity * 2}) 45%,
-            rgba(249, 115, 22, ${fillOpacity * 2.5}) 50%,
-            rgba(251, 191, 36, ${fillOpacity * 2}) 55%,
-            rgba(251, 191, 36, ${fillOpacity}) 100%
+            rgba(255, 196, 0, ${fillOpacity}) 0%,
+            rgba(255, 196, 0, ${fillOpacity * 1.5}) 45%,
+            rgba(249, 115, 22, ${fillOpacity * 2}) 50%,
+            rgba(255, 196, 0, ${fillOpacity * 1.5}) 55%,
+            rgba(255, 196, 0, ${fillOpacity}) 100%
           );
           background-size: 200% 100%;
           background-clip: text;
@@ -85,6 +94,10 @@ export default function BackgroundWordmark({
 
         /* Mobile optimizations */
         @media (max-width: 768px) {
+          .wordmark-container {
+            opacity: ${mobileOpacity};
+          }
+          
           .wordmark-text {
             font-size: clamp(48px, 12vw, 96px) !important;
             letter-spacing: 0.15em !important;

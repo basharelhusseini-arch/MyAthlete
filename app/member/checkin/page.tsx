@@ -7,6 +7,9 @@ import { Activity, Dumbbell, UtensilsCrossed, Moon, CheckCircle, Loader2 } from 
 interface CheckinForm {
   didWorkout: boolean;
   calories: string;
+  protein: string;
+  carbs: string;
+  fat: string;
   sleepHours: string;
 }
 
@@ -22,6 +25,9 @@ export default function CheckinPage() {
   const [formData, setFormData] = useState<CheckinForm>({
     didWorkout: false,
     calories: '',
+    protein: '',
+    carbs: '',
+    fat: '',
     sleepHours: '',
   });
 
@@ -50,6 +56,9 @@ export default function CheckinPage() {
             setFormData({
               didWorkout: data.checkin.did_workout,
               calories: data.checkin.calories?.toString() || '',
+              protein: data.checkin.protein_g?.toString() || '',
+              carbs: data.checkin.carbs_g?.toString() || '',
+              fat: data.checkin.fat_g?.toString() || '',
               sleepHours: data.checkin.sleep_hours?.toString() || '',
             });
           }
@@ -90,6 +99,9 @@ export default function CheckinPage() {
         body: JSON.stringify({
           didWorkout: formData.didWorkout,
           calories: formData.calories ? parseInt(formData.calories, 10) : 0,
+          protein: formData.protein ? parseFloat(formData.protein) : 0,
+          carbs: formData.carbs ? parseFloat(formData.carbs) : 0,
+          fat: formData.fat ? parseFloat(formData.fat) : 0,
           sleepHours: formData.sleepHours ? parseFloat(formData.sleepHours) : 0,
         }),
       });
@@ -193,25 +205,85 @@ export default function CheckinPage() {
             </p>
           </div>
 
-          {/* Calories */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              <div className="flex items-center space-x-2">
-                <UtensilsCrossed className="w-5 h-5 text-green-400" />
-                <span>Calories Consumed (optional)</span>
+          {/* Nutrition Tracking */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-gray-300 flex items-center space-x-2">
+              <UtensilsCrossed className="w-5 h-5 text-green-400" />
+              <span>Nutrition Tracking (optional - helps maximize diet score)</span>
+            </h3>
+            
+            {/* Calories */}
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                Calories
+              </label>
+              <input
+                type="number"
+                value={formData.calories}
+                onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
+                placeholder="e.g., 2200"
+                min="0"
+                max="10000"
+                className="w-full px-4 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+              />
+            </div>
+
+            {/* Macros Grid */}
+            <div className="grid grid-cols-3 gap-3">
+              {/* Protein */}
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                  Protein (g)
+                </label>
+                <input
+                  type="number"
+                  value={formData.protein}
+                  onChange={(e) => setFormData({ ...formData, protein: e.target.value })}
+                  placeholder="150"
+                  min="0"
+                  max="500"
+                  step="0.1"
+                  className="w-full px-3 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all text-sm"
+                />
               </div>
-            </label>
-            <input
-              type="number"
-              value={formData.calories}
-              onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
-              placeholder="e.g., 2200"
-              min="0"
-              max="10000"
-              className="w-full px-4 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
-            />
-            <p className="text-sm text-gray-400 mt-2">
-              Target: 2200 ± 300 calories for optimal score (up to 40 points)
+
+              {/* Carbs */}
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                  Carbs (g)
+                </label>
+                <input
+                  type="number"
+                  value={formData.carbs}
+                  onChange={(e) => setFormData({ ...formData, carbs: e.target.value })}
+                  placeholder="200"
+                  min="0"
+                  max="1000"
+                  step="0.1"
+                  className="w-full px-3 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all text-sm"
+                />
+              </div>
+
+              {/* Fat */}
+              <div>
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                  Fat (g)
+                </label>
+                <input
+                  type="number"
+                  value={formData.fat}
+                  onChange={(e) => setFormData({ ...formData, fat: e.target.value })}
+                  placeholder="70"
+                  min="0"
+                  max="500"
+                  step="0.1"
+                  className="w-full px-3 py-3 bg-black/50 border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <p className="text-xs text-gray-400">
+              <span className="font-medium">Tip:</span> Track macros for up to 15 bonus points! Perfect: 2200±300 cal, ~150g protein, ~200g carbs, ~70g fat
             </p>
           </div>
 
