@@ -15,7 +15,8 @@ import {
   Target,
   Heart,
   Trophy,
-  User
+  User,
+  ChefHat
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -36,6 +37,7 @@ const memberNavigation = [
   { name: 'Dashboard', href: '/member/dashboard', icon: LayoutDashboard },
   { name: 'My Workouts', href: '/member/workouts', icon: Dumbbell },
   { name: 'My Nutrition', href: '/member/nutrition', icon: UtensilsCrossed },
+  { name: 'Recipes', href: '/member/recipes', icon: ChefHat },
   { name: 'My Classes', href: '/member/classes', icon: Calendar },
   { name: 'Health Score', href: '/member/health', icon: Activity },
   { name: 'Habits', href: '/member/habits', icon: Target },
