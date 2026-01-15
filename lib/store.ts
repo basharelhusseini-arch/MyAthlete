@@ -1,4 +1,5 @@
 import { Member, Membership, Trainer, GymClass, Payment, EmailNotification, Exercise, WorkoutPlan, Workout, WorkoutExercise, WorkoutProgress, WorkoutTemplate, Recipe, NutritionPlan, DailyMealPlan, MacroTargets, ShoppingList, Meal, Habit, HabitEntry, WhoopConnection, WhoopData } from '@/types';
+import { calculateTargets, splitIntoMeals, type Sex, type ActivityLevel, type Goal } from './nutrition';
 
 // Simple password hashing (in production, use bcrypt)
 // This function must work in both build-time and runtime environments
@@ -3350,7 +3351,7 @@ class DataStore {
     return this.dailyMealPlans[index];
   }
 
-  // Phase 3: Macro Calculator (Mifflin-St Jeor formula)
+  // Phase 3: Macro Calculator (uses scientifically-backed nutrition.ts)
   calculateMacros(params: {
     gender: 'male' | 'female';
     age: number;
@@ -3359,117 +3360,49 @@ class DataStore {
     activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
     goal: 'weight_loss' | 'muscle_gain' | 'maintenance' | 'performance' | 'general_health';
   }): MacroTargets {
-    // Calculate BMR using Mifflin-St Jeor equation
-    let bmr: number;
-    if (params.gender === 'male') {
-      bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age + 5;
-    } else {
-      bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age - 161;
-    }
+    // Use the new nutrition calculation library for consistent, accurate calculations
+    const targets = calculateTargets({
+      sex: params.gender as Sex,
+      age: params.age,
+      heightCm: params.height,
+      weightKg: params.weight,
+      activityLevel: params.activityLevel as ActivityLevel,
+      goal: params.goal as Goal,
+    });
 
-    // Activity multipliers
-    const activityMultipliers = {
-      sedentary: 1.2,
-      light: 1.375,
-      moderate: 1.55,
-      active: 1.725,
-      very_active: 1.9,
-    };
-
-    // Calculate TDEE (Total Daily Energy Expenditure)
-    const tdee = bmr * activityMultipliers[params.activityLevel];
-
-    // Adjust calories based on goal
-    let targetCalories: number;
-    switch (params.goal) {
-      case 'weight_loss':
-        targetCalories = tdee * 0.85; // 15% deficit
-        break;
-      case 'muscle_gain':
-        targetCalories = tdee * 1.15; // 15% surplus
-        break;
-      case 'performance':
-        targetCalories = tdee * 1.1; // 10% surplus
-        break;
-      default:
-        targetCalories = tdee; // maintenance
-    }
-
-    // Calculate macros
-    // Protein: 2.2g per kg body weight (for muscle gain) or 1.6g (for weight loss)
-    const proteinGrams = params.goal === 'muscle_gain' 
-      ? Math.round(params.weight * 2.2) 
-      : Math.round(params.weight * 1.6);
-    
-    // Fats: 25-30% of calories
-    const fatPercentage = 0.275; // 27.5%
-    const fatCalories = Math.round(targetCalories * fatPercentage);
-    const fatGrams = Math.round(fatCalories / 9);
-
-    // Carbohydrates: remaining calories
-    const proteinCalories = proteinGrams * 4;
-    const actualFatCalories = fatGrams * 9;
-    const carbCalories = Math.round(targetCalories - proteinCalories - actualFatCalories);
-    const carbGrams = Math.round(carbCalories / 4);
-
-    // Verify and normalize to ensure exact calorie match
-    const calculatedCalories = (proteinGrams * 4) + (carbGrams * 4) + (fatGrams * 9);
-    const caloriesDiff = Math.round(targetCalories) - calculatedCalories;
-    
-    // Adjust carbs to match target calories exactly (carbs are most flexible macro)
-    const adjustedCarbGrams = carbGrams + Math.round(caloriesDiff / 4);
-    const finalCalories = (proteinGrams * 4) + (adjustedCarbGrams * 4) + (fatGrams * 9);
-
+    // Convert to MacroTargets format (old format for compatibility)
     return {
-      calories: finalCalories,
-      protein: proteinGrams,
-      carbohydrates: adjustedCarbGrams,
-      fats: fatGrams,
+      calories: targets.calories,
+      protein: targets.protein_g,
+      carbohydrates: targets.carbs_g,
+      fats: targets.fat_g,
     };
   }
 
   // Helper function to normalize macros to match target calories
+  // Now uses the scientific calculation from nutrition.ts
   private normalizeMacros(
     currentProtein: number,
     currentCarbs: number,
     currentFats: number,
     targetCalories: number
   ): { protein: number; carbs: number; fats: number; calories: number } {
-    const currentCalories = (currentProtein * 4) + (currentCarbs * 4) + (currentFats * 9);
+    // Use the roundMacrosConsistently function from nutrition.ts
+    // This ensures mathematical consistency
+    const { roundMacrosConsistently } = require('./nutrition');
     
-    if (Math.abs(currentCalories - targetCalories) < 5) {
-      // Close enough, return as is
-      return {
-        protein: Math.round(currentProtein),
-        carbs: Math.round(currentCarbs),
-        fats: Math.round(currentFats),
-        calories: (Math.round(currentProtein) * 4) + (Math.round(currentCarbs) * 4) + (Math.round(currentFats) * 9)
-      };
-    }
-
-    // Scale proportionally to match target
-    const scale = targetCalories / currentCalories;
-    const scaledProtein = currentProtein * scale;
-    const scaledCarbs = currentCarbs * scale;
-    const scaledFats = currentFats * scale;
-
-    // Round and verify
-    let protein = Math.round(scaledProtein);
-    let carbs = Math.round(scaledCarbs);
-    let fats = Math.round(scaledFats);
-    
-    // Final adjustment to match exactly
-    const calculatedCals = (protein * 4) + (carbs * 4) + (fats * 9);
-    const diff = targetCalories - calculatedCals;
-    
-    // Adjust carbs (most flexible) to match exactly
-    carbs += Math.round(diff / 4);
+    const normalized = roundMacrosConsistently({
+      targetCalories,
+      protein_g: currentProtein,
+      carbs_g: currentCarbs,
+      fat_g: currentFats,
+    });
     
     return {
-      protein,
-      carbs,
-      fats,
-      calories: (protein * 4) + (carbs * 4) + (fats * 9)
+      protein: normalized.protein_g,
+      carbs: normalized.carbs_g,
+      fats: normalized.fat_g,
+      calories: normalized.caloriesFromMacros,
     };
   }
 
