@@ -91,6 +91,11 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
             src={recipe.imageUrl}
             alt={recipe.name}
             className="w-full h-full object-cover"
+            loading="eager"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80&auto=format&fit=crop';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8">
