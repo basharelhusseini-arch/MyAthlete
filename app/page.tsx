@@ -78,12 +78,6 @@ export default function LandingPage() {
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      {/* Layer B: Background wordmark (z-index: 10) - Readable, in isolation */}
-      <div className="fixed inset-0" style={{ zIndex: 10, isolation: 'isolate' }}>
-        <BackgroundWordmark intensity={0.45} position="center" />
-      </div>
-
-      {/* Layer D: Foreground content (z-index: 20+) */}
       {/* Navigation */}
       <nav className="relative z-50 glass-effect border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -114,9 +108,35 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative z-20 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
+      {/* Hero Section with Isolated Stacking Context */}
+      <section className="relative z-20 pt-20 pb-32 px-4 sm:px-6 lg:px-8" style={{ isolation: 'isolate' }}>
+        {/* Background Wordmark - z-10, positioned below hero text */}
+        <div 
+          className="absolute inset-0 pointer-events-none overflow-hidden"
+          style={{ zIndex: 10 }}
+          aria-hidden="true"
+        >
+          <div className="absolute left-1/2 -translate-x-1/2 top-[55%] -translate-y-1/2 wordmark-wrapper">
+            <h2 
+              className="wordmark-text select-none whitespace-nowrap"
+              style={{
+                fontSize: 'clamp(56px, 10vw, 160px)',
+                fontWeight: 900,
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+                color: 'rgba(255, 200, 0, 0.12)',
+                WebkitTextStroke: '2px rgba(255, 200, 0, 0.6)',
+                textShadow: '0 0 32px rgba(255, 200, 0, 0.22)',
+                filter: 'none',
+                mixBlendMode: 'normal',
+              }}
+            >
+              BUILT TO THRIVV
+            </h2>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto text-center relative z-20">
           <div className="animate-fade-in-up">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-6">
               <span className="text-white">Welcome to </span>
@@ -241,6 +261,42 @@ export default function LandingPage() {
 
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        /* Wordmark Styles - Decisive Implementation */
+        .wordmark-wrapper {
+          opacity: 0.45; /* Desktop default */
+        }
+
+        .wordmark-text {
+          position: relative;
+          /* No blur filters */
+          /* No mix-blend-mode */
+          /* Pure, clean text */
+        }
+
+        /* Mobile: Increase opacity for better visibility */
+        @media (max-width: 768px) {
+          .wordmark-wrapper {
+            opacity: 0.55;
+          }
+          
+          .wordmark-text {
+            font-size: clamp(40px, 12vw, 96px) !important;
+            letter-spacing: 0.2em !important;
+            white-space: normal !important;
+            text-align: center;
+            line-height: 0.95;
+            max-width: 90vw;
+            word-break: break-word;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .wordmark-text {
+            font-size: clamp(32px, 10vw, 72px) !important;
+            letter-spacing: 0.15em !important;
+          }
         }
       `}</style>
     </div>
