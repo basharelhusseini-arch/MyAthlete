@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, TrendingUp, Zap, Moon, UtensilsCrossed, Target, Award, Sparkles, Watch, ArrowRight, Calendar, CheckCircle } from 'lucide-react';
@@ -32,11 +32,7 @@ export default function MemberHealthPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchHealthData();
-  }, []);
-
-  const fetchHealthData = async () => {
+  const fetchHealthData = useCallback(async () => {
     try {
       setError(null);
       const response = await fetch('/api/health/summary');
@@ -58,7 +54,11 @@ export default function MemberHealthPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchHealthData();
+  }, [fetchHealthData]);
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-thrivv-neon-green';
@@ -119,7 +119,7 @@ export default function MemberHealthPage() {
       {error && (
         <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4">
           <p className="text-sm text-orange-400">
-            ⚠️ We couldn't load your complete health history. Your latest score is shown below.
+            ⚠️ We couldn&apos;t load your complete health history. Your latest score is shown below.
           </p>
         </div>
       )}
