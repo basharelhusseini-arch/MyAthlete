@@ -9,6 +9,6 @@ ALTER TABLE health_scores ADD COLUMN IF NOT EXISTS habit_score INT DEFAULT 0 CHE
 
 -- 3. Add habit tracking columns to daily_checkins
 ALTER TABLE daily_checkins ADD COLUMN IF NOT EXISTS habits_completed INT DEFAULT 0;
-ALTER TABLE daily_checkins ADD COLUMN IF NOT EXISTS habit_details JSONB DEFAULT '{}';
+ALTER TABLE daily_checkins ADD COLUMN IF NOT EXISTS habit_details JSONB DEFAULT '{}'::jsonb;
 
 -- Success! Habit tracking enabled with 10 points for 2+ habits, 5 points for 1 habit.
