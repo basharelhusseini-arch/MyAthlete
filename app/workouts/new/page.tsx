@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Sparkles, Target, TrendingUp, Calendar, Clock, Loader2, Dumbbell } from 'lucide-react';
@@ -9,6 +9,7 @@ import { WorkoutPlan } from '@/types';
 export default function GenerateWorkoutPlanPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [memberId, setMemberId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     memberId: '',
     goal: 'general_fitness' as WorkoutPlan['goal'],
@@ -18,6 +19,15 @@ export default function GenerateWorkoutPlanPage() {
     equipment: [] as string[],
     limitations: '',
   });
+
+  // Auto-populate memberId from localStorage
+  useEffect(() => {
+    const id = localStorage.getItem('memberId');
+    if (id) {
+      setMemberId(id);
+      setFormData(prev => ({ ...prev, memberId: id }));
+    }
+  }, []);
 
   const goals: { value: WorkoutPlan['goal']; label: string; desc: string }[] = [
     { value: 'strength', label: 'Strength', desc: 'Build maximum strength' },
@@ -49,7 +59,8 @@ export default function GenerateWorkoutPlanPage() {
     e.preventDefault();
     
     if (!formData.memberId) {
-      alert('Please enter a member ID');
+      alert('Please log in to generate a workout plan');
+      router.push('/member/login');
       return;
     }
 
@@ -117,21 +128,22 @@ export default function GenerateWorkoutPlanPage() {
       <div className="premium-card p-8 animate-slide-up">
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Member ID */}
-          <div>
-            <label htmlFor="memberId" className="block text-sm font-medium text-thrivv-text-primary mb-2">
-              Member ID <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="text"
-              id="memberId"
-              value={formData.memberId}
-              onChange={(e) => setFormData({ ...formData, memberId: e.target.value })}
-              placeholder="Enter member ID"
-              className="input-premium"
-              required
-            />
-            <p className="text-xs text-thrivv-text-muted mt-1">The member this plan will be created for</p>
-          </div>
+          {memberId && (
+            <div>
+              <label htmlFor="memberId" className="block text-sm font-medium text-thrivv-text-primary mb-2">
+                Member ID
+              </label>
+              <input
+                type="text"
+                id="memberId"
+                value={formData.memberId}
+                className="input-premium bg-thrivv-bg-card/50 cursor-not-allowed"
+                readOnly
+                disabled
+              />
+              <p className="text-xs text-thrivv-text-muted mt-1">Auto-detected from your session</p>
+            </div>
+          )}
 
           {/* Goal Selection */}
           <div>
