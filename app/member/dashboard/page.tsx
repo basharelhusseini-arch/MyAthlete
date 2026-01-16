@@ -62,7 +62,7 @@ export default function MemberDashboardPage() {
         const scoreRes = await fetch('/api/score/today');
         if (scoreRes.ok) {
           const scoreData = await scoreRes.json();
-          setHealthScore(scoreData.healthScore);
+          setHealthScore(scoreData.score);
         }
 
         // Fetch score history (last 7 days)
