@@ -1,19 +1,23 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { getSupabaseEnv, getSupabaseServiceKey } from './env';
+import { cookies } from 'next/headers';
 
 // Get environment variables (will throw clear error if missing)
 // During build, placeholders are used; at runtime, real validation happens
 let supabaseUrl: string;
+let supabaseAnonKey: string;
 let supabaseServiceKey: string;
 
 try {
   const env = getSupabaseEnv();
   supabaseUrl = env.supabaseUrl;
+  supabaseAnonKey = env.supabaseAnonKey;
   supabaseServiceKey = getSupabaseServiceKey() || 'placeholder-service-key';
 } catch (error) {
   // During build, use placeholders to prevent build failures
   // Runtime API calls will fail with helpful error messages
   supabaseUrl = 'https://placeholder.supabase.co';
+  supabaseAnonKey = 'placeholder-anon-key';
   supabaseServiceKey = 'placeholder-service-key';
   
   if (process.env.NODE_ENV === 'development') {
@@ -22,8 +26,35 @@ try {
   }
 }
 
+// Create client for API routes (with auth context from cookies)
+export function createClient(cookieStore: ReturnType<typeof cookies>) {
+  const authToken = cookieStore.get('sb-access-token')?.value;
+  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+  
+  const client = createSupabaseClient(
+    supabaseUrl,
+    supabaseAnonKey,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+
+  // Set auth session if tokens exist
+  if (authToken && refreshToken) {
+    client.auth.setSession({
+      access_token: authToken,
+      refresh_token: refreshToken,
+    });
+  }
+
+  return client;
+}
+
 // Server-side client with service role (bypasses RLS)
-export const supabase = createClient(
+export const supabase = createSupabaseClient(
   supabaseUrl,
   supabaseServiceKey,
   {
