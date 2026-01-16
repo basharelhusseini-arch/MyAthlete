@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// This route is deprecated and replaced by /api/score/today
-// Kept for backwards compatibility but returns empty data
+// This route is deprecated and replaced by /api/health/summary
+// Kept for backwards compatibility but returns deprecation message
 export async function GET(request: NextRequest) {
   return NextResponse.json({
     total: 0,
@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
     dietQuality: 0,
     habitCompletion: 0,
     sleepQuality: 0,
-    message: 'This endpoint is deprecated. Use /api/score/today instead.'
+    message: 'This endpoint is deprecated. Use /api/health/summary or /api/score/today instead.',
+    deprecatedSince: '2026-01-16',
+    newEndpoint: '/api/health/summary'
   }, { status: 410 }); // 410 Gone status
 }

@@ -3,103 +3,75 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Activity, TrendingUp, Users, Zap, Moon, UtensilsCrossed, Target, Award, Link2 } from 'lucide-react';
+import { Activity, TrendingUp, Zap, Moon, UtensilsCrossed, Target, Award, Sparkles, Watch, ArrowRight, Calendar, CheckCircle } from 'lucide-react';
 
-interface HealthScore {
-  total: number;
-  workoutScore: number;
-  dietScore: number;
-  habitScore: number;
-  sleepScore: number;
-  workoutCount: number;
-  workoutIntensity: number;
-  dietQuality: number;
-  habitCompletion: number;
-  sleepQuality: number;
-}
-
-interface FriendScore {
-  id: string;
-  name: string;
+interface HealthSummary {
   score: number;
-  avatar?: string;
+  updatedAt: string;
+  streak: number;
+  last7Days: Array<{
+    date: string;
+    score: number;
+    training_score: number;
+    diet_score: number;
+    sleep_score: number;
+    habit_score: number;
+  }>;
+  components: {
+    training: number;
+    diet: number;
+    sleep: number;
+    habits: number;
+  };
+  insights: string[];
 }
 
 export default function MemberHealthPage() {
   const router = useRouter();
-  const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
-  const [friends, setFriends] = useState<FriendScore[]>([]);
-  const [whoopConnected, setWhoopConnected] = useState(false);
+  const [healthData, setHealthData] = useState<HealthSummary | null>(null);
   const [loading, setLoading] = useState(true);
-  const [memberId, setMemberId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedMemberId = localStorage.getItem('memberId');
-    if (!storedMemberId) {
-      router.push('/member/login');
-      return;
-    }
-    setMemberId(storedMemberId);
-    fetchHealthData(storedMemberId);
-  }, [router]);
+    fetchHealthData();
+  }, []);
 
-  const fetchHealthData = async (memberId: string) => {
+  const fetchHealthData = async () => {
     try {
-      // Fetch health score
-      const scoreRes = await fetch(`/api/health/score?memberId=${memberId}`);
-      if (scoreRes.ok) {
-        const scoreData = await scoreRes.json();
-        setHealthScore(scoreData);
+      setError(null);
+      const response = await fetch('/api/health/summary');
+      
+      if (response.status === 401) {
+        router.push('/member/login');
+        return;
       }
 
-      // Check Whoop connection
-      const whoopRes = await fetch(`/api/whoop/connection?memberId=${memberId}`);
-      if (whoopRes.ok) {
-        const whoopData = await whoopRes.json();
-        setWhoopConnected(!!whoopData);
+      if (!response.ok) {
+        throw new Error('Failed to fetch health data');
       }
 
-      // Fetch friends' scores
-      const friendsRes = await fetch(`/api/health/friends?memberId=${memberId}`);
-      if (friendsRes.ok) {
-        const friendsData = await friendsRes.json();
-        setFriends(friendsData);
-      }
-    } catch (error) {
-      console.error('Failed to fetch health data:', error);
+      const data = await response.json();
+      setHealthData(data);
+    } catch (err: any) {
+      console.error('Failed to fetch health data:', err);
+      setError(err.message || 'Failed to load health data');
     } finally {
       setLoading(false);
     }
   };
 
-  const connectWhoop = async () => {
-    try {
-      const response = await fetch('/api/whoop/connection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ memberId }),
-      });
-      if (response.ok) {
-        setWhoopConnected(true);
-        if (memberId) {
-          fetchHealthData(memberId);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to connect Whoop:', error);
-    }
-  };
-
   const getScoreColor = (score: number) => {
+    if (score >= 90) return 'text-thrivv-neon-green';
     if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
+    if (score >= 60) return 'text-thrivv-gold-500';
     if (score >= 40) return 'text-orange-400';
     return 'text-red-400';
   };
 
   const getScoreBgColor = (score: number) => {
+    if (score >= 90) return 'bg-thrivv-neon-green/20 border-thrivv-neon-green/30';
     if (score >= 80) return 'bg-green-500/20 border-green-500/30';
-    if (score >= 60) return 'bg-yellow-500/20 border-yellow-500/30';
+    if (score >= 60) return 'bg-thrivv-gold-500/20 border-thrivv-gold-500/30';
     if (score >= 40) return 'bg-orange-500/20 border-orange-500/30';
     return 'bg-red-500/20 border-red-500/30';
   };
@@ -107,22 +79,20 @@ export default function MemberHealthPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400">Loading health statistics...</p>
+        <div className="text-center">
+          <Activity className="w-12 h-12 text-thrivv-gold-500 mx-auto mb-4 animate-pulse" />
+          <p className="text-thrivv-text-secondary">Loading health statistics...</p>
+        </div>
       </div>
     );
   }
 
-  if (!healthScore) {
-    return (
-      <div className="text-center py-12">
-        <Activity className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-        <p className="text-gray-400">No health data available</p>
-      </div>
-    );
-  }
-
-  const userRank = friends.findIndex(f => f.id === memberId) + 1;
-  const totalUsers = friends.length;
+  // Show partial UI even if data fetch failed
+  const score = healthData?.score || 0;
+  const components = healthData?.components || { training: 0, diet: 0, sleep: 0, habits: 0 };
+  const insights = healthData?.insights || ['Complete your first check-in to start tracking your health score.'];
+  const last7Days = healthData?.last7Days || [];
+  const streak = healthData?.streak || 0;
 
   return (
     <div className="space-y-6">
@@ -130,34 +100,50 @@ export default function MemberHealthPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gradient">Health Statistics</h1>
-          <p className="mt-2 text-gray-400">Track your overall health and wellness</p>
+          <p className="mt-2 text-thrivv-text-secondary">Track your overall health and wellness</p>
         </div>
-        {!whoopConnected && (
-          <button
-            onClick={connectWhoop}
-            className="flex items-center px-4 py-2 btn-primary"
-          >
-            <Link2 className="w-5 h-5 mr-2" />
-            Connect Whoop
-          </button>
+        {streak > 0 && (
+          <div className="bg-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-xl px-6 py-3">
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-5 h-5 text-thrivv-gold-500" />
+              <div>
+                <p className="text-2xl font-bold text-thrivv-gold-500">{streak}</p>
+                <p className="text-xs text-thrivv-text-muted">Day Streak</p>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
+      {/* Error Warning (if any) */}
+      {error && (
+        <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4">
+          <p className="text-sm text-orange-400">
+            ⚠️ We couldn't load your complete health history. Your latest score is shown below.
+          </p>
+        </div>
+      )}
+
       {/* Health Score Card */}
-      <div className="dark-card">
+      <div className="premium-card">
         <div className="p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-400 mb-2">Your Health Score</h2>
+              <h2 className="text-lg font-semibold text-thrivv-text-secondary mb-2">Your Health Score</h2>
               <div className="flex items-baseline space-x-3">
-                <span className={`text-6xl font-bold ${getScoreColor(healthScore.total)}`}>
-                  {Math.round(healthScore.total)}
+                <span className={`text-6xl font-bold ${getScoreColor(score)}`}>
+                  {Math.round(score)}
                 </span>
-                <span className="text-2xl text-gray-500">/ 100</span>
+                <span className="text-2xl text-thrivv-text-muted">/ 110</span>
               </div>
+              {healthData?.updatedAt && (
+                <p className="text-xs text-thrivv-text-muted mt-2">
+                  Last updated: {new Date(healthData.updatedAt).toLocaleDateString()}
+                </p>
+              )}
             </div>
-            <div className={`p-6 rounded-full ${getScoreBgColor(healthScore.total)} border-2`}>
-              <Award className="w-12 h-12 text-yellow-400" />
+            <div className={`p-6 rounded-full ${getScoreBgColor(score)} border-2`}>
+              <Award className="w-12 h-12 text-thrivv-gold-500" />
             </div>
           </div>
 
@@ -165,185 +151,162 @@ export default function MemberHealthPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             <div className="glass-effect rounded-lg p-4 card-hover">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Workouts</span>
-                <Zap className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-thrivv-text-secondary">Training</span>
+                <Zap className="w-4 h-4 text-thrivv-gold-500" />
               </div>
-              <p className="text-2xl font-bold text-white">{Math.round(healthScore.workoutScore)}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {healthScore.workoutCount} workouts • {Math.round(healthScore.workoutIntensity)}% intensity
-              </p>
+              <p className="text-2xl font-bold text-thrivv-text-primary">{Math.round(components.training)}</p>
+              <p className="text-xs text-thrivv-text-muted mt-1">of 30 points</p>
             </div>
 
             <div className="glass-effect rounded-lg p-4 card-hover">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Diet</span>
-                <UtensilsCrossed className="w-4 h-4 text-green-400" />
+                <span className="text-sm text-thrivv-text-secondary">Diet</span>
+                <UtensilsCrossed className="w-4 h-4 text-thrivv-neon-green" />
               </div>
-              <p className="text-2xl font-bold text-white">{Math.round(healthScore.dietScore)}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {Math.round(healthScore.dietQuality)}% quality
-              </p>
+              <p className="text-2xl font-bold text-thrivv-text-primary">{Math.round(components.diet)}</p>
+              <p className="text-xs text-thrivv-text-muted mt-1">of 40 points</p>
             </div>
 
             <div className="glass-effect rounded-lg p-4 card-hover">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Habits</span>
-                <Target className="w-4 h-4 text-orange-400" />
-              </div>
-              <p className="text-2xl font-bold text-white">{Math.round(healthScore.habitScore)}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {Math.round(healthScore.habitCompletion)}% completion
-              </p>
-            </div>
-
-            <div className="glass-effect rounded-lg p-4 card-hover">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Sleep</span>
+                <span className="text-sm text-thrivv-text-secondary">Sleep</span>
                 <Moon className="w-4 h-4 text-blue-400" />
               </div>
-              <p className="text-2xl font-bold text-white">{Math.round(healthScore.sleepScore)}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {Math.round(healthScore.sleepQuality)}% quality
-                {!whoopConnected && ' (Connect Whoop)'}
-              </p>
+              <p className="text-2xl font-bold text-thrivv-text-primary">{Math.round(components.sleep)}</p>
+              <p className="text-xs text-thrivv-text-muted mt-1">of 30 points</p>
+            </div>
+
+            <div className="glass-effect rounded-lg p-4 card-hover">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-thrivv-text-secondary">Habits</span>
+                <Target className="w-4 h-4 text-orange-400" />
+              </div>
+              <p className="text-2xl font-bold text-thrivv-text-primary">{Math.round(components.habits)}</p>
+              <p className="text-xs text-thrivv-text-muted mt-1">of 10 points</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Leaderboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Friends Leaderboard */}
-        <div className="dark-card">
-          <div className="px-6 py-4 border-b border-yellow-500/20 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <Users className="w-5 h-5 mr-2 text-yellow-400" />
-              Friends Leaderboard
+      {/* 7-Day Trend */}
+      {last7Days.length > 0 && (
+        <div className="premium-card">
+          <div className="px-6 py-4 border-b border-thrivv-gold-500/20">
+            <h2 className="text-lg font-semibold text-thrivv-text-primary flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-thrivv-gold-500" />
+              7-Day Trend
             </h2>
-            <span className="text-sm text-yellow-400 font-semibold">Rank #{userRank} of {totalUsers}</span>
           </div>
           <div className="p-6">
-            {friends.length === 0 ? (
-              <div className="text-center py-8">
-                <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-400 mb-2">No friends yet</p>
-                <p className="text-sm text-gray-500">Connect with friends to compare health scores</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {friends.slice(0, 10).map((friend, index) => {
-                  const isCurrentUser = friend.id === memberId;
-                  return (
-                    <div
-                      key={friend.id}
-                      className={`flex items-center justify-between p-4 rounded-lg ${
-                        isCurrentUser
-                          ? 'bg-yellow-500/20 border-2 border-yellow-500/50 shadow-lg shadow-yellow-500/20'
-                          : 'bg-black/50 hover:bg-yellow-500/5 border border-yellow-500/10'
-                      } transition-all`}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
-                          index === 0 ? 'bg-yellow-500 text-black' :
-                          index === 1 ? 'bg-gray-400 text-black' :
-                          index === 2 ? 'bg-orange-500 text-black' :
-                          'bg-gray-700 text-gray-300'
-                        }`}>
-                          {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
-                        </div>
-                        <div>
-                          <p className={`font-medium ${isCurrentUser ? 'text-yellow-400' : 'text-white'}`}>
-                            {friend.name}
-                            {isCurrentUser && (
-                              <span className="ml-2 text-xs bg-yellow-500/30 text-yellow-300 px-2 py-0.5 rounded-full">
-                                You
-                              </span>
-                            )}
-                          </p>
-                          <p className="text-sm text-gray-400">
-                            {Math.round(friend.score)} Health Score
-                          </p>
-                        </div>
-                      </div>
-                      <div className={`text-2xl font-bold ${getScoreColor(friend.score)}`}>
-                        {Math.round(friend.score)}
-                      </div>
+            <div className="grid grid-cols-7 gap-2">
+              {last7Days.map((day, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-xs text-thrivv-text-muted mb-2">
+                    {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                  </div>
+                  <div className={`w-full h-24 rounded-lg border-2 flex items-end justify-center p-2 ${getScoreBgColor(day.score)}`}>
+                    <span className={`text-lg font-bold ${getScoreColor(day.score)}`}>
+                      {Math.round(day.score)}
+                    </span>
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    <div className="text-xs text-thrivv-text-muted flex items-center justify-center">
+                      <Zap className="w-3 h-3 mr-1 text-thrivv-gold-500" />
+                      {day.training_score}
                     </div>
-                  );
-                })}
+                    <div className="text-xs text-thrivv-text-muted flex items-center justify-center">
+                      <UtensilsCrossed className="w-3 h-3 mr-1 text-thrivv-neon-green" />
+                      {day.diet_score}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Health Insights */}
+        <div className="premium-card">
+          <div className="px-6 py-4 border-b border-thrivv-gold-500/20">
+            <h2 className="text-lg font-semibold text-thrivv-text-primary flex items-center">
+              <Sparkles className="w-5 h-5 mr-2 text-thrivv-gold-500" />
+              Health Insights
+            </h2>
+          </div>
+          <div className="p-6 space-y-3">
+            {insights.length > 0 ? (
+              insights.map((insight, index) => (
+                <div
+                  key={index}
+                  className="flex items-start space-x-3 p-4 bg-thrivv-bg-card/30 rounded-lg border border-thrivv-gold-500/10 hover:border-thrivv-gold-500/30 transition-colors"
+                >
+                  <CheckCircle className="w-5 h-5 text-thrivv-gold-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-thrivv-text-secondary leading-relaxed">
+                    {insight}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Sparkles className="w-12 h-12 text-thrivv-text-muted mx-auto mb-4" />
+                <p className="text-thrivv-text-secondary text-sm">
+                  Complete check-ins to unlock personalized insights
+                </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Health Insights */}
-        <div className="dark-card">
-          <div className="px-6 py-4 border-b border-yellow-500/20">
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-yellow-400" />
-              Health Insights
+        {/* Connect Wearable CTA */}
+        <div className="premium-card bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/30">
+          <div className="px-6 py-4 border-b border-blue-500/20">
+            <h2 className="text-lg font-semibold text-thrivv-text-primary flex items-center">
+              <Watch className="w-5 h-5 mr-2 text-blue-400" />
+              Connect Your Wearable
             </h2>
           </div>
-          <div className="p-6 space-y-4">
-            {healthScore.workoutScore < 20 && (
-              <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-4">
-                <p className="text-sm font-medium text-orange-400 mb-1">Workout Activity Low</p>
-                <p className="text-xs text-gray-400">
-                  Try to complete at least 3 workouts per week to improve your score.
-                </p>
-                <Link href="/member/workouts" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
-                  View Workouts →
-                </Link>
+          <div className="p-6">
+            <div className="space-y-4">
+              <p className="text-thrivv-text-secondary text-sm leading-relaxed">
+                Connect Apple Health, Google Fit, Whoop, Oura, Garmin, or Fitbit for automatic sleep, activity, and recovery tracking — and more detailed insights.
+              </p>
+              
+              {/* Device Icons */}
+              <div className="grid grid-cols-3 gap-3 py-4">
+                <div className="text-center p-3 bg-thrivv-bg-card/50 rounded-lg">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <Watch className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xs text-thrivv-text-muted">Apple Health</p>
+                </div>
+                <div className="text-center p-3 bg-thrivv-bg-card/50 rounded-lg">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xs text-thrivv-text-muted">Whoop</p>
+                </div>
+                <div className="text-center p-3 bg-thrivv-bg-card/50 rounded-lg">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                    <Target className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-xs text-thrivv-text-muted">Oura</p>
+                </div>
               </div>
-            )}
 
-            {healthScore.dietScore < 20 && (
-              <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-4">
-                <p className="text-sm font-medium text-orange-400 mb-1">Diet Quality Needs Improvement</p>
-                <p className="text-xs text-gray-400">
-                  Track your meals and follow nutrition plans to boost your diet score.
-                </p>
-                <Link href="/member/nutrition" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
-                  View Diet Tracker →
-                </Link>
-              </div>
-            )}
+              <Link
+                href="/member/wearables"
+                className="btn-primary w-full flex items-center justify-center space-x-2 py-3"
+              >
+                <span>Connect Wearable</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
 
-            {healthScore.habitScore < 20 && (
-              <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-4">
-                <p className="text-sm font-medium text-orange-400 mb-1">Habit Consistency Low</p>
-                <p className="text-xs text-gray-400">
-                  Complete your daily habits consistently to improve your score.
-                </p>
-                <Link href="/member/habits" className="text-xs text-orange-400 hover:text-orange-300 mt-2 inline-block">
-                  View Habits →
-                </Link>
-              </div>
-            )}
-
-            {!whoopConnected && (
-              <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
-                <p className="text-sm font-medium text-blue-400 mb-1">Connect Whoop for Sleep Tracking</p>
-                <p className="text-xs text-gray-400">
-                  Connect your Whoop device to track sleep quality and improve your health score.
-                </p>
-                <button
-                  onClick={connectWhoop}
-                  className="text-xs text-blue-400 hover:text-blue-300 mt-2 inline-block"
-                >
-                  Connect Whoop →
-                </button>
-              </div>
-            )}
-
-            {healthScore.total >= 80 && (
-              <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-                <p className="text-sm font-medium text-green-400 mb-1">Excellent Health Score!</p>
-                <p className="text-xs text-gray-400">
-                  You&apos;re maintaining great health across all categories. Keep it up!
-                </p>
-              </div>
-            )}
+              <p className="text-xs text-thrivv-text-muted text-center">
+                Takes ~1 minute to set up
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -351,47 +314,47 @@ export default function MemberHealthPage() {
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Link
-          href="/member/workouts"
-          className="dark-card p-6 card-hover cursor-pointer group"
+          href="/member/checkin"
+          className="premium-card p-6 card-hover cursor-pointer group"
         >
-          <div className="p-3 rounded-lg bg-yellow-500/20 w-fit mb-3 group-hover:bg-yellow-500/30 transition-colors">
-            <Zap className="w-8 h-8 text-yellow-400" />
+          <div className="p-3 rounded-lg bg-thrivv-gold-500/20 w-fit mb-3 group-hover:bg-thrivv-gold-500/30 transition-colors">
+            <CheckCircle className="w-8 h-8 text-thrivv-gold-500" />
           </div>
-          <h3 className="font-semibold text-white mb-1">Workouts</h3>
-          <p className="text-sm text-gray-400">Track your exercise</p>
+          <h3 className="font-semibold text-thrivv-text-primary mb-1">Daily Check-in</h3>
+          <p className="text-sm text-thrivv-text-secondary">Track your progress</p>
+        </Link>
+
+        <Link
+          href="/member/workouts"
+          className="premium-card p-6 card-hover cursor-pointer group"
+        >
+          <div className="p-3 rounded-lg bg-thrivv-gold-500/20 w-fit mb-3 group-hover:bg-thrivv-gold-500/30 transition-colors">
+            <Zap className="w-8 h-8 text-thrivv-gold-500" />
+          </div>
+          <h3 className="font-semibold text-thrivv-text-primary mb-1">Workouts</h3>
+          <p className="text-sm text-thrivv-text-secondary">Track your exercise</p>
         </Link>
 
         <Link
           href="/member/nutrition"
-          className="dark-card p-6 card-hover cursor-pointer group"
+          className="premium-card p-6 card-hover cursor-pointer group"
         >
           <div className="p-3 rounded-lg bg-green-500/20 w-fit mb-3 group-hover:bg-green-500/30 transition-colors">
-            <UtensilsCrossed className="w-8 h-8 text-green-400" />
+            <UtensilsCrossed className="w-8 h-8 text-thrivv-neon-green" />
           </div>
-          <h3 className="font-semibold text-white mb-1">Diet Tracker</h3>
-          <p className="text-sm text-gray-400">Monitor nutrition</p>
+          <h3 className="font-semibold text-thrivv-text-primary mb-1">Diet Tracker</h3>
+          <p className="text-sm text-thrivv-text-secondary">Monitor nutrition</p>
         </Link>
 
         <Link
           href="/member/habits"
-          className="dark-card p-6 card-hover cursor-pointer group"
+          className="premium-card p-6 card-hover cursor-pointer group"
         >
           <div className="p-3 rounded-lg bg-orange-500/20 w-fit mb-3 group-hover:bg-orange-500/30 transition-colors">
             <Target className="w-8 h-8 text-orange-400" />
           </div>
-          <h3 className="font-semibold text-white mb-1">Habits</h3>
-          <p className="text-sm text-gray-400">Build consistency</p>
-        </Link>
-
-        <Link
-          href="/member/wearables"
-          className="dark-card p-6 card-hover cursor-pointer group"
-        >
-          <div className="p-3 rounded-lg bg-blue-500/20 w-fit mb-3 group-hover:bg-blue-500/30 transition-colors">
-            <Moon className="w-8 h-8 text-blue-400" />
-          </div>
-          <h3 className="font-semibold text-white mb-1">Wearables</h3>
-          <p className="text-sm text-gray-400">Sleep & recovery</p>
+          <h3 className="font-semibold text-thrivv-text-primary mb-1">Habits</h3>
+          <p className="text-sm text-thrivv-text-secondary">Build consistency</p>
         </Link>
       </div>
     </div>
