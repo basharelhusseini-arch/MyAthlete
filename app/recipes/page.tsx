@@ -116,19 +116,23 @@ export default function RecipesPage() {
             >
               {/* Recipe Image */}
               {recipe.imageUrl ? (
-                <div className="relative w-full h-48 bg-black">
+                <div className="relative w-full h-48 bg-black overflow-hidden">
                   <Image
                     src={recipe.imageUrl}
                     alt={recipe.name}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-opacity duration-300"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    loading="lazy"
+                    quality={85}
+                    unoptimized={true}
                     onError={(e) => {
                       // Fallback to placeholder if image fails to load
-                      e.currentTarget.style.display = 'none';
-                      const parent = e.currentTarget.parentElement;
+                      const target = e.currentTarget as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
                       if (parent) {
-                        parent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-gray-900"><svg class="w-12 h-12 text-yellow-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>';
+                        parent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-gray-900"><svg class="w-12 h-12 text-yellow-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
                       }
                     }}
                   />

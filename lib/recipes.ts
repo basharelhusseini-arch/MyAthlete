@@ -29,7 +29,7 @@ export const recipesData: Recipe[] = [
     id: 'grilled-chicken-quinoa-bowl',
     name: 'Grilled Chicken Quinoa Power Bowl',
     description: 'Protein-packed bowl with grilled chicken, quinoa, roasted vegetables, and tahini dressing',
-    imageUrl: 'https://images.unsplash.com/photo-IGfIGP5ONV0?w=1600&auto=format&fit=crop&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-IGfIGP5ONV0?w=900&h=600&auto=format&fit=crop&q=80',
     imageId: 'IGfIGP5ONV0',
     calories: 554,
     protein_g: 57,
