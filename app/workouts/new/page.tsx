@@ -64,6 +64,7 @@ export default function GenerateWorkoutPlanPage() {
       return;
     }
 
+    console.log('Submitting workout plan request:', formData);
     setLoading(true);
     
     try {
@@ -73,11 +74,15 @@ export default function GenerateWorkoutPlanPage() {
         body: JSON.stringify(formData),
       });
 
+      console.log('Response status:', response.status);
+
       if (response.ok) {
         const plan = await response.json();
+        console.log('Plan generated successfully:', plan);
         router.push(`/workouts/${plan.id}`);
       } else {
         const error = await response.json();
+        console.error('Error response:', error);
         alert(error.error || 'Failed to generate workout plan');
       }
     } catch (error) {
