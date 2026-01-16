@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Filter, X, UtensilsCrossed } from 'lucide-react';
+import { Search, Filter, X, UtensilsCrossed, Trash2 } from 'lucide-react';
 import { recipesData, filterRecipes, sortRecipes, searchRecipes, type Recipe } from '@/lib/recipes';
 
 export default function MemberRecipesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<'protein' | 'calories' | 'carbs'>('protein');
+  const [customRecipes, setCustomRecipes] = useState<any[]>([]);
   
   // Filter states
   const [filters, setFilters] = useState({
@@ -18,6 +19,72 @@ export default function MemberRecipesPage() {
     vegetarian: false,
     mealPrep: false,
   });
+
+  // Fetch custom recipes on mount
+  useEffect(() => {
+    fetchCustomRecipes();
+  }, []);
+
+  const fetchCustomRecipes = async () => {
+    try {
+      const response = await fetch('/api/custom-recipes');
+      if (response.ok) {
+        const data = await response.json();
+        setCustomRecipes(data);
+      }
+    } catch (error) {
+      console.error('Error fetching custom recipes:', error);
+    }
+  };
+
+  const deleteCustomRecipe = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this recipe?')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/custom-recipes/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setCustomRecipes(customRecipes.filter(r => r.id !== id));
+        alert('Recipe deleted successfully!');
+      } else {
+        alert('Failed to delete recipe');
+      }
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+      alert('Error deleting recipe');
+    }
+  };
+
+  // Convert custom recipes to Recipe format
+  const formattedCustomRecipes: Recipe[] = customRecipes.map(cr => ({
+    id: cr.id,
+    name: cr.name,
+    description: cr.description || 'Custom recipe',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=900&h=600&auto=format&fit=crop&q=80', // Default image
+    imageId: '1546069901-ba9599a7e63c',
+    calories: cr.calories_per_serving,
+    protein_g: cr.protein_per_serving,
+    carbs_g: cr.carbs_per_serving,
+    fat_g: cr.fat_per_serving,
+    prepMinutes: 0,
+    cookMinutes: 0,
+    servings: cr.servings,
+    ingredients: cr.ingredients.map((ing: any) => ({
+      item: ing.ingredientName,
+      quantity: ing.grams,
+      unit: 'g'
+    })),
+    instructions: ['Custom recipe - instructions not provided'],
+    tags: ['custom'],
+    isCustom: true
+  }));
+
+  // Combine default and custom recipes
+  const allRecipes = [...recipesData, ...formattedCustomRecipes];
 
   // DEV: Verify no duplicate image URLs
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
@@ -57,24 +124,36 @@ export default function MemberRecipesPage() {
   };
 
   const filteredAndSortedRecipes = useMemo(() => {
-    let recipes: Recipe[] = recipesData;
+    let recipes: Recipe[] = allRecipes;
 
     // Apply search
     if (searchQuery.trim()) {
-      recipes = searchRecipes(searchQuery);
+      const query = searchQuery.toLowerCase();
+      recipes = recipes.filter(r => 
+        r.name.toLowerCase().includes(query) ||
+        r.description.toLowerCase().includes(query) ||
+        r.tags.some(tag => tag.toLowerCase().includes(query))
+      );
     }
 
     // Apply filters
     const activeFilters = Object.entries(filters).some(([_, value]) => value);
     if (activeFilters) {
-      recipes = filterRecipes(filters);
+      recipes = recipes.filter(recipe => {
+        if (filters.highProtein && recipe.protein_g < 30) return false;
+        if (filters.lowCarb && recipe.carbs_g > 30) return false;
+        if (filters.lowCalorie && recipe.calories > 400) return false;
+        if (filters.vegetarian && !recipe.tags.includes('vegetarian')) return false;
+        if (filters.mealPrep && !recipe.tags.includes('meal-prep')) return false;
+        return true;
+      });
     }
 
     // Apply sorting
     recipes = sortRecipes(recipes, sortBy);
 
     return recipes;
-  }, [searchQuery, filters, sortBy]);
+  }, [searchQuery, filters, sortBy, allRecipes]);
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
@@ -233,7 +312,12 @@ export default function MemberRecipesPage() {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-thrivv-text-secondary text-sm">
-          Showing <span className="text-thrivv-gold-500 font-semibold">{filteredAndSortedRecipes.length}</span> of {recipesData.length} recipes
+          Showing <span className="text-thrivv-gold-500 font-semibold">{filteredAndSortedRecipes.length}</span> of {allRecipes.length} recipes
+          {customRecipes.length > 0 && (
+            <span className="text-yellow-500 ml-2">
+              ({customRecipes.length} custom)
+            </span>
+          )}
         </p>
       </div>
 
@@ -253,31 +337,38 @@ export default function MemberRecipesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAndSortedRecipes.map((recipe) => (
-            <Link
-              key={recipe.id}
-              href={`/member/recipes/${recipe.id}`}
-              className="premium-card p-0 overflow-hidden group cursor-pointer"
-            >
-              {/* Recipe Image */}
-              <div className="relative h-48 overflow-hidden bg-thrivv-bg-card">
-                <img
-                  src={`${recipe.imageUrl}&v=2`}
-                  alt={recipe.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&auto=format&fit=crop&q=80';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
+            <div key={recipe.id} className="relative">
+              <Link
+                href={`/member/recipes/${recipe.id}`}
+                className="premium-card p-0 overflow-hidden group cursor-pointer block"
+              >
+                {/* Recipe Image */}
+                <div className="relative h-48 overflow-hidden bg-thrivv-bg-card">
+                  <img
+                    src={`${recipe.imageUrl}&v=2`}
+                    alt={recipe.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&auto=format&fit=crop&q=80';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  
+                  {/* Custom Recipe Badge */}
+                  {(recipe as any).isCustom && (
+                    <div className="absolute top-3 left-3 px-3 py-1 bg-yellow-500 text-black text-xs font-semibold rounded-full">
+                      Your Recipe
+                    </div>
+                  )}
+                </div>
 
-              {/* Recipe Info */}
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-thrivv-text-primary mb-2 line-clamp-1">
-                  {recipe.name}
-                </h3>
+                {/* Recipe Info */}
+                <div className="p-5">
+                  <h3 className="text-lg font-semibold text-thrivv-text-primary mb-2 line-clamp-1">
+                    {recipe.name}
+                  </h3>
                 <p className="text-sm text-thrivv-text-secondary mb-4 line-clamp-2">
                   {recipe.description}
                 </p>
@@ -320,6 +411,21 @@ export default function MemberRecipesPage() {
                 </div>
               </div>
             </Link>
+            
+            {/* Delete button for custom recipes */}
+            {(recipe as any).isCustom && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteCustomRecipe(recipe.id);
+                }}
+                className="absolute top-3 right-3 p-2 bg-red-500/90 hover:bg-red-600 text-white rounded-lg transition-colors z-10"
+                title="Delete recipe"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           ))}
         </div>
       )}

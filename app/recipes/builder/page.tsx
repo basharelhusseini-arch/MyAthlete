@@ -90,15 +90,51 @@ export default function RecipeBuilderPage() {
     };
   }, [totalNutrition, servings]);
 
-  const saveRecipe = () => {
-    // TODO: Implement save functionality
-    console.log('Saving recipe:', {
-      name: recipeName,
-      ingredients: recipeIngredients,
-      servings,
-      nutrition: totalNutrition
-    });
-    alert('Recipe saved! (This feature will store to database soon)');
+  const [saving, setSaving] = useState(false);
+
+  const saveRecipe = async () => {
+    if (!recipeName || recipeIngredients.length === 0) {
+      alert('Please add a recipe name and at least one ingredient');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch('/api/custom-recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: recipeName,
+          description: `Custom recipe with ${recipeIngredients.length} ingredients`,
+          servings,
+          ingredients: recipeIngredients.map(ri => ({
+            ingredientId: ri.ingredient.id,
+            ingredientName: ri.ingredient.name,
+            grams: ri.grams
+          })),
+          totalNutrition,
+          perServingNutrition
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save recipe');
+      }
+
+      const savedRecipe = await response.json();
+      alert(`Recipe "${recipeName}" saved successfully! ✅\n\nYou can find it on the Recipes page.`);
+      
+      // Reset form
+      setRecipeName('');
+      setRecipeIngredients([]);
+      setServings(1);
+    } catch (error: any) {
+      console.error('Error saving recipe:', error);
+      alert(`Failed to save recipe: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -117,10 +153,10 @@ export default function RecipeBuilderPage() {
           </div>
           <button
             onClick={saveRecipe}
-            disabled={!recipeName || recipeIngredients.length === 0}
+            disabled={!recipeName || recipeIngredients.length === 0 || saving}
             className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Save Recipe
+            {saving ? 'Saving...' : 'Save Recipe'}
           </button>
         </div>
       </div>
