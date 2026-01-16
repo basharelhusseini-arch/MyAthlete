@@ -146,47 +146,21 @@ export function calculateHealthScore(
   }
 
   // Habit Tracking Score (0-10 points)
+  // 2+ habits = 10 points (full), 1 habit = 5 points (half)
   let habitScore = 0;
   let habitsCompleted = 0;
 
   if (data.habits) {
-    // Each wellness habit is worth points when completed
-    const habitScores = {
-      sauna: 2,
-      steamRoom: 2,
-      iceBath: 2,
-      coldShower: 1.5,
-      meditation: 1.5,
-      stretching: 1,
-    };
+    // Count how many habits were completed
+    const habitValues = Object.values(data.habits);
+    habitsCompleted = habitValues.filter(Boolean).length;
 
-    if (data.habits.sauna) {
-      habitScore += habitScores.sauna;
-      habitsCompleted++;
+    // Scoring: 2+ habits = 10 points, 1 habit = 5 points
+    if (habitsCompleted >= 2) {
+      habitScore = 10;
+    } else if (habitsCompleted === 1) {
+      habitScore = 5;
     }
-    if (data.habits.steamRoom) {
-      habitScore += habitScores.steamRoom;
-      habitsCompleted++;
-    }
-    if (data.habits.iceBath) {
-      habitScore += habitScores.iceBath;
-      habitsCompleted++;
-    }
-    if (data.habits.coldShower) {
-      habitScore += habitScores.coldShower;
-      habitsCompleted++;
-    }
-    if (data.habits.meditation) {
-      habitScore += habitScores.meditation;
-      habitsCompleted++;
-    }
-    if (data.habits.stretching) {
-      habitScore += habitScores.stretching;
-      habitsCompleted++;
-    }
-
-    // Cap at 10 points
-    habitScore = Math.min(10, habitScore);
   }
 
   const totalScore = Math.min(110, trainingScore + dietScore + sleepScore + habitScore);

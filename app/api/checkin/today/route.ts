@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const user = await requireAuth();
 
     const body = await request.json();
-    const { didWorkout, calories, sleepHours } = body;
+    const { didWorkout, calories, sleepHours, habits } = body;
 
     // Validation
     if (typeof didWorkout !== 'boolean') {
@@ -22,6 +22,9 @@ export async function POST(request: NextRequest) {
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
 
+    // Count habits completed
+    const habitsCompleted = habits ? Object.values(habits).filter(Boolean).length : 0;
+
     // Construct payload explicitly with only existing columns
     const checkinPayload = {
       user_id: user.id,
@@ -29,6 +32,8 @@ export async function POST(request: NextRequest) {
       did_workout: didWorkout,
       calories: calories || 0,
       sleep_hours: sleepHours || 0,
+      habits_completed: habitsCompleted,
+      habit_details: habits || {},
     };
 
     // Upsert check-in (insert or update if exists)
@@ -55,11 +60,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate health score (macros would come from nutrition logs if needed)
+    // Calculate health score with habits
     const score = calculateHealthScore({
       didWorkout,
       calories,
       sleepHours,
+      habits: habits || undefined,
     });
 
     // Upsert health score

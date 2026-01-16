@@ -11,6 +11,14 @@ interface CheckinForm {
   carbs: string;
   fat: string;
   sleepHours: string;
+  habits: {
+    sauna: boolean;
+    steamRoom: boolean;
+    iceBath: boolean;
+    coldShower: boolean;
+    meditation: boolean;
+    stretching: boolean;
+  };
 }
 
 export default function CheckinPage() {
@@ -29,6 +37,14 @@ export default function CheckinPage() {
     carbs: '',
     fat: '',
     sleepHours: '',
+    habits: {
+      sauna: false,
+      steamRoom: false,
+      iceBath: false,
+      coldShower: false,
+      meditation: false,
+      stretching: false,
+    },
   });
 
   useEffect(() => {
@@ -53,6 +69,7 @@ export default function CheckinPage() {
           const data = await response.json();
           if (data.checkin) {
             setHasCheckedIn(true);
+            const habitDetails = data.checkin.habit_details || {};
             setFormData({
               didWorkout: data.checkin.did_workout,
               calories: data.checkin.calories?.toString() || '',
@@ -60,6 +77,14 @@ export default function CheckinPage() {
               carbs: '',
               fat: '',
               sleepHours: data.checkin.sleep_hours?.toString() || '',
+              habits: {
+                sauna: habitDetails.sauna || false,
+                steamRoom: habitDetails.steamRoom || false,
+                iceBath: habitDetails.iceBath || false,
+                coldShower: habitDetails.coldShower || false,
+                meditation: habitDetails.meditation || false,
+                stretching: habitDetails.stretching || false,
+              },
             });
           }
         }
@@ -98,6 +123,7 @@ export default function CheckinPage() {
         didWorkout: formData.didWorkout,
         calories: formData.calories ? parseInt(formData.calories, 10) : 0,
         sleepHours: formData.sleepHours ? parseFloat(formData.sleepHours) : 0,
+        habits: formData.habits,
       };
 
       const response = await fetch('/api/checkin/today', {
@@ -326,6 +352,143 @@ export default function CheckinPage() {
             <p className="text-sm text-gray-400 mt-2">
               Optimal: 7-9 hours for full 30 points
             </p>
+          </div>
+
+          {/* Wellness Habits */}
+          <div className="pt-4 border-t border-gray-700">
+            <h3 className="text-sm font-medium text-gray-300 mb-3">
+              Wellness Habits (optional - earn up to 10 points!)
+            </h3>
+            <p className="text-xs text-gray-400 mb-4">
+              2+ habits = 10 points | 1 habit = 5 points
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Sauna */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.sauna 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.sauna && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.sauna}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, sauna: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Sauna</span>
+              </label>
+
+              {/* Steam Room */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.steamRoom 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.steamRoom && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.steamRoom}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, steamRoom: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Steam Room</span>
+              </label>
+
+              {/* Ice Bath */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.iceBath 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.iceBath && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.iceBath}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, iceBath: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Ice Bath</span>
+              </label>
+
+              {/* Cold Shower */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.coldShower 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.coldShower && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.coldShower}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, coldShower: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Cold Shower</span>
+              </label>
+
+              {/* Meditation */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.meditation 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.meditation && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.meditation}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, meditation: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Meditation</span>
+              </label>
+
+              {/* Stretching */}
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  formData.habits.stretching 
+                    ? 'bg-yellow-500 border-yellow-500' 
+                    : 'border-gray-600 group-hover:border-yellow-400'
+                }`}>
+                  {formData.habits.stretching && <CheckCircle className="w-3 h-3 text-black" />}
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.habits.stretching}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    habits: { ...formData.habits, stretching: e.target.checked }
+                  })}
+                  className="sr-only"
+                />
+                <span className="text-sm text-white">Stretching</span>
+              </label>
+            </div>
           </div>
 
         </div>
