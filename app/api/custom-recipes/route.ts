@@ -1,19 +1,16 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
-import { cookies } from 'next/headers';
+import { supabase } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 // GET - Fetch all custom recipes for current user
 export async function GET() {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Get current user from JWT session
+    const user = await getCurrentUser();
     
-    if (userError || !user) {
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -39,13 +36,10 @@ export async function GET() {
 // POST - Create a new custom recipe
 export async function POST(request: Request) {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Get current user from JWT session
+    const user = await getCurrentUser();
     
-    if (userError || !user) {
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

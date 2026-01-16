@@ -1,7 +1,7 @@
 -- Create custom_recipes table for user-created recipes
 CREATE TABLE IF NOT EXISTS custom_recipes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
   servings DECIMAL NOT NULL DEFAULT 1,
@@ -31,40 +31,8 @@ CREATE TABLE IF NOT EXISTS custom_recipes (
 CREATE INDEX IF NOT EXISTS idx_custom_recipes_user_id ON custom_recipes(user_id);
 CREATE INDEX IF NOT EXISTS idx_custom_recipes_public ON custom_recipes(is_public) WHERE is_public = true;
 
--- Enable Row Level Security
-ALTER TABLE custom_recipes ENABLE ROW LEVEL SECURITY;
-
--- RLS Policies
--- Users can view their own recipes
-CREATE POLICY "Users can view own recipes"
-  ON custom_recipes
-  FOR SELECT
-  USING (auth.uid() = user_id);
-
--- Users can view public recipes
-CREATE POLICY "Users can view public recipes"
-  ON custom_recipes
-  FOR SELECT
-  USING (is_public = true);
-
--- Users can insert their own recipes
-CREATE POLICY "Users can create own recipes"
-  ON custom_recipes
-  FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
-
--- Users can update their own recipes
-CREATE POLICY "Users can update own recipes"
-  ON custom_recipes
-  FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
-
--- Users can delete their own recipes
-CREATE POLICY "Users can delete own recipes"
-  ON custom_recipes
-  FOR DELETE
-  USING (auth.uid() = user_id);
+-- Note: No RLS policies since app uses custom JWT authentication
+-- Authorization is handled in API routes
 
 -- Create updated_at trigger
 CREATE OR REPLACE FUNCTION update_custom_recipes_updated_at()

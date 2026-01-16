@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
-import { cookies } from 'next/headers';
+import { supabase } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,19 +10,16 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Get current user from JWT session
+    const user = await getCurrentUser();
     
-    if (userError || !user) {
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = params;
 
-    // Delete the recipe (RLS will ensure user owns it)
+    // Delete the recipe (ensure user owns it)
     const { error } = await supabase
       .from('custom_recipes')
       .delete()
