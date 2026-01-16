@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, UtensilsCrossed } from 'lucide-react';
 import { recipesData, filterRecipes, sortRecipes, searchRecipes, type Recipe } from '@/lib/recipes';
 
 export default function MemberRecipesPage() {
@@ -81,11 +81,20 @@ export default function MemberRecipesPage() {
   return (
     <div className="min-h-screen bg-thrivv-bg-dark">
       {/* Hero Section */}
-      <div className="mb-8 animate-fade-in-up">
-        <h1 className="text-4xl font-semibold text-thrivv-text-primary mb-2">
-          Recipes
-        </h1>
-        <p className="text-thrivv-text-secondary">Macro-friendly recipes to fuel your goals</p>
+      <div className="mb-8 animate-fade-in-up flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-semibold text-thrivv-text-primary mb-2">
+            Recipes
+          </h1>
+          <p className="text-thrivv-text-secondary">Macro-friendly recipes to fuel your goals</p>
+        </div>
+        <Link
+          href="/recipes/builder"
+          className="flex items-center px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+        >
+          <UtensilsCrossed className="w-5 h-5 mr-2" />
+          Build Your Recipe
+        </Link>
       </div>
 
       {/* Search and Filters Bar */}
