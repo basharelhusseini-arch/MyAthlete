@@ -52,13 +52,22 @@ export default function RecipesPage() {
           <h1 className="text-3xl font-bold text-white">Recipe Database</h1>
           <p className="mt-2 text-gray-400">Browse and manage all recipes</p>
         </div>
-        <Link
-          href="/recipes/new"
-          className="flex items-center px-4 py-2 btn-primary"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Add Recipe
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/recipes/builder"
+            className="flex items-center px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+          >
+            <UtensilsCrossed className="w-5 h-5 mr-2" />
+            Build Your Recipe
+          </Link>
+          <Link
+            href="/recipes/new"
+            className="flex items-center px-4 py-2 btn-primary"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Add Recipe
+          </Link>
+        </div>
       </div>
 
       {/* Search and Filter */}
