@@ -6,6 +6,60 @@ import Image from 'next/image';
 import { Plus, Search, Filter, UtensilsCrossed, Clock, Users, Flame } from 'lucide-react';
 import { Recipe } from '@/types';
 
+// Recipe Image Component with fallback handling
+function RecipeImage({ recipe }: { recipe: Recipe }) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Determine fallback icon based on tags
+  const getFallbackIcon = () => {
+    const tags = recipe.tags.join(' ').toLowerCase();
+    if (tags.includes('breakfast')) return '🍳';
+    if (tags.includes('vegetarian') || tags.includes('vegan')) return '🥗';
+    if (tags.includes('high-protein')) return '💪';
+    if (tags.includes('snack')) return '🥜';
+    return '🍽️';
+  };
+
+  if (!recipe.imageUrl || imageError) {
+    return (
+      <div className="w-full h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center">
+        <div className="text-5xl mb-2">{getFallbackIcon()}</div>
+        <UtensilsCrossed className="w-8 h-8 text-yellow-500/30" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
+      {/* Loading skeleton */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 animate-pulse" />
+      )}
+      
+      <Image
+        src={recipe.imageUrl}
+        alt={recipe.name}
+        fill
+        className={`object-cover transition-all duration-500 ${
+          isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
+        }`}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        loading="lazy"
+        quality={85}
+        onLoad={() => setIsLoading(false)}
+        onError={() => {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Failed to load image for recipe: ${recipe.name}`, recipe.imageUrl);
+          }
+          setImageError(true);
+          setIsLoading(false);
+        }}
+      />
+    </div>
+  );
+}
+
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,33 +178,7 @@ export default function RecipesPage() {
               className="dark-card overflow-hidden card-hover flex flex-col"
             >
               {/* Recipe Image */}
-              {recipe.imageUrl ? (
-                <div className="relative w-full h-48 bg-black overflow-hidden">
-                  <Image
-                    src={recipe.imageUrl}
-                    alt={recipe.name}
-                    fill
-                    className="object-cover transition-opacity duration-300"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading="lazy"
-                    quality={85}
-                    unoptimized={true}
-                    onError={(e) => {
-                      // Fallback to placeholder if image fails to load
-                      const target = e.currentTarget as HTMLImageElement;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        parent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-gray-900"><svg class="w-12 h-12 text-yellow-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
-                      }
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="w-full h-48 bg-gray-900 flex items-center justify-center">
-                  <UtensilsCrossed className="w-12 h-12 text-yellow-500/30" />
-                </div>
-              )}
+              <RecipeImage recipe={recipe} />
 
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex-1">
