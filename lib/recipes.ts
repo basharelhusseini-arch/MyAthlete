@@ -3519,9 +3519,8 @@ export const recipesData: Recipe[] = [
 /**
  * Get recipe by ID
  */
-export function getRecipeById(id: string): Recipe | null {
-  const recipe = recipesData.find(r => r.id === id);
-  return recipe || null;
+export function getRecipeById(id: string): Recipe | undefined {
+  return recipesData.find(r => r.id === id);
 }
 
 /**
