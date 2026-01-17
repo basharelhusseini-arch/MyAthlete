@@ -291,7 +291,7 @@ export default function RewardsPage() {
               </div>
             </div>
             <div className="text-4xl font-bold text-white mb-1">{healthScore?.total || 0}</div>
-            <div className="text-sm text-gray-400">Today's Health Score</div>
+            <div className="text-sm text-gray-400">Today&apos;s Health Score</div>
           </div>
 
           {/* Next Reward */}
