@@ -3515,3 +3515,100 @@ export const recipesData: Recipe[] = [
     ]
   }
 ];
+
+/**
+ * Get recipe by ID
+ */
+export function getRecipeById(id: string): Recipe | null {
+  const recipe = recipesData.find(r => r.id === id);
+  return recipe || null;
+}
+
+/**
+ * Sort recipes by specified criteria
+ */
+export function sortRecipes(recipes: Recipe[], sortBy: string): Recipe[] {
+  // Clone array to avoid mutation
+  const sorted = [...recipes];
+  
+  switch (sortBy) {
+    case 'protein':
+    case 'protein_desc':
+      return sorted.sort((a, b) => b.protein_g - a.protein_g);
+    
+    case 'protein_asc':
+      return sorted.sort((a, b) => a.protein_g - b.protein_g);
+    
+    case 'calories':
+    case 'calories_asc':
+      return sorted.sort((a, b) => a.calories - b.calories);
+    
+    case 'calories_desc':
+      return sorted.sort((a, b) => b.calories - a.calories);
+    
+    case 'carbs':
+    case 'carbs_asc':
+      return sorted.sort((a, b) => a.carbs_g - b.carbs_g);
+    
+    case 'carbs_desc':
+      return sorted.sort((a, b) => b.carbs_g - a.carbs_g);
+    
+    case 'time':
+    case 'time_asc':
+      return sorted.sort((a, b) => {
+        const timeA = a.prepMinutes + a.cookMinutes;
+        const timeB = b.prepMinutes + b.cookMinutes;
+        return timeA - timeB;
+      });
+    
+    case 'time_desc':
+      return sorted.sort((a, b) => {
+        const timeA = a.prepMinutes + a.cookMinutes;
+        const timeB = b.prepMinutes + b.cookMinutes;
+        return timeB - timeA;
+      });
+    
+    case 'popular':
+    case 'new':
+    default:
+      // Keep original order
+      return sorted;
+  }
+}
+
+/**
+ * Filter recipes by criteria
+ */
+export function filterRecipes(
+  recipes: Recipe[],
+  filters: {
+    highProtein?: boolean;
+    lowCarb?: boolean;
+    lowCalorie?: boolean;
+    vegetarian?: boolean;
+    mealPrep?: boolean;
+  }
+): Recipe[] {
+  return recipes.filter(recipe => {
+    if (filters.highProtein && recipe.protein_g < 30) return false;
+    if (filters.lowCarb && recipe.carbs_g > 30) return false;
+    if (filters.lowCalorie && recipe.calories > 400) return false;
+    if (filters.vegetarian && !recipe.tags.includes('vegetarian')) return false;
+    if (filters.mealPrep && !recipe.tags.includes('meal-prep')) return false;
+    return true;
+  });
+}
+
+/**
+ * Search recipes by query string
+ */
+export function searchRecipes(recipes: Recipe[], query: string): Recipe[] {
+  if (!query.trim()) return recipes;
+  
+  const q = query.toLowerCase();
+  return recipes.filter(r => 
+    r.name.toLowerCase().includes(q) ||
+    r.description.toLowerCase().includes(q) ||
+    r.tags.some(tag => tag.toLowerCase().includes(q))
+  );
+}

@@ -7,7 +7,7 @@
  * 2. Fallback: localStorage (for development/offline)
  */
 
-import { recipesData, getRecipeById, type Recipe } from './recipes';
+import { recipesData, getRecipeById, type Recipe } from '@/lib/recipes';
 
 // ===== TYPES =====
 
