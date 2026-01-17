@@ -45,12 +45,24 @@ export default function RewardsPage() {
 
   const fetchHealthScore = async (id: string) => {
     try {
-      const response = await fetch(`/api/health/score?memberId=${id}`);
+      // Fetch actual reward points from API
+      const rewardsResponse = await fetch('/api/rewards/points');
+      if (rewardsResponse.ok) {
+        const rewardsData = await rewardsResponse.json();
+        setPoints(rewardsData.points);
+      }
+
+      // Fetch health score for display
+      const response = await fetch('/api/health/summary');
       if (response.ok) {
         const data = await response.json();
-        setHealthScore(data);
-        // Calculate points: 10 points per health score point
-        setPoints(data.total * 10);
+        setHealthScore({
+          total: data.score,
+          workoutScore: data.components.training,
+          dietScore: data.components.diet,
+          habitScore: data.components.habits,
+          sleepScore: data.components.sleep,
+        });
       }
     } catch (error) {
       console.error('Failed to fetch health score:', error);
@@ -279,7 +291,7 @@ export default function RewardsPage() {
               </div>
             </div>
             <div className="text-4xl font-bold text-white mb-1">{healthScore?.total || 0}</div>
-            <div className="text-sm text-gray-400">Health Score (10 pts each)</div>
+            <div className="text-sm text-gray-400">Today's Health Score</div>
           </div>
 
           {/* Next Reward */}
@@ -300,22 +312,28 @@ export default function RewardsPage() {
             <Zap className="w-5 h-5 mr-2 text-yellow-400" />
             How to Earn Points
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-blue-400 mb-2">+10</div>
-              <div className="text-gray-300">Per Health Score Point</div>
+              <div className="text-2xl font-bold text-blue-400 mb-2">Daily</div>
+              <div className="text-gray-300 mb-2">Health Score Based</div>
+              <div className="text-xs text-gray-500">
+                Score 50 → 1 pt<br/>
+                Score 110 → 25 pts
+              </div>
             </div>
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-green-400 mb-2">+50</div>
-              <div className="text-gray-300">Complete Weekly Workouts</div>
+              <div className="text-2xl font-bold text-green-400 mb-2">Threshold</div>
+              <div className="text-gray-300 mb-2">Score Below 50</div>
+              <div className="text-xs text-gray-500">
+                No points earned
+              </div>
             </div>
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-purple-400 mb-2">+25</div>
-              <div className="text-gray-300">Log Nutrition Daily</div>
-            </div>
-            <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-orange-400 mb-2">+100</div>
-              <div className="text-gray-300">Connect Wearable</div>
+              <div className="text-2xl font-bold text-purple-400 mb-2">Max</div>
+              <div className="text-gray-300 mb-2">25 Points/Day</div>
+              <div className="text-xs text-gray-500">
+                At score 110
+              </div>
             </div>
           </div>
         </div>

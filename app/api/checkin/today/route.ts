@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { requireAuth } from '@/lib/auth';
 import { calculateHealthScore } from '@/lib/health-score';
+import { healthToRewardPoints } from '@/lib/reward-points';
 
 export async function POST(request: NextRequest) {
   try {
@@ -103,10 +104,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calculate reward points from health score
+    const rewardPointsEarned = healthToRewardPoints(score.totalScore);
+
+    // Update reward history (upsert for idempotency)
+    await supabase
+      .from('reward_history')
+      .upsert(
+        {
+          user_id: user.id,
+          date: today,
+          health_score: score.totalScore,
+          points_earned: rewardPointsEarned,
+        },
+        {
+          onConflict: 'user_id,date',
+        }
+      );
+
+    // Get user's current total reward points
+    const { data: userData } = await supabase
+      .from('users')
+      .select('reward_points')
+      .eq('id', user.id)
+      .single();
+
+    // Calculate new total (sum all history to be accurate)
+    const { data: historyData } = await supabase
+      .from('reward_history')
+      .select('points_earned')
+      .eq('user_id', user.id);
+
+    const totalPoints = historyData?.reduce((sum, h) => sum + Number(h.points_earned), 0) || 0;
+
+    // Update user's total reward points
+    await supabase
+      .from('users')
+      .update({ reward_points: totalPoints })
+      .eq('id', user.id);
+
     return NextResponse.json({
       success: true,
       checkin,
       score: healthScore,
+      rewardPoints: {
+        earned: rewardPointsEarned,
+        total: totalPoints,
+      },
     });
   } catch (error: any) {
     if (error.message === 'Unauthorized') {
