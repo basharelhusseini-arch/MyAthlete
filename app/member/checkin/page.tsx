@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Activity, Dumbbell, UtensilsCrossed, Moon, CheckCircle, Loader2 } from 'lucide-react';
+import { getTodayLog, computeTotals } from '@/lib/nutrition-log';
 
 interface CheckinForm {
   didWorkout: boolean;
@@ -94,6 +95,49 @@ export default function CheckinPage() {
         if (scoreResponse.ok) {
           const scoreData = await scoreResponse.json();
           setCurrentScore(scoreData.score);
+        }
+        
+        // IMPORTANT: Sync nutrition data to health score if meals are logged
+        // This ensures nutrition counts toward reward points
+        try {
+          const memberId = localStorage.getItem('memberId');
+          if (memberId) {
+            // Get today's nutrition from localStorage
+            const todayLog = await getTodayLog(memberId);
+            
+            if (todayLog.meals.length > 0) {
+              const totals = computeTotals(todayLog);
+              
+              console.log('🔄 Syncing nutrition to health score:', totals);
+              
+              // Update health score with nutrition data
+              const nutritionResponse = await fetch('/api/health/update-from-nutrition', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                  memberId,
+                  date: new Date().toISOString().split('T')[0],
+                  totalCalories: totals.calories,
+                  totalProtein: totals.protein_g,
+                  totalCarbs: totals.carbs_g,
+                  totalFat: totals.fat_g,
+                  mealCount: totals.mealCount,
+                }),
+              });
+              
+              if (nutritionResponse.ok) {
+                console.log('✅ Nutrition synced to health score successfully');
+                // Refresh the score display
+                const scoreResponse = await fetch('/api/score/today');
+                if (scoreResponse.ok) {
+                  const scoreData = await scoreResponse.json();
+                  setCurrentScore(scoreData.score);
+                }
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Could not sync nutrition to health score:', err);
         }
       } catch (error) {
         console.error('Failed to fetch check-in:', error);
