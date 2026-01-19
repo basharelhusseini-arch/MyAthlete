@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ingredientsDatabase, 
@@ -18,11 +19,24 @@ interface RecipeIngredient {
 }
 
 export default function RecipeBuilderPage() {
+  const router = useRouter();
+  const [memberId, setMemberId] = useState<string | null>(null);
   const [recipeName, setRecipeName] = useState('');
   const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredient[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [servings, setServings] = useState(1);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const storedMemberId = localStorage.getItem('memberId');
+    if (!storedMemberId) {
+      alert('Please log in to create custom recipes');
+      router.push('/member/login');
+      return;
+    }
+    setMemberId(storedMemberId);
+  }, [router]);
 
   const categories = ['All', ...getAllCategories()];
 
@@ -93,6 +107,12 @@ export default function RecipeBuilderPage() {
   const [saving, setSaving] = useState(false);
 
   const saveRecipe = async () => {
+    if (!memberId) {
+      alert('Please log in first to save recipes');
+      router.push('/member/login');
+      return;
+    }
+
     if (!recipeName || recipeIngredients.length === 0) {
       alert('Please add a recipe name and at least one ingredient');
       return;
@@ -102,7 +122,10 @@ export default function RecipeBuilderPage() {
     try {
       const response = await fetch('/api/custom-recipes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important: send cookies with request
         body: JSON.stringify({
           name: recipeName,
           description: `Custom recipe with ${recipeIngredients.length} ingredients`,
@@ -118,8 +141,19 @@ export default function RecipeBuilderPage() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save recipe');
+        const errorData = await response.json();
+        
+        // Handle authentication errors specifically
+        if (response.status === 401) {
+          alert('Your session has expired. Please log in again.');
+          localStorage.removeItem('memberId');
+          localStorage.removeItem('memberName');
+          localStorage.removeItem('memberEmail');
+          router.push('/member/login');
+          return;
+        }
+        
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const savedRecipe = await response.json();
@@ -129,13 +163,25 @@ export default function RecipeBuilderPage() {
       setRecipeName('');
       setRecipeIngredients([]);
       setServings(1);
+      
+      // Optionally redirect to recipes page
+      router.push('/member/recipes');
     } catch (error: any) {
       console.error('Error saving recipe:', error);
-      alert(`Failed to save recipe: ${error.message}`);
+      alert(`Failed to save recipe: ${error.message}\n\nIf this persists, try logging out and back in.`);
     } finally {
       setSaving(false);
     }
   };
+
+  // Show loading state while checking auth
+  if (memberId === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center">
+        <p className="text-gray-400">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -144,7 +190,7 @@ export default function RecipeBuilderPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link 
-              href="/recipes"
+              href="/member/recipes"
               className="text-yellow-500 hover:text-yellow-400 transition-colors"
             >
               ← Back to Recipes
