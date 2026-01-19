@@ -214,7 +214,7 @@ export function generateAthleteWorkoutPlan(
     // Return empty but valid result - will be caught by API validation
     return {
       plan: {
-        id: `plan-${params.memberId}-${Date.now()}`,
+        id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         memberId: params.memberId,
         name: 'Empty Plan',
         description: 'No exercises match your equipment selection',
@@ -338,7 +338,7 @@ export function generateAthleteWorkoutPlan(
     
     // Create workout
     workouts.push({
-      id: `workout-${params.memberId}-${i}`,
+      id: `workout-${params.memberId}-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 9)}`,
       workoutPlanId: 'plan-placeholder', // Will be set by caller
       memberId: params.memberId,
       name: `Week ${weekNum}, Day ${workoutInWeek}${isDeloadWeek ? ' (Deload)' : ''}`,
@@ -354,7 +354,7 @@ export function generateAthleteWorkoutPlan(
   
   // Create plan
   const plan: WorkoutPlan = {
-    id: `plan-${params.memberId}-${Date.now()}`,
+    id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     memberId: params.memberId,
     name: `${template.name} - ${params.duration} Week Program`,
     description: `Athlete-intelligent ${params.goal.replace('_', ' ')} program with progressive overload, deload weeks, and exercise variety.`,
