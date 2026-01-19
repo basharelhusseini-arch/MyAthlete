@@ -652,13 +652,13 @@ class DataStore {
   }): WorkoutPlan {
     // Use new athlete-intelligent generator
     const { generateAthleteWorkoutPlan } = require('./athlete-workout-generator');
-    const { plan, workouts } = generateAthleteWorkoutPlan(params, this.exercises);
+    const { plan, workouts }: { plan: WorkoutPlan; workouts: Workout[] } = generateAthleteWorkoutPlan(params, this.exercises);
     
     // Add plan to store
     this.workoutPlans.push(plan);
     
     // Add all workouts to store
-    workouts.forEach(workout => {
+    workouts.forEach((workout: Workout) => {
       this.workouts.push(workout);
     });
     
