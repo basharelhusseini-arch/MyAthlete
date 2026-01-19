@@ -650,166 +650,18 @@ class DataStore {
     equipment?: string[];
     limitations?: string[];
   }): WorkoutPlan {
-    // Create workout plan
-    const plan = this.addWorkoutPlan({
-      memberId: params.memberId,
-      name: `${params.goal.charAt(0).toUpperCase() + params.goal.slice(1).replace('_', ' ')} Workout Plan - ${params.difficulty.charAt(0).toUpperCase() + params.difficulty.slice(1)}`,
-      description: `Personalized ${params.goal.replace('_', ' ')} workout plan for ${params.difficulty} level. ${params.limitations ? `Limitations: ${params.limitations}.` : ''}`,
-      goal: params.goal,
-      duration: params.duration,
-      frequency: params.frequency,
-      difficulty: params.difficulty,
-      status: 'active',
-      startDate: new Date().toISOString().split('T')[0],
-      createdBy: 'ai',
-    });
-
-    // Rule-based exercise selection based on goal and difficulty
-    const availableExercises = this.exercises.filter(ex => {
-      // Filter by equipment if specified
-      if (params.equipment && params.equipment.length > 0) {
-        if (!params.equipment.includes(ex.equipment)) return false;
-      }
-      // Filter by difficulty
-      if (params.difficulty === 'beginner' && ex.difficulty !== 'beginner') return false;
-      if (params.difficulty === 'intermediate' && ex.difficulty === 'advanced') return false;
-      return true;
-    });
-
-    // Select exercises based on goal
-    let selectedExercises: Exercise[] = [];
+    // Use new athlete-intelligent generator
+    const { generateAthleteWorkoutPlan } = require('./athlete-workout-generator');
+    const { plan, workouts } = generateAthleteWorkoutPlan(params, this.exercises);
     
-    if (params.goal === 'strength' || params.goal === 'muscle_gain') {
-      selectedExercises = availableExercises.filter(ex => 
-        ex.category === 'strength'
-      ).slice(0, 6);
-    } else if (params.goal === 'weight_loss' || params.goal === 'endurance') {
-      selectedExercises = [
-        ...availableExercises.filter(ex => ex.category === 'cardio').slice(0, 3),
-        ...availableExercises.filter(ex => ex.category === 'strength').slice(0, 3),
-      ];
-    } else if (params.goal === 'flexibility') {
-      selectedExercises = availableExercises.filter(ex => 
-        ex.category === 'flexibility' || ex.category === 'strength'
-      ).slice(0, 5);
-    } else {
-      // general_fitness or athletic_performance
-      selectedExercises = [
-        ...availableExercises.filter(ex => ex.category === 'strength').slice(0, 4),
-        ...availableExercises.filter(ex => ex.category === 'cardio').slice(0, 2),
-      ];
-    }
-
-    // Ensure we have at least some exercises
-    if (selectedExercises.length === 0) {
-      selectedExercises = availableExercises.slice(0, 5);
-    }
-
-    // Generate workouts for the plan duration
-    const startDate = new Date(plan.startDate);
-    const totalWorkouts = params.duration * params.frequency;
-    const daysBetweenWorkouts = Math.floor(7 / params.frequency);
-
-    for (let i = 0; i < totalWorkouts; i++) {
-      const workoutDate = new Date(startDate);
-      workoutDate.setDate(startDate.getDate() + (i * daysBetweenWorkouts));
-
-      // Create workout exercises with appropriate reps/sets based on difficulty
-      // Uses the exercise's own recommended programming for each level
-      const workoutExercises: WorkoutExercise[] = selectedExercises.map((ex, index) => {
-        let sets = 3;
-        let reps: number | undefined = 10;
-        let restSeconds = 60;
-        let duration: number | undefined;
-
-        // Use exercise-specific recommendations if available
-        if (ex.recommendedSets) {
-          const levelRec = ex.recommendedSets[params.difficulty];
-          sets = levelRec.sets;
-          
-          // Parse reps/duration from the recommendation
-          if (levelRec.reps) {
-            // Handle ranges like "8-12" by taking the midpoint
-            if (levelRec.reps.includes('-')) {
-              const [min, max] = levelRec.reps.split('-').map(n => parseInt(n.trim()));
-              reps = Math.floor((min + max) / 2);
-            } else {
-              reps = parseInt(levelRec.reps);
-            }
-          }
-          
-          if (levelRec.duration) {
-            reps = undefined;
-            // Parse duration like "30-45 seconds" or "60 seconds"
-            const durationMatch = levelRec.duration.match(/\d+/);
-            if (durationMatch) {
-              duration = parseInt(durationMatch[0]);
-            }
-          }
-        } else {
-          // Fallback to basic programming if no recommendations
-          if (params.difficulty === 'beginner') {
-            sets = 2;
-            reps = 8;
-            restSeconds = 90;
-          } else if (params.difficulty === 'intermediate') {
-            sets = 3;
-            reps = 10;
-            restSeconds = 60;
-          } else {
-            sets = 4;
-            reps = 12;
-            restSeconds = 45;
-          }
-        }
-
-        // Parse rest time from exercise if available
-        if (ex.rest) {
-          const restMatch = ex.rest.match(/(\d+)(?:-(\d+))?\s*(minutes?|seconds?)/i);
-          if (restMatch) {
-            const restValue = parseInt(restMatch[1]);
-            const unit = restMatch[3].toLowerCase();
-            if (unit.includes('minute')) {
-              restSeconds = restValue * 60;
-            } else {
-              restSeconds = restValue;
-            }
-            // If range, use the lower end
-            if (restMatch[2]) {
-              const restValue2 = parseInt(restMatch[2]);
-              restSeconds = Math.floor((restValue + restValue2) / 2) * (unit.includes('minute') ? 60 : 1);
-            }
-          }
-        }
-
-        return {
-          exerciseId: ex.id,
-          sets,
-          reps,
-          duration,
-          restSeconds,
-          order: index + 1,
-        };
-      });
-
-      const workoutName = `Workout ${i + 1} - ${params.goal.replace('_', ' ')}`;
-      
-      // Estimate workout duration (simplified calculation)
-      const avgSets = params.difficulty === 'beginner' ? 2 : params.difficulty === 'intermediate' ? 3 : 4;
-      const avgRest = params.difficulty === 'beginner' ? 90 : params.difficulty === 'intermediate' ? 60 : 45;
-      const estimatedDuration = Math.ceil(workoutExercises.length * avgSets * (avgRest / 60 + 0.5));
-      
-      this.addWorkout({
-        workoutPlanId: plan.id,
-        memberId: params.memberId,
-        name: workoutName,
-        date: workoutDate.toISOString().split('T')[0],
-        exercises: workoutExercises,
-        status: 'scheduled',
-        duration: estimatedDuration,
-      });
-    }
-
+    // Add plan to store
+    this.workoutPlans.push(plan);
+    
+    // Add all workouts to store
+    workouts.forEach(workout => {
+      this.workouts.push(workout);
+    });
+    
     return plan;
   }
 

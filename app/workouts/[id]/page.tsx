@@ -274,9 +274,88 @@ export default function WorkoutPlanDetailPage() {
                     </span>
                   </div>
 
+                  {/* Warm-up Section */}
+                  {workout.warmup && (
+                    <div className="mb-6 bg-thrivv-gold-500/5 border border-thrivv-gold-500/20 rounded-xl p-5">
+                      <h4 className="text-sm font-semibold text-thrivv-gold-500 mb-4 flex items-center">
+                        <Wind className="w-4 h-4 mr-2" />
+                        Warm-up Protocol
+                      </h4>
+                      
+                      {/* General Warm-up */}
+                      {workout.warmup.general && workout.warmup.general.length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-xs font-medium text-thrivv-text-secondary mb-2">General (5-8 min)</p>
+                          <ul className="space-y-1 text-sm text-thrivv-text-primary ml-4">
+                            {workout.warmup.general.map((item, i) => (
+                              <li key={i} className="flex items-start">
+                                <span className="text-thrivv-gold-500 mr-2">•</span>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {/* Mobility */}
+                      {workout.warmup.mobility && workout.warmup.mobility.length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-xs font-medium text-thrivv-text-secondary mb-2">Mobility/Activation (3-6 min)</p>
+                          <ul className="space-y-1 text-sm text-thrivv-text-primary ml-4">
+                            {workout.warmup.mobility.map((item, i) => (
+                              <li key={i} className="flex items-start">
+                                <span className="text-thrivv-gold-500 mr-2">•</span>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {/* Ramp Sets */}
+                      {workout.warmup.rampSets && workout.warmup.rampSets.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium text-thrivv-text-secondary mb-2">Specific Warm-up Sets</p>
+                          <div className="space-y-2">
+                            {workout.warmup.rampSets.map((set, i) => (
+                              <div key={i} className="flex items-center justify-between text-sm bg-thrivv-bg-dark rounded-lg p-2">
+                                <span className="text-thrivv-text-primary font-medium">
+                                  Set {i + 1}: {set.percent1RM === 0 ? 'Bar' : `${set.percent1RM}% × ${set.reps}`}
+                                </span>
+                                {set.notes && (
+                                  <span className="text-xs text-thrivv-text-muted italic">{set.notes}</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Week/Session Info */}
+                  {(workout.weekNumber || workout.sessionType) && (
+                    <div className="flex items-center gap-2 mb-4">
+                      {workout.weekNumber && (
+                        <span className="text-xs px-2 py-1 bg-thrivv-bg-card text-thrivv-text-secondary border border-thrivv-gold-500/10 rounded">
+                          Week {workout.weekNumber}
+                        </span>
+                      )}
+                      {workout.sessionType && (
+                        <span className={`text-xs px-2 py-1 rounded capitalize ${
+                          workout.sessionType === 'deload' ? 'bg-thrivv-neon-green/10 text-thrivv-neon-green border border-thrivv-neon-green/20' :
+                          workout.sessionType === 'strength' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                          'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                        }`}>
+                          {workout.sessionType}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {/* Exercises */}
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-thrivv-text-secondary mb-4">Exercises</h4>
+                    <h4 className="text-sm font-medium text-thrivv-text-secondary mb-4">Working Sets</h4>
                     {workout.exercises.map((ex, index) => {
                       const exercise = exercises[ex.exerciseId];
                       const exerciseKey = `${workout.id}-${index}`;
@@ -322,6 +401,12 @@ export default function WorkoutPlanDetailPage() {
 
                             {/* Exercise Prescription */}
                             <div className="ml-11 flex flex-wrap gap-2 text-sm">
+                              {ex.isMainLift && (
+                                <span className="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg font-semibold text-xs flex items-center">
+                                  <Zap className="w-3 h-3 mr-1" />
+                                  Main Lift
+                                </span>
+                              )}
                               <span className="px-3 py-1 bg-thrivv-gold-500/10 text-thrivv-gold-500 border border-thrivv-gold-500/20 rounded-lg font-medium">
                                 {ex.sets} sets
                               </span>
@@ -333,6 +418,22 @@ export default function WorkoutPlanDetailPage() {
                               {ex.duration && (
                                 <span className="px-3 py-1 bg-thrivv-bg-dark text-thrivv-text-primary border border-thrivv-gold-500/10 rounded-lg font-medium">
                                   {ex.duration}s hold
+                                </span>
+                              )}
+                              {ex.percent1RM && (
+                                <span className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg font-semibold">
+                                  @ {ex.percent1RM}% 1RM
+                                </span>
+                              )}
+                              {ex.rpe && (
+                                <span className="px-3 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg font-semibold">
+                                  RPE {ex.rpe}
+                                </span>
+                              )}
+                              {ex.tempo && (
+                                <span className="px-3 py-1 bg-thrivv-bg-dark text-thrivv-text-secondary border border-thrivv-gold-500/10 rounded-lg font-medium flex items-center">
+                                  <Timer className="w-3 h-3 mr-1" />
+                                  {ex.tempo}
                                 </span>
                               )}
                               {ex.weight && (
@@ -354,6 +455,24 @@ export default function WorkoutPlanDetailPage() {
                             {/* Expandable Details */}
                             {isExpanded && (
                               <div className="mt-6 ml-11 space-y-6 animate-fade-in-up">
+                                {/* Coaching Cues */}
+                                {ex.coachingCues && ex.coachingCues.length > 0 && (
+                                  <div className="bg-thrivv-gold-500/5 border border-thrivv-gold-500/20 rounded-lg p-4">
+                                    <h6 className="font-semibold text-thrivv-gold-500 mb-2 flex items-center gap-2">
+                                      <Target className="w-4 h-4" />
+                                      Focus Points
+                                    </h6>
+                                    <ul className="space-y-1">
+                                      {ex.coachingCues.map((cue, i) => (
+                                        <li key={i} className="text-sm text-thrivv-text-primary flex items-start">
+                                          <span className="text-thrivv-gold-500 mr-2">→</span>
+                                          {cue}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                
                                 {/* Instructions */}
                                 <div>
                                   <h6 className="font-semibold text-thrivv-text-primary mb-3 flex items-center gap-2">

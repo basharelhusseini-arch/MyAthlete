@@ -128,6 +128,26 @@ export interface WorkoutExercise {
   distanceUnit?: 'miles' | 'km';
   caloriesBurned?: number; // calculated or tracked calories
   intensity?: 'low' | 'moderate' | 'high'; // cardio intensity level
+  // Athlete programming fields
+  isMainLift?: boolean; // Flag for primary compound movements
+  percent1RM?: number; // % of 1 rep max (40-100)
+  rpe?: number; // Rate of Perceived Exertion (1-10)
+  rpeRange?: [number, number]; // RPE range like [7, 8]
+  tempo?: string; // e.g., "3-1-1-0" (eccentric-bottom-concentric-top)
+  coachingCues?: string[]; // Specific cues for this set
+  movementPattern?: 'squat' | 'hinge' | 'push' | 'pull' | 'carry' | 'core' | 'isolation';
+}
+
+export interface WarmupSection {
+  general: string[]; // General warm-up activities
+  mobility: string[]; // Mobility/activation drills
+  rampSets?: WarmupSet[]; // Progressive warm-up sets for main lift
+}
+
+export interface WarmupSet {
+  percent1RM: number; // Percentage of 1RM
+  reps: number;
+  notes?: string; // e.g., "Bar only", "Focus on speed"
 }
 
 export interface WorkoutPlan {
@@ -158,6 +178,9 @@ export interface Workout {
   notes?: string;
   rating?: number; // 1-5 stars
   completedAt?: string;
+  warmup?: WarmupSection; // Warm-up protocol
+  weekNumber?: number; // Week in the program (for progression tracking)
+  sessionType?: 'strength' | 'hypertrophy' | 'conditioning' | 'power' | 'deload'; // Session focus
 }
 
 export interface WorkoutProgress {
