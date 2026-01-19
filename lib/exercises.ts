@@ -1902,6 +1902,271 @@ export const exercisesDatabase: Exercise[] = [
         description: 'Maximum effort, explosive movements'
       }
     }
+  },
+  
+  // ========================================
+  // PLYOMETRIC & EXPLOSIVE EXERCISES
+  // ========================================
+  {
+    id: 'plyo-box-jumps',
+    name: 'Box Jumps',
+    description: 'Explosive lower body power - jump onto an elevated platform',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'calves'],
+    equipment: 'other',
+    difficulty: 'intermediate',
+    instructions: [
+      'Stand facing a sturdy box or platform (start with 12-24 inches)',
+      'Perform a quarter squat and swing arms back',
+      'Explode upward, swinging arms forward',
+      'Land softly on the box with both feet',
+      'Stand up fully, then step down carefully',
+      'Reset and repeat - focus on quality over speed'
+    ],
+    tips: [
+      'Land quietly with soft knees',
+      'Full hip extension at takeoff',
+      'Step down - don\'t jump down',
+      'Rest fully between reps for max power'
+    ],
+    breathing: 'Exhale forcefully on takeoff',
+    tempo: 'Explosive',
+    rest: '60-90 seconds between sets',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '5' },
+      intermediate: { sets: 4, reps: '6' },
+      advanced: { sets: 5, reps: '8' }
+    }
+  },
+  
+  {
+    id: 'plyo-broad-jumps',
+    name: 'Broad Jumps',
+    description: 'Horizontal explosive power - jump for maximum distance',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'hamstrings', 'calves'],
+    equipment: 'bodyweight',
+    difficulty: 'beginner',
+    instructions: [
+      'Stand with feet shoulder-width apart',
+      'Perform a quarter squat and swing arms back',
+      'Explode forward, swinging arms aggressively',
+      'Drive hips and knees forward',
+      'Land softly with knees bent, absorbing force',
+      'Stick the landing before next rep'
+    ],
+    tips: [
+      'Focus on distance, not height',
+      'Aggressive arm swing',
+      'Stick each landing for 2 seconds',
+      'Full body explosion'
+    ],
+    breathing: 'Big breath in, explode on exhale',
+    tempo: 'Explosive',
+    rest: '45-60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '5' },
+      intermediate: { sets: 4, reps: '6' },
+      advanced: { sets: 5, reps: '8' }
+    }
+  },
+  
+  {
+    id: 'plyo-depth-jumps',
+    name: 'Depth Jumps',
+    description: 'Advanced reactive power - step off box and immediately jump',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'calves'],
+    equipment: 'other',
+    difficulty: 'advanced',
+    instructions: [
+      'Stand on a box (12-18 inches)',
+      'Step off (don\'t jump off)',
+      'Land on both feet',
+      'Immediately explode upward as high as possible',
+      'Minimize ground contact time',
+      'Land softly and reset'
+    ],
+    tips: [
+      'Minimal ground contact time is key',
+      'Don\'t sink into deep squat - be reactive',
+      'Start with low boxes',
+      'This is advanced - master box jumps first'
+    ],
+    breathing: 'Quick exhale on rebound',
+    tempo: 'Reactive',
+    rest: '90-120 seconds (full recovery)',
+    recommendedSets: {
+      beginner: { sets: 0, reps: '0' },
+      intermediate: { sets: 3, reps: '4' },
+      advanced: { sets: 4, reps: '5' }
+    }
+  },
+  
+  {
+    id: 'plyo-bounding',
+    name: 'Bounding',
+    description: 'Exaggerated running strides for power development',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'hamstrings', 'calves'],
+    equipment: 'bodyweight',
+    difficulty: 'intermediate',
+    instructions: [
+      'Start with a short jog',
+      'Transition to exaggerated running strides',
+      'Drive knee high and extend opposite leg fully',
+      'Maximize air time and distance per stride',
+      'Powerful arm drive opposite to lead leg',
+      'Land and immediately drive into next bound'
+    ],
+    tips: [
+      'Exaggerate height and distance',
+      'Powerful arm drive',
+      'Quick ground contacts',
+      'Progress from 20m to 40m'
+    ],
+    breathing: 'Rhythmic and powerful',
+    tempo: 'Explosive',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '20m' },
+      intermediate: { sets: 4, reps: '30m' },
+      advanced: { sets: 5, reps: '40m' }
+    }
+  },
+  
+  {
+    id: 'sprint-acceleration-10m',
+    name: '10m Acceleration Sprints',
+    description: 'Maximum acceleration from standing start',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'calves'],
+    equipment: 'bodyweight',
+    difficulty: 'beginner',
+    instructions: [
+      'Start in athletic stance or sprint start position',
+      'Drive hard out of stance - 45-degree body angle',
+      'Powerful arm drive',
+      'Maximum effort for 10 meters',
+      'Decelerate smoothly after mark',
+      'Walk back and recover fully'
+    ],
+    tips: [
+      'First 3 steps are critical',
+      'Stay low - don\'t pop up too early',
+      'Aggressive arm drive',
+      'Full recovery between reps (2-3 min)'
+    ],
+    breathing: 'Hold breath during sprint',
+    tempo: 'Maximum effort',
+    rest: '2-3 minutes (full recovery)',
+    recommendedSets: {
+      beginner: { sets: 4, reps: '4' },
+      intermediate: { sets: 5, reps: '5' },
+      advanced: { sets: 6, reps: '6' }
+    }
+  },
+  
+  {
+    id: 'sprint-flying-30m',
+    name: '30m Flying Sprints',
+    description: 'Maximum velocity sprint with running start',
+    category: 'plyometric',
+    muscleGroups: ['quads', 'glutes', 'hamstrings', 'calves'],
+    equipment: 'bodyweight',
+    difficulty: 'intermediate',
+    instructions: [
+      'Mark 20m build-up zone + 30m sprint zone',
+      'Accelerate gradually through build-up zone',
+      'Hit maximum speed at spray zone entry',
+      'Maintain max velocity through 30m',
+      'Decelerate smoothly after',
+      'Full recovery walk back'
+    ],
+    tips: [
+      'Gradual build-up - don\'t sprint the build zone',
+      'Relaxed at max speed',
+      'Upright posture',
+      'This is true max velocity work'
+    ],
+    breathing: 'Relaxed breathing at max speed',
+    tempo: 'Maximum velocity',
+    rest: '3-4 minutes (complete recovery)',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '3' },
+      intermediate: { sets: 4, reps: '4' },
+      advanced: { sets: 5, reps: '5' }
+    }
+  },
+  
+  {
+    id: 'endurance-zone2-bike',
+    name: 'Zone 2 Bike (Aerobic Base)',
+    description: 'Low-intensity steady-state cardio for aerobic development',
+    category: 'endurance',
+    muscleGroups: ['quads', 'glutes', 'calves'],
+    equipment: 'cardio_machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Set bike to comfortable resistance',
+      'Maintain steady pace - conversational intensity',
+      'Target heart rate: 60-70% max HR',
+      'Maintain consistent cadence (80-90 RPM)',
+      'Focus on nasal breathing if possible',
+      'Duration: 20-40 minutes continuous'
+    ],
+    tips: [
+      'Should be able to hold conversation',
+      'If breathing hard, slow down',
+      'This builds aerobic base',
+      'Consistency over intensity'
+    ],
+    breathing: 'Nasal breathing preferred, smooth rhythm',
+    tempo: 'Steady',
+    rest: 'N/A',
+    recommendedSets: {
+      beginner: { sets: 1, duration: '20 minutes' },
+      intermediate: { sets: 1, duration: '30 minutes' },
+      advanced: { sets: 1, duration: '40 minutes' }
+    },
+    mets: 5.0,
+    caloriesPerMinute: 6,
+    supportsTime: true
+  },
+  
+  {
+    id: 'endurance-zone2-row',
+    name: 'Zone 2 Rowing (Aerobic Base)',
+    description: 'Low-intensity rowing for aerobic capacity and recovery',
+    category: 'endurance',
+    muscleGroups: ['back', 'quads', 'glutes', 'core'],
+    equipment: 'cardio_machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Set rower at light resistance',
+      'Maintain steady pace - 18-22 strokes/min',
+      'Target heart rate: 60-70% max HR',
+      'Focus on technique over speed',
+      'Smooth drive and recovery',
+      'Duration: 20-40 minutes'
+    ],
+    tips: [
+      'Legs drive, arms finish',
+      'Conversational pace',
+      'Don\'t rush the recovery',
+      'Great for active recovery days'
+    ],
+    breathing: 'Rhythmic - exhale on drive',
+    tempo: 'Steady',
+    rest: 'N/A',
+    recommendedSets: {
+      beginner: { sets: 1, duration: '20 minutes' },
+      intermediate: { sets: 1, duration: '30 minutes' },
+      advanced: { sets: 1, duration: '40 minutes' }
+    },
+    mets: 5.5,
+    caloriesPerMinute: 7,
+    supportsTime: true
   }
 ];
 
