@@ -16,7 +16,7 @@ try {
     duration: 4,
     frequency: 3,
     equipment: ['barbell', 'dumbbells', 'cable', 'machine'],
-    limitations: '',
+    limitations: [],
   });
   
   console.log(`✅ Plan generated: ${plan.name} (ID: ${plan.id})`);
