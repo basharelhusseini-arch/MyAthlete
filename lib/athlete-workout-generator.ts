@@ -16,10 +16,13 @@ import { Exercise, WorkoutPlan, Workout, WorkoutExercise, WarmupSection, WarmupS
 // SPLIT LIBRARY - Defines workout structure by goal & frequency
 // ========================================
 
+// Session types used by the generator (non-optional subset of Workout['sessionType'])
+type SessionType = 'strength' | 'hypertrophy' | 'conditioning' | 'power' | 'speed' | 'recovery' | 'deload';
+
 interface SplitDay {
   theme: string; // e.g., "Push (Chest/Shoulders/Triceps)"
   purpose: string; // 1-2 sentence description
-  sessionType: Workout['sessionType'];
+  sessionType: SessionType;
   primaryMuscles: string[]; // Muscles to prioritize for exercise selection
   secondaryMuscles?: string[]; // Optional secondary muscles
   mainLiftPattern?: string[]; // Movement patterns for main lift (e.g., ['push', 'press'])
@@ -661,7 +664,7 @@ interface ExerciseRole {
   rpe?: number;
 }
 
-const SESSION_BLUEPRINTS: Record<Workout['sessionType'], ExerciseRole[]> = {
+const SESSION_BLUEPRINTS: Record<SessionType, ExerciseRole[]> = {
   strength: [
     { role: 'main', count: 1, sets: 4, reps: 5, restSeconds: 240, percent1RM: 80, rpe: 8 },
     { role: 'secondary', count: 1, sets: 3, reps: 6, restSeconds: 180, percent1RM: 75, rpe: 7 },
@@ -708,7 +711,7 @@ const SESSION_BLUEPRINTS: Record<Workout['sessionType'], ExerciseRole[]> = {
 /**
  * Generate warm-up section with progressive ramp sets
  */
-export function generateWarmup(mainExercise: Exercise, sessionType: Workout['sessionType']): WarmupSection {
+export function generateWarmup(mainExercise: Exercise, sessionType: SessionType): WarmupSection {
   const isBarbell = mainExercise.equipment === 'barbell';
   const isMainLift = ['bench', 'squat', 'deadlift', 'press'].some(pattern => 
     mainExercise.name.toLowerCase().includes(pattern)
