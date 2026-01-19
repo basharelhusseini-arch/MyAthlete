@@ -25,7 +25,17 @@ export async function POST(request: NextRequest) {
 
     // Generate workout plan using athlete-intelligent generator
     console.log('Generating workout plan with AI...');
-    const { plan, workouts } = generateAthleteWorkoutPlan(
+    console.log('Exercise database size:', exercisesDatabase?.length || 0);
+    
+    if (!exercisesDatabase || exercisesDatabase.length === 0) {
+      console.error('❌ Exercise database is empty!');
+      return NextResponse.json({ 
+        error: 'Exercise database not loaded',
+        details: 'The exercise library failed to load. This is a server configuration issue.'
+      }, { status: 500 });
+    }
+    
+    const result = generateAthleteWorkoutPlan(
       {
         memberId,
         goal,
@@ -37,8 +47,42 @@ export async function POST(request: NextRequest) {
       },
       exercisesDatabase
     );
+    
+    if (!result) {
+      console.error('❌ generateAthleteWorkoutPlan returned null/undefined');
+      return NextResponse.json({ 
+        error: 'Workout generation failed',
+        details: 'The workout generator did not return a result'
+      }, { status: 500 });
+    }
+    
+    const { plan, workouts } = result;
+    
+    if (!plan) {
+      console.error('❌ No plan generated');
+      return NextResponse.json({ 
+        error: 'Plan generation failed',
+        details: 'No plan object was created'
+      }, { status: 500 });
+    }
+    
+    if (!workouts || workouts.length === 0) {
+      console.error('❌ No workouts generated!');
+      console.error('Plan details:', { goal, difficulty, duration, frequency });
+      console.error('Available exercises:', exercisesDatabase.length);
+      return NextResponse.json({ 
+        error: 'No workouts generated',
+        details: `Expected ${duration * frequency} workouts but got 0. Check exercise database and generation logic.`,
+        debug: {
+          planId: plan.id,
+          expectedWorkouts: duration * frequency,
+          actualWorkouts: 0,
+          exerciseCount: exercisesDatabase.length
+        }
+      }, { status: 500 });
+    }
 
-    console.log(`Generated ${workouts.length} workouts for plan ${plan.id}`);
+    console.log(`✅ Generated ${workouts.length} workouts for plan ${plan.id}`);
 
     // Insert workout plan into Supabase
     console.log('Attempting to insert plan into Supabase...');
