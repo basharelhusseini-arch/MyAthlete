@@ -61,12 +61,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate health score with habits
+    // Determine which sections have been logged
+    const hasLoggedWorkout = didWorkout !== null && didWorkout !== undefined;
+    const hasLoggedNutrition = calories !== null && calories !== undefined && calories > 0;
+    const hasLoggedSleep = sleepHours !== null && sleepHours !== undefined && sleepHours > 0;
+    const hasLoggedHabits = habits && Object.values(habits).some(Boolean);
+    
+    // Calculate health score with habits and tracking flags
     const score = calculateHealthScore({
       didWorkout,
       calories,
       sleepHours,
       habits: habits || undefined,
+      hasLoggedWorkout,
+      hasLoggedMeals: hasLoggedNutrition,
+      hasLoggedSleep,
+      hasLoggedHabits,
     });
 
     // Upsert health score

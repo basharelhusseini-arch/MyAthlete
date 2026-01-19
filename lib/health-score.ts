@@ -1,11 +1,17 @@
 // Health Score Calculation - Integrated with Nutrition and Habit Tracking
 // Simple, explainable algorithm that uses real meal data and wellness habits
+// ONLY calculates scores for sections where data has been logged
 
 export interface CheckinData {
   didWorkout: boolean;
   calories: number | null; // From logged meals or manual entry
   sleepHours: number | null;
   habits?: HabitData; // Wellness habits
+  // Flags to track which sections have been logged
+  hasLoggedMeals?: boolean; // True if user logged actual meals in nutrition tracker
+  hasLoggedWorkout?: boolean; // True if user completed/logged a workout
+  hasLoggedSleep?: boolean; // True if user entered sleep hours
+  hasLoggedHabits?: boolean; // True if user checked any habits
 }
 
 export interface HabitData {
@@ -41,6 +47,9 @@ export interface HealthScoreResult {
     calorieScore: number;
     macroScore: number;
     habitsCompleted: number;
+    sectionsLogged: string[]; // Which sections were included in calculation
+    sectionsAvailable: number; // How many sections were logged
+    maxPossibleScore: number; // Max score based on logged sections
   };
 }
 
@@ -48,82 +57,113 @@ export interface HealthScoreResult {
 const DEFAULT_CALORIE_TARGET = 2200;
 const CALORIE_TOLERANCE = 300; // ±300 calories is good
 
+// Maximum points per section
+const MAX_TRAINING_SCORE = 30;
+const MAX_DIET_SCORE = 40;
+const MAX_SLEEP_SCORE = 30;
+const MAX_HABIT_SCORE = 10;
+const MAX_TOTAL_SCORE = 110;
+
 /**
  * Calculate health score from daily check-in data
- * Total: 0-110 points
- * - Training: 0-30 points
- * - Diet: 0-40 points (includes calorie + macro scoring)
- * - Sleep: 0-30 points
- * - Habits: 0-10 points (wellness habits)
+ * 
+ * NEW BEHAVIOR:
+ * - Only sections with logged data are included in the calculation
+ * - Total score is scaled proportionally based on which sections were logged
+ * - Example: If only Nutrition (40pts) and Sleep (30pts) are logged:
+ *   - Max possible = 70 points
+ *   - If you get 35/40 nutrition + 25/30 sleep = 60/70 = 85.7%
+ *   - Final score = 85.7% × 110 = 94 points
+ * 
+ * This ensures users aren't penalized for not logging all sections
  */
 export function calculateHealthScore(
   data: CheckinData,
   target?: NutritionTarget,
   consumed?: ConsumedNutrition
 ): HealthScoreResult {
+  const sectionsLogged: string[] = [];
+  let maxPossibleScore = 0;
+  
   // Training Score (0-30 points)
-  const trainingScore = data.didWorkout ? 30 : 0;
+  // Only count if user explicitly logged a workout
+  let trainingScore = 0;
+  const hasLoggedWorkout = data.hasLoggedWorkout ?? (data.didWorkout !== null && data.didWorkout !== undefined);
+  
+  if (hasLoggedWorkout) {
+    trainingScore = data.didWorkout ? 30 : 0;
+    maxPossibleScore += MAX_TRAINING_SCORE;
+    sectionsLogged.push('Training');
+  }
 
-  // Diet Score (0-40 points) - Includes calories AND macros
+  // Diet Score (0-40 points) - Only count if user logged meals or calories
   let calorieScore = 0;
   let macroScore = 0;
-
   const calories = data.calories !== null ? data.calories : (consumed?.calories || 0);
-  const calorieTarget = target?.calories || DEFAULT_CALORIE_TARGET;
-
-  if (calories > 0) {
-    const diff = Math.abs(calories - calorieTarget);
+  const hasLoggedNutrition = data.hasLoggedMeals ?? (calories > 0);
+  
+  if (hasLoggedNutrition) {
+    const calorieTarget = target?.calories || DEFAULT_CALORIE_TARGET;
     
-    // Calorie Score (0-25 points)
-    if (diff <= CALORIE_TOLERANCE) {
-      // Perfect range: full points
-      calorieScore = 25;
-    } else {
-      // Deduct points based on how far off target
-      // -1 point per 50 calories off (after tolerance)
-      const pointsOff = Math.floor((diff - CALORIE_TOLERANCE) / 50);
-      calorieScore = Math.max(0, 25 - pointsOff);
+    if (calories > 0) {
+      const diff = Math.abs(calories - calorieTarget);
+      
+      // Calorie Score (0-25 points)
+      if (diff <= CALORIE_TOLERANCE) {
+        // Perfect range: full points
+        calorieScore = 25;
+      } else {
+        // Deduct points based on how far off target
+        // -1 point per 50 calories off (after tolerance)
+        const pointsOff = Math.floor((diff - CALORIE_TOLERANCE) / 50);
+        calorieScore = Math.max(0, 25 - pointsOff);
+      }
+
+      // Macro Score (0-15 points) - Only if targets and consumed data available
+      if (target && consumed && target.protein_g && target.carbs_g && target.fat_g) {
+        // Protein adherence (0-6 points)
+        const proteinDiff = Math.abs(consumed.protein_g - target.protein_g);
+        if (proteinDiff <= target.protein_g * 0.10) {
+          macroScore += 6; // Perfect
+        } else if (proteinDiff <= target.protein_g * 0.15) {
+          macroScore += 4; // Good
+        } else if (proteinDiff <= target.protein_g * 0.25) {
+          macroScore += 2; // Acceptable
+        }
+
+        // Carbs adherence (0-5 points)
+        const carbsDiff = Math.abs(consumed.carbs_g - target.carbs_g);
+        if (carbsDiff <= target.carbs_g * 0.10) {
+          macroScore += 5; // Perfect
+        } else if (carbsDiff <= target.carbs_g * 0.15) {
+          macroScore += 3; // Good
+        } else if (carbsDiff <= target.carbs_g * 0.25) {
+          macroScore += 1; // Acceptable
+        }
+
+        // Fat adherence (0-4 points)
+        const fatDiff = Math.abs(consumed.fat_g - target.fat_g);
+        if (fatDiff <= target.fat_g * 0.10) {
+          macroScore += 4; // Perfect
+        } else if (fatDiff <= target.fat_g * 0.15) {
+          macroScore += 3; // Good
+        } else if (fatDiff <= target.fat_g * 0.25) {
+          macroScore += 1; // Acceptable
+        }
+      }
     }
-
-    // Macro Score (0-15 points) - Only if targets and consumed data available
-    if (target && consumed && target.protein_g && target.carbs_g && target.fat_g) {
-      // Protein adherence (0-6 points)
-      const proteinDiff = Math.abs(consumed.protein_g - target.protein_g);
-      if (proteinDiff <= target.protein_g * 0.10) {
-        macroScore += 6; // Perfect
-      } else if (proteinDiff <= target.protein_g * 0.15) {
-        macroScore += 4; // Good
-      } else if (proteinDiff <= target.protein_g * 0.25) {
-        macroScore += 2; // Acceptable
-      }
-
-      // Carbs adherence (0-5 points)
-      const carbsDiff = Math.abs(consumed.carbs_g - target.carbs_g);
-      if (carbsDiff <= target.carbs_g * 0.10) {
-        macroScore += 5; // Perfect
-      } else if (carbsDiff <= target.carbs_g * 0.15) {
-        macroScore += 3; // Good
-      } else if (carbsDiff <= target.carbs_g * 0.25) {
-        macroScore += 1; // Acceptable
-      }
-
-      // Fat adherence (0-4 points)
-      const fatDiff = Math.abs(consumed.fat_g - target.fat_g);
-      if (fatDiff <= target.fat_g * 0.10) {
-        macroScore += 4; // Perfect
-      } else if (fatDiff <= target.fat_g * 0.15) {
-        macroScore += 3; // Good
-      } else if (fatDiff <= target.fat_g * 0.25) {
-        macroScore += 1; // Acceptable
-      }
-    }
+    
+    maxPossibleScore += MAX_DIET_SCORE;
+    sectionsLogged.push('Nutrition');
   }
 
   const dietScore = calorieScore + macroScore;
 
-  // Sleep Score (0-30 points)
+  // Sleep Score (0-30 points) - Only count if user logged sleep
   let sleepScore = 0;
-  if (data.sleepHours !== null) {
+  const hasLoggedSleep = data.hasLoggedSleep ?? (data.sleepHours !== null && data.sleepHours !== undefined && data.sleepHours > 0);
+  
+  if (hasLoggedSleep && data.sleepHours !== null) {
     if (data.sleepHours >= 7 && data.sleepHours <= 9) {
       // Optimal sleep: full points
       sleepScore = 30;
@@ -143,14 +183,17 @@ export function calculateHealthScore(
       // Too little or too much: 5 points
       sleepScore = 5;
     }
+    
+    maxPossibleScore += MAX_SLEEP_SCORE;
+    sectionsLogged.push('Sleep');
   }
 
-  // Habit Tracking Score (0-10 points)
-  // 2+ habits = 10 points (full), 1 habit = 5 points (half)
+  // Habit Tracking Score (0-10 points) - Only count if user logged habits
   let habitScore = 0;
   let habitsCompleted = 0;
+  const hasLoggedHabits = data.hasLoggedHabits ?? (data.habits && Object.values(data.habits).some(Boolean));
 
-  if (data.habits) {
+  if (hasLoggedHabits && data.habits) {
     // Count how many habits were completed
     const habitValues = Object.values(data.habits);
     habitsCompleted = habitValues.filter(Boolean).length;
@@ -161,12 +204,25 @@ export function calculateHealthScore(
     } else if (habitsCompleted === 1) {
       habitScore = 5;
     }
+    
+    maxPossibleScore += MAX_HABIT_SCORE;
+    sectionsLogged.push('Habits');
   }
 
-  const totalScore = Math.min(110, trainingScore + dietScore + sleepScore + habitScore);
+  // Calculate raw score (sum of all logged sections)
+  const rawScore = trainingScore + dietScore + sleepScore + habitScore;
+  
+  // Scale to 0-110 based on which sections were logged
+  // If maxPossibleScore is 0 (nothing logged), return 0
+  let totalScore = 0;
+  if (maxPossibleScore > 0) {
+    // Convert raw score to percentage, then scale to 110
+    const percentage = rawScore / maxPossibleScore;
+    totalScore = Math.round(percentage * MAX_TOTAL_SCORE);
+  }
 
   return {
-    totalScore,
+    totalScore: Math.min(MAX_TOTAL_SCORE, totalScore),
     trainingScore,
     dietScore,
     sleepScore,
@@ -175,6 +231,9 @@ export function calculateHealthScore(
       calorieScore,
       macroScore,
       habitsCompleted,
+      sectionsLogged,
+      sectionsAvailable: sectionsLogged.length,
+      maxPossibleScore,
     },
   };
 }
@@ -235,4 +294,31 @@ export function calculateDietScore(
   }
 
   return { score, macroBonus, feedback };
+}
+
+/**
+ * Helper function to determine if user has logged meals
+ * Can be called from nutrition tracking API
+ */
+export function hasMealsLogged(meals: any[]): boolean {
+  return meals && meals.length > 0;
+}
+
+/**
+ * Helper to get consumed nutrition from logged meals
+ */
+export function calculateConsumedFromMeals(meals: any[]): ConsumedNutrition {
+  if (!meals || meals.length === 0) {
+    return { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 };
+  }
+  
+  return meals.reduce(
+    (total, meal) => ({
+      calories: total.calories + (meal.calories || 0),
+      protein_g: total.protein_g + (meal.protein_g || 0),
+      carbs_g: total.carbs_g + (meal.carbs_g || 0),
+      fat_g: total.fat_g + (meal.fat_g || 0),
+    }),
+    { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 }
+  );
 }
