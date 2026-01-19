@@ -196,8 +196,40 @@ export function generateAthleteWorkoutPlan(
   });
   
   // Separate main lifts and accessories
-  const mainLifts = availableExercises.filter(ex => isMainLift(ex.id) && ex.category === 'strength');
+  let mainLifts = availableExercises.filter(ex => isMainLift(ex.id) && ex.category === 'strength');
   const accessories = availableExercises.filter(ex => !isMainLift(ex.id));
+  
+  // Fallback: If no main lifts available (e.g., no barbell selected), use best strength exercises
+  if (mainLifts.length === 0) {
+    console.log('⚠️ No main lifts available with selected equipment, using strength exercises as substitutes');
+    mainLifts = availableExercises
+      .filter(ex => ex.category === 'strength')
+      .slice(0, 3); // Take top 3 strength exercises
+  }
+  
+  // Safety check: Must have some exercises
+  if (availableExercises.length === 0) {
+    console.error('❌ No exercises available after filtering!');
+    console.error('Params:', params);
+    // Return empty but valid result - will be caught by API validation
+    return {
+      plan: {
+        id: `plan-${params.memberId}-${Date.now()}`,
+        memberId: params.memberId,
+        name: 'Empty Plan',
+        description: 'No exercises match your equipment selection',
+        goal: params.goal,
+        duration: params.duration,
+        frequency: params.frequency,
+        difficulty: params.difficulty,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        startDate: new Date().toISOString().split('T')[0],
+        createdBy: 'ai',
+      },
+      workouts: []
+    };
+  }
   
   // Generate workouts
   const totalWorkouts = params.duration * params.frequency;
