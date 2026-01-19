@@ -43,9 +43,13 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
   };
 
   const handleAddToToday = async () => {
-    if (!recipe || !memberId) return;
+    if (!recipe || !memberId) {
+      alert('Please log in to add recipes to your daily log');
+      return;
+    }
 
     try {
+      console.log('Adding meal:', { memberId, recipeId: recipe.id, servings });
       await addMealToToday(memberId, recipe.id, servings);
       setAddedToToday(true);
       setShowToast(true);
@@ -58,9 +62,9 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
 
       // Hide toast after 3 seconds
       setTimeout(() => setShowToast(false), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to add meal:', error);
-      alert('Failed to add recipe to today. Please try again.');
+      alert(`Failed to add recipe to today: ${error.message || 'Please try again.'}`);
     }
   };
 

@@ -166,25 +166,35 @@ export async function addMealToToday(
   recipeId: string,
   servings: number = 1
 ): Promise<DailyLog> {
+  console.log('[nutrition-log] addMealToToday called:', { memberId, recipeId, servings });
+  
   // Validate recipe exists
   const recipe = getRecipeById(recipeId);
   if (!recipe) {
+    console.error('[nutrition-log] Recipe not found in recipesData:', recipeId);
+    console.error('[nutrition-log] Available recipe IDs (first 10):', recipesData.slice(0, 10).map(r => r.id));
     throw new Error(`Recipe not found: ${recipeId}`);
   }
+
+  console.log('[nutrition-log] Recipe found:', recipe.name);
 
   if (isSupabaseAvailable()) {
     return await addMealToSupabase(memberId, recipeId, servings);
   }
 
   // localStorage implementation
+  console.log('[nutrition-log] Using localStorage');
   const log = getTodayLogFromLocalStorage(memberId);
+  console.log('[nutrition-log] Current log:', log);
   
   // Check if already added today (prevent duplicates)
   const existingIndex = log.meals.findIndex(m => m.recipeId === recipeId);
   if (existingIndex >= 0) {
     // Update servings instead of adding duplicate
+    console.log('[nutrition-log] Updating existing meal servings');
     log.meals[existingIndex].servings += servings;
   } else {
+    console.log('[nutrition-log] Adding new meal');
     log.meals.push({
       recipeId,
       servings,
@@ -193,6 +203,7 @@ export async function addMealToToday(
   }
   
   saveTodayLogToLocalStorage(memberId, log);
+  console.log('[nutrition-log] Meal added successfully, new log:', log);
   return log;
 }
 
