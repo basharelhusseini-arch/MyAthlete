@@ -664,44 +664,62 @@ interface ExerciseRole {
   rpe?: number;
 }
 
+// Goal-specific session blueprints (ensures 5-8 exercises per workout, ~60 min)
 const SESSION_BLUEPRINTS: Record<SessionType, ExerciseRole[]> = {
+  // STRENGTH: Heavy compounds, long rest, muscle-group focused (6 exercises, ~60 min)
   strength: [
-    { role: 'main', count: 1, sets: 4, reps: 5, restSeconds: 240, percent1RM: 80, rpe: 8 },
-    { role: 'secondary', count: 1, sets: 3, reps: 6, restSeconds: 180, percent1RM: 75, rpe: 7 },
-    { role: 'accessory', count: 3, sets: 3, reps: [8, 10], restSeconds: 90, rpe: 7 },
-    { role: 'core', count: 1, sets: 3, reps: [10, 15], restSeconds: 60, rpe: 7 }
-  ],
+    { role: 'main', count: 1, sets: 4, reps: 5, restSeconds: 240, percent1RM: 80, rpe: 8 },        // ~12 min
+    { role: 'secondary', count: 1, sets: 3, reps: 6, restSeconds: 180, percent1RM: 75, rpe: 7 },  // ~10 min
+    { role: 'accessory', count: 3, sets: 3, reps: [8, 10], restSeconds: 90, rpe: 7 },             // ~20 min
+    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 60, rpe: 7 }                  // ~5 min
+  ], // Total: 6 exercises, ~47 min + 12 min warm-up = ~59 min
+  
+  // HYPERTROPHY: Moderate weight, higher volume, pump focus (7 exercises, ~60 min)
   hypertrophy: [
-    { role: 'main', count: 1, sets: 4, reps: [8, 10], restSeconds: 120, percent1RM: 70, rpe: 8 },
-    { role: 'secondary', count: 1, sets: 4, reps: [10, 12], restSeconds: 90, rpe: 7 },
-    { role: 'accessory', count: 4, sets: 3, reps: [12, 15], restSeconds: 60, rpe: 7 },
-    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 45, rpe: 7 }
-  ],
+    { role: 'main', count: 1, sets: 4, reps: [8, 10], restSeconds: 120, percent1RM: 70, rpe: 8 }, // ~10 min
+    { role: 'secondary', count: 1, sets: 4, reps: [10, 12], restSeconds: 90, rpe: 7 },            // ~8 min
+    { role: 'accessory', count: 4, sets: 3, reps: [12, 15], restSeconds: 60, rpe: 7 },            // ~20 min
+    { role: 'core', count: 1, sets: 3, reps: [15, 20], restSeconds: 45, rpe: 7 }                  // ~4 min
+  ], // Total: 7 exercises, ~42 min + 12 min warm-up = ~54 min
+  
+  // POWER: Explosive work, full recovery (5 exercises, ~60 min)
   power: [
-    { role: 'main', count: 1, sets: 5, reps: [3, 5], restSeconds: 240, percent1RM: 75, rpe: 8 },
-    { role: 'secondary', count: 1, sets: 4, reps: 6, restSeconds: 180, percent1RM: 70, rpe: 7 },
-    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 120, rpe: 7 },
-    { role: 'core', count: 1, sets: 3, reps: [10, 12], restSeconds: 60, rpe: 7 }
-  ],
+    { role: 'main', count: 1, sets: 5, reps: [3, 5], restSeconds: 240, percent1RM: 75, rpe: 8 },  // ~15 min
+    { role: 'secondary', count: 1, sets: 4, reps: 6, restSeconds: 180, percent1RM: 70, rpe: 7 },  // ~10 min
+    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 120, rpe: 7 },                  // ~12 min
+    { role: 'core', count: 1, sets: 3, reps: [10, 12], restSeconds: 60, rpe: 7 }                  // ~5 min
+  ], // Total: 5 exercises, ~42 min + 12 min warm-up = ~54 min
+  
+  // CONDITIONING: Circuits, intervals, high-rep (6-7 exercises, ~60 min)
   conditioning: [
-    { role: 'main', count: 1, sets: 3, reps: 15, restSeconds: 60, rpe: 8 },
-    { role: 'accessory', count: 4, sets: 3, reps: 15, restSeconds: 45, rpe: 7 },
-    { role: 'finisher', count: 1, sets: 3, reps: [20, 30], restSeconds: 30, rpe: 9 }
-  ],
+    { role: 'main', count: 1, sets: 4, reps: 15, restSeconds: 60, rpe: 8 },                       // ~8 min (cardio)
+    { role: 'secondary', count: 1, sets: 3, reps: 12, restSeconds: 60, rpe: 7 },                  // ~6 min
+    { role: 'accessory', count: 4, sets: 3, reps: 15, restSeconds: 45, rpe: 7 },                  // ~18 min
+    { role: 'finisher', count: 1, sets: 3, reps: [20, 30], restSeconds: 30, rpe: 9 }              // ~4 min
+  ], // Total: 7 exercises, ~36 min + 10 min warm-up = ~46 min
+  
+  // SPEED: Sprint drills, plyos, explosive (6-7 exercises, ~60 min)
   speed: [
-    { role: 'main', count: 1, sets: 5, reps: 5, restSeconds: 300, rpe: 9 }, // Sprint sets
-    { role: 'secondary', count: 1, sets: 3, reps: 8, restSeconds: 180, rpe: 8 }, // Plyos
-    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 90, rpe: 6 } // Light strength
-  ],
+    { role: 'main', count: 2, sets: 6, reps: 6, restSeconds: 240, rpe: 9 },                       // ~20 min (sprint work)
+    { role: 'secondary', count: 2, sets: 3, reps: 6, restSeconds: 180, rpe: 8 },                  // ~12 min (plyos)
+    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 90, rpe: 6 },                   // ~10 min (unilateral)
+    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 60, rpe: 6 }                  // ~5 min
+  ], // Total: 7 exercises, ~47 min + 10 min warm-up = ~57 min
+  
+  // RECOVERY: Mobility, Z2 cardio, stability (6 exercises, ~60 min)
   recovery: [
-    { role: 'main', count: 1, sets: 1, reps: [20, 40], restSeconds: 0, rpe: 5 }, // Z2 cardio (minutes)
-    { role: 'accessory', count: 3, sets: 2, reps: [10, 12], restSeconds: 45, rpe: 5 }, // Mobility/stability
-    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 30, rpe: 5 }
-  ],
+    { role: 'main', count: 1, sets: 1, reps: [25, 35], restSeconds: 0, rpe: 5 },                  // ~30 min (Z2 cardio)
+    { role: 'accessory', count: 4, sets: 2, reps: [10, 12], restSeconds: 45, rpe: 5 },            // ~12 min (mobility/stability)
+    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 30, rpe: 5 }                  // ~4 min
+  ], // Total: 6 exercises, ~46 min + 10 min warm-up = ~56 min
+  
+  // DELOAD: Reduced volume/intensity (5 exercises, ~45 min)
   deload: [
-    { role: 'main', count: 1, sets: 2, reps: 5, restSeconds: 180, percent1RM: 65, rpe: 6 },
-    { role: 'accessory', count: 2, sets: 2, reps: 8, restSeconds: 90, rpe: 6 }
-  ]
+    { role: 'main', count: 1, sets: 2, reps: 5, restSeconds: 180, percent1RM: 65, rpe: 6 },       // ~8 min
+    { role: 'secondary', count: 1, sets: 2, reps: 8, restSeconds: 120, rpe: 6 },                  // ~6 min
+    { role: 'accessory', count: 2, sets: 2, reps: 10, restSeconds: 90, rpe: 6 },                  // ~8 min
+    { role: 'core', count: 1, sets: 2, reps: 12, restSeconds: 60, rpe: 5 }                        // ~3 min
+  ] // Total: 5 exercises, ~25 min + 10 min warm-up = ~35 min (intentionally short for recovery)
 };
 
 // ========================================
@@ -735,14 +753,16 @@ export function generateWarmup(mainExercise: Exercise, sessionType: SessionType)
   // Add specific warm-up for athletic sessions
   if (sessionType === 'speed') {
     warmup.general = [
-      '5 min light jog',
-      'Dynamic warm-up: high knees, butt kicks, A-skips',
-      '3-4 build-up sprints (50-70% effort)',
+      '5 min light jog or bike',
+      'Dynamic warm-up: high knees × 20m, butt kicks × 20m, A-skips × 20m',
+      'Sprint mechanics drills: wall drives (2×10 each leg), falling starts (3 reps)',
+      '3-4 progressive build-ups: 50m @ 50%, 60%, 70%, 80%',
     ];
     warmup.mobility = [
-      'Leg swings: 10 each direction per leg',
+      'Leg swings: 10 forward/back + 10 lateral (each leg)',
       'Walking lunges with rotation: 10 reps',
-      'Ankle mobility: 10 circles each direction',
+      'Ankle mobility: 10 circles + 10 dorsiflexion pumps (each)',
+      'Hip flexor march: 2×10 each leg',
     ];
   }
   
@@ -819,36 +839,108 @@ function selectExercisesForSession(
   const usedExerciseIds = new Set<string>();
   
   for (const roleSpec of blueprint) {
-    // Filter exercises by role
+    // Filter exercises by role and session type
     let candidateExercises: Exercise[] = [];
     
     if (roleSpec.role === 'main' || roleSpec.role === 'secondary') {
-      // For main and secondary lifts, prioritize compound movements
-      candidateExercises = filterExercisesByMuscles(
-        availableExercises.filter(ex => 
-          ex.category === 'strength' && 
-          (difficulty !== 'beginner' || ex.difficulty !== 'advanced')
-        ),
-        splitDay.primaryMuscles,
-        splitDay.secondaryMuscles,
-        roleSpec.role === 'main' ? splitDay.mainLiftPattern : splitDay.accessoryPatterns
-      );
-      
-      // Fallback if no exercises match
-      if (candidateExercises.length === 0) {
-        candidateExercises = availableExercises.filter(ex => 
-          ex.category === 'strength' &&
+      // SPEED DAYS: Select cardio/plyometric exercises for main/secondary
+      if (splitDay.sessionType === 'speed') {
+        if (roleSpec.role === 'main') {
+          // Main = cardio/sprint work
+          candidateExercises = availableExercises.filter(ex =>
+            ex.category === 'cardio' || ex.category === 'endurance'
+          );
+        } else {
+          // Secondary = plyometric work
+          candidateExercises = availableExercises.filter(ex =>
+            ex.category === 'plyometric' || ex.category === 'cardio'
+          );
+        }
+        
+        // Fallback: use any cardio/plyo/explosive
+        if (candidateExercises.length === 0) {
+          candidateExercises = availableExercises.filter(ex =>
+            ex.category === 'cardio' || ex.category === 'plyometric' || 
+            ex.category === 'endurance' || ex.name.toLowerCase().includes('jump')
+          );
+        }
+      }
+      // RECOVERY DAYS: Select cardio for main, mobility for secondary
+      else if (splitDay.sessionType === 'recovery') {
+        if (roleSpec.role === 'main') {
+          // Main = steady-state cardio
+          candidateExercises = availableExercises.filter(ex =>
+            ex.category === 'cardio' || ex.category === 'endurance'
+          );
+        } else {
+          // Secondary = flexibility/balance
+          candidateExercises = availableExercises.filter(ex =>
+            ex.category === 'flexibility' || ex.category === 'balance'
+          );
+        }
+      }
+      // CONDITIONING DAYS: Mix of cardio and strength
+      else if (splitDay.sessionType === 'conditioning') {
+        candidateExercises = availableExercises.filter(ex =>
+          ex.category === 'cardio' || ex.category === 'endurance' || 
+          ex.category === 'plyometric' || ex.category === 'strength'
+        );
+      }
+      // STRENGTH/HYPERTROPHY/POWER: Standard muscle-group filtering
+      else {
+        candidateExercises = filterExercisesByMuscles(
+          availableExercises.filter(ex => 
+            ex.category === 'strength' && 
+            (difficulty !== 'beginner' || ex.difficulty !== 'advanced')
+          ),
+          splitDay.primaryMuscles,
+          splitDay.secondaryMuscles,
+          roleSpec.role === 'main' ? splitDay.mainLiftPattern : splitDay.accessoryPatterns
+        );
+        
+        // Fallback if no exercises match
+        if (candidateExercises.length === 0) {
+          candidateExercises = availableExercises.filter(ex => 
+            ex.category === 'strength' &&
+            ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg))
+          );
+        }
+      }
+    } else if (roleSpec.role === 'accessory') {
+      // SPEED/RECOVERY: Light unilateral or mobility work
+      if (splitDay.sessionType === 'speed' || splitDay.sessionType === 'recovery') {
+        candidateExercises = availableExercises.filter(ex =>
+          (ex.name.toLowerCase().includes('single') || 
+           ex.name.toLowerCase().includes('unilateral') ||
+           ex.category === 'balance' ||
+           ex.category === 'flexibility') &&
+          ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg))
+        );
+        
+        // Fallback: any bodyweight or light exercise
+        if (candidateExercises.length === 0) {
+          candidateExercises = availableExercises.filter(ex =>
+            ex.equipment === 'bodyweight' &&
+            ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg))
+          );
+        }
+      }
+      // CONDITIONING: High-rep bodyweight or light exercises
+      else if (splitDay.sessionType === 'conditioning') {
+        candidateExercises = availableExercises.filter(ex =>
+          (ex.equipment === 'bodyweight' || ex.equipment === 'dumbbells') &&
           ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg))
         );
       }
-    } else if (roleSpec.role === 'accessory') {
-      // For accessories, get all exercises targeting the day's muscles
-      candidateExercises = filterExercisesByMuscles(
-        availableExercises,
-        splitDay.primaryMuscles,
-        splitDay.secondaryMuscles,
-        splitDay.accessoryPatterns
-      );
+      // STANDARD: Target day's muscles
+      else {
+        candidateExercises = filterExercisesByMuscles(
+          availableExercises,
+          splitDay.primaryMuscles,
+          splitDay.secondaryMuscles,
+          splitDay.accessoryPatterns
+        );
+      }
     } else if (roleSpec.role === 'core') {
       // Core exercises
       candidateExercises = availableExercises.filter(ex =>
@@ -903,6 +995,35 @@ function selectExercisesForSession(
       }
       
       workoutExercises.push(workoutExercise);
+    }
+  }
+  
+  // VALIDATION: Ensure minimum 5 exercises per workout (excluding deload)
+  const MIN_EXERCISES = splitDay.sessionType === 'deload' ? 4 : 5;
+  const MAX_EXERCISES = 8;
+  
+  if (workoutExercises.length < MIN_EXERCISES) {
+    console.warn(`⚠️ Only ${workoutExercises.length} exercises generated, adding more accessories (target: ${MIN_EXERCISES})`);
+    
+    // Add more accessories to reach minimum
+    const needed = MIN_EXERCISES - workoutExercises.length;
+    const accessoryCandidates = availableExercises.filter(ex =>
+      !usedExerciseIds.has(ex.id) &&
+      (ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg)) || ex.muscleGroups.includes('core'))
+    );
+    
+    for (let i = 0; i < needed && i < accessoryCandidates.length; i++) {
+      const ex = accessoryCandidates[i];
+      workoutExercises.push({
+        exerciseId: ex.id,
+        sets: 3,
+        reps: splitDay.sessionType === 'conditioning' ? 15 : 12,
+        restSeconds: 60,
+        order: workoutExercises.length + 1,
+        sessionRole: 'accessory',
+        rpe: 7,
+      });
+      usedExerciseIds.add(ex.id);
     }
   }
   
