@@ -136,6 +136,8 @@ export interface WorkoutExercise {
   tempo?: string; // e.g., "3-1-1-0" (eccentric-bottom-concentric-top)
   coachingCues?: string[]; // Specific cues for this set
   movementPattern?: 'squat' | 'hinge' | 'push' | 'pull' | 'carry' | 'core' | 'isolation';
+  // Session role for coherent programming
+  sessionRole?: 'warmup' | 'main' | 'secondary' | 'accessory' | 'core' | 'conditioning' | 'finisher';
 }
 
 export interface WarmupSection {
@@ -180,7 +182,10 @@ export interface Workout {
   completedAt?: string;
   warmup?: WarmupSection; // Warm-up protocol
   weekNumber?: number; // Week in the program (for progression tracking)
-  sessionType?: 'strength' | 'hypertrophy' | 'conditioning' | 'power' | 'deload'; // Session focus
+  sessionType?: 'strength' | 'hypertrophy' | 'conditioning' | 'power' | 'deload' | 'speed' | 'recovery'; // Session focus
+  // Split-based programming fields
+  dayTheme?: string; // e.g., "Push (Chest/Shoulders/Triceps)", "Speed & Plyo", "Recovery & Mobility"
+  purpose?: string; // 1-2 sentence description of the day's training focus
 }
 
 export interface WorkoutProgress {
