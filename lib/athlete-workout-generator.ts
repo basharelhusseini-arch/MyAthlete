@@ -23,12 +23,13 @@ export const MOVEMENT_PATTERNS = {
 
 // Main compound lifts that can repeat for progression
 const MAIN_LIFTS = [
-  'barbell-back-squat',
-  'barbell-front-squat',
-  'barbell-bench-press',
-  'barbell-deadlift',
-  'barbell-overhead-press',
-  'trap-bar-deadlift',
+  'legs-barbell-back-squat',
+  'legs-barbell-front-squat',
+  'chest-barbell-bench-press',
+  'back-barbell-deadlift',
+  'back-trap-bar-deadlift',
+  'shoulders-barbell-overhead-press',
+  'shoulders-dumbbell-shoulder-press',
 ];
 
 interface ProgramTemplate {

@@ -9,6 +9,7 @@ import { WorkoutPlan } from '@/types';
 export default function GenerateWorkoutPlanPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [memberId, setMemberId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     memberId: '',
@@ -57,10 +58,11 @@ export default function GenerateWorkoutPlanPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
     if (!formData.memberId) {
-      alert('Please log in to generate a workout plan');
-      router.push('/member/login');
+      setError('Please log in to generate a workout plan');
+      setTimeout(() => router.push('/member/login'), 2000);
       return;
     }
 
@@ -79,15 +81,16 @@ export default function GenerateWorkoutPlanPage() {
       if (response.ok) {
         const plan = await response.json();
         console.log('Plan generated successfully:', plan);
+        // Success! Redirect to view the plan
         router.push(`/workouts/${plan.id}`);
       } else {
-        const error = await response.json();
-        console.error('Error response:', error);
-        alert(error.error || 'Failed to generate workout plan');
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        setError(errorData.error || 'Failed to generate workout plan. Please try again.');
       }
     } catch (error) {
       console.error('Failed to generate workout plan:', error);
-      alert('An error occurred. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -128,6 +131,13 @@ export default function GenerateWorkoutPlanPage() {
           </div>
         </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="premium-card p-4 bg-red-500/10 border border-red-500/20 animate-fade-in">
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
 
       {/* Form */}
       <div className="premium-card p-8 animate-slide-up">
