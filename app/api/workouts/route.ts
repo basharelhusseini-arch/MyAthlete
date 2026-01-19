@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { store } from '@/lib/store';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,17 +12,44 @@ export async function GET(request: NextRequest) {
     const memberId = searchParams.get('memberId');
     const workoutPlanId = searchParams.get('workoutPlanId');
     
-    let workouts;
+    let query = supabase.from('workouts').select('*');
+    
     if (memberId) {
-      workouts = store.getMemberWorkouts(memberId);
+      query = query.eq('member_id', memberId);
     } else if (workoutPlanId) {
-      workouts = store.getWorkoutPlanWorkouts(workoutPlanId);
-    } else {
-      workouts = store.getAllWorkouts();
+      query = query.eq('workout_plan_id', workoutPlanId);
     }
     
-    return NextResponse.json(workouts);
+    query = query.order('date', { ascending: true });
+    
+    const { data: workouts, error } = await query;
+    
+    if (error) {
+      console.error('Failed to fetch workouts:', error);
+      return NextResponse.json({ error: 'Failed to fetch workouts' }, { status: 500 });
+    }
+    
+    // Convert snake_case to camelCase for frontend
+    const formattedWorkouts = workouts?.map(w => ({
+      id: w.id,
+      workoutPlanId: w.workout_plan_id,
+      memberId: w.member_id,
+      name: w.name,
+      date: w.date,
+      exercises: w.exercises,
+      duration: w.duration,
+      status: w.status,
+      notes: w.notes,
+      rating: w.rating,
+      completedAt: w.completed_at,
+      warmup: w.warmup,
+      weekNumber: w.week_number,
+      sessionType: w.session_type,
+    })) || [];
+    
+    return NextResponse.json(formattedWorkouts);
   } catch (error) {
+    console.error('Error in workouts GET:', error);
     return NextResponse.json({ error: 'Failed to fetch workouts' }, { status: 500 });
   }
 }
