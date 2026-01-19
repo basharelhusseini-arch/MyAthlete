@@ -127,15 +127,30 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
 
   const updateHealthScore = async (userId: string) => {
     try {
+      // Get today's nutrition log
+      const log = await getTodayLog(userId);
+      const totals = computeTotals(log);
+      
       const today = new Date().toISOString().split('T')[0];
       const response = await fetch('/api/health/update-from-nutrition', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, date: today }),
+        body: JSON.stringify({ 
+          memberId: userId,
+          date: today,
+          totalCalories: totals.calories,
+          totalProtein: totals.protein_g,
+          totalCarbs: totals.carbs_g,
+          totalFat: totals.fat_g,
+          mealCount: totals.mealCount,
+        }),
       });
       
       if (!response.ok) {
-        console.warn('Failed to update health score:', await response.text());
+        const errorText = await response.text();
+        console.warn('Failed to update health score:', errorText);
+      } else {
+        console.log('✅ Health score updated successfully');
       }
     } catch (error) {
       console.error('Failed to update health score:', error);
