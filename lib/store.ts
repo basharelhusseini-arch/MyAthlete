@@ -1404,5 +1404,12 @@ class DataStore {
 // Export password utilities
 export { hashPassword, verifyPassword };
 
-// Export singleton instance
-export const store = new DataStore();
+// Export singleton instance with global caching to persist across HMR
+// This ensures the same store instance is used across all API routes in development
+const globalForStore = global as unknown as { store: DataStore | undefined };
+
+export const store = globalForStore.store ?? new DataStore();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForStore.store = store;
+}
