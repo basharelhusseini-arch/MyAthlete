@@ -57,9 +57,55 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const workout = store.addWorkout(body);
-    return NextResponse.json(workout, { status: 201 });
+    
+    // Convert camelCase to snake_case for database
+    const workoutData = {
+      id: body.id || `workout-${Date.now()}`,
+      workout_plan_id: body.workoutPlanId,
+      member_id: body.memberId,
+      name: body.name,
+      date: body.date,
+      exercises: body.exercises || [],
+      duration: body.duration,
+      status: body.status || 'scheduled',
+      notes: body.notes,
+      warmup: body.warmup || null,
+      week_number: body.weekNumber,
+      session_type: body.sessionType,
+    };
+    
+    const { data: workout, error } = await supabase
+      .from('workouts')
+      .insert(workoutData)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Failed to create workout:', error);
+      return NextResponse.json({ error: 'Failed to create workout', details: error.message }, { status: 500 });
+    }
+    
+    // Convert snake_case back to camelCase
+    const formattedWorkout = {
+      id: workout.id,
+      workoutPlanId: workout.workout_plan_id,
+      memberId: workout.member_id,
+      name: workout.name,
+      date: workout.date,
+      exercises: workout.exercises,
+      duration: workout.duration,
+      status: workout.status,
+      notes: workout.notes,
+      rating: workout.rating,
+      completedAt: workout.completed_at,
+      warmup: workout.warmup,
+      weekNumber: workout.week_number,
+      sessionType: workout.session_type,
+    };
+    
+    return NextResponse.json(formattedWorkout, { status: 201 });
   } catch (error) {
+    console.error('Error in workouts POST:', error);
     return NextResponse.json({ error: 'Failed to create workout' }, { status: 500 });
   }
 }
