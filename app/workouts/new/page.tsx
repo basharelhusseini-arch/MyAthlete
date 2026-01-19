@@ -86,7 +86,11 @@ export default function GenerateWorkoutPlanPage() {
       } else {
         const errorData = await response.json();
         console.error('Error response:', errorData);
-        setError(errorData.error || 'Failed to generate workout plan. Please try again.');
+        // Show detailed error including hints
+        const errorMessage = errorData.error || 'Failed to generate workout plan';
+        const details = errorData.details ? ` (${errorData.details})` : '';
+        const hint = errorData.hint ? `\n\nℹ️ ${errorData.hint}` : '';
+        setError(errorMessage + details + hint);
       }
     } catch (error) {
       console.error('Failed to generate workout plan:', error);
