@@ -1,16 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Target, TrendingUp, Calendar, Clock, Loader2, Dumbbell } from 'lucide-react';
+import { ArrowLeft, Sparkles, Target, TrendingUp, Calendar, Clock, Loader2, Dumbbell, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { WorkoutPlan } from '@/types';
+
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export default function GenerateWorkoutPlanPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [memberId, setMemberId] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [isDirty, setIsDirty] = useState(false);
+  const formInitialized = useRef(false);
+  
   const [formData, setFormData] = useState({
     memberId: '',
     goal: 'general_fitness' as WorkoutPlan['goal'],
@@ -28,7 +34,140 @@ export default function GenerateWorkoutPlanPage() {
       setMemberId(id);
       setFormData(prev => ({ ...prev, memberId: id }));
     }
+    
+    // Try to restore form from localStorage (in case user navigated back)
+    const savedForm = localStorage.getItem('workout-form-draft');
+    if (savedForm && !formInitialized.current) {
+      try {
+        const parsed = JSON.parse(savedForm);
+        setFormData(prev => ({ ...prev, ...parsed }));
+        setIsDirty(true);
+        formInitialized.current = true;
+      } catch (e) {
+        console.error('Failed to restore form:', e);
+      }
+    }
   }, []);
+
+  // Save form to localStorage when it changes (autosave draft)
+  useEffect(() => {
+    if (isDirty && formInitialized.current) {
+      localStorage.setItem('workout-form-draft', JSON.stringify(formData));
+    }
+  }, [formData, isDirty]);
+
+  // Track form changes
+  const updateFormData = (updates: Partial<typeof formData>) => {
+    setFormData(prev => ({ ...prev, ...updates }));
+    setIsDirty(true);
+    setSaveStatus('idle');
+    setError(null);
+  };
+
+  // Warn before leaving with unsaved work
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty && saveStatus !== 'saved') {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty, saveStatus]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await saveAndGenerate();
+  };
+
+  const saveAndGenerate = async () => {
+    setError(null);
+    
+    if (!formData.memberId) {
+      setError('Please log in to generate a workout plan');
+      setTimeout(() => router.push('/member/login'), 2000);
+      return false;
+    }
+
+    console.log('Generating workout plan:', formData);
+    setLoading(true);
+    setSaveStatus('saving');
+    
+    try {
+      const response = await fetch('/api/workout-plans/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      console.log('Response status:', response.status);
+
+      if (response.ok) {
+        const plan = await response.json();
+        console.log('Plan generated successfully:', plan);
+        
+        // Clear the draft from localStorage
+        localStorage.removeItem('workout-form-draft');
+        setIsDirty(false);
+        setSaveStatus('saved');
+        
+        // Show success briefly before redirecting
+        setTimeout(() => {
+          router.push(`/workouts/${plan.id}`);
+        }, 500);
+        
+        return true;
+      } else {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        
+        // Show detailed error including hints
+        const errorMessage = errorData.error || 'Failed to generate workout plan';
+        const details = errorData.details ? ` (${errorData.details})` : '';
+        const hint = errorData.hint ? `\n\nℹ️ ${errorData.hint}` : '';
+        const fullError = errorMessage + details + hint;
+        
+        setError(fullError);
+        setSaveStatus('error');
+        return false;
+      }
+    } catch (error) {
+      console.error('Failed to generate workout plan:', error);
+      setError('Network error. Please check your connection and try again.');
+      setSaveStatus('error');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackClick = async (e: React.MouseEvent) => {
+    // If no changes or already saved, navigate immediately
+    if (!isDirty || saveStatus === 'saved') {
+      return; // Let the link navigate normally
+    }
+
+    // If there are unsaved changes, warn the user
+    e.preventDefault();
+    
+    const confirmed = window.confirm(
+      'You have unsaved changes. Your form data has been saved as a draft. Do you want to leave?'
+    );
+    
+    if (confirmed) {
+      router.push('/workouts');
+    }
+  };
+
+  const toggleEquipment = (eq: string) => {
+    updateFormData({
+      equipment: formData.equipment.includes(eq)
+        ? formData.equipment.filter(e => e !== eq)
+        : [...formData.equipment, eq],
+    });
+  };
 
   const goals: { value: WorkoutPlan['goal']; label: string; desc: string }[] = [
     { value: 'strength', label: 'Strength', desc: 'Build maximum strength' },
@@ -56,70 +195,49 @@ export default function GenerateWorkoutPlanPage() {
     { value: 'resistance_bands', label: 'Resistance Bands', icon: '🎯' },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    
-    if (!formData.memberId) {
-      setError('Please log in to generate a workout plan');
-      setTimeout(() => router.push('/member/login'), 2000);
-      return;
-    }
-
-    console.log('Submitting workout plan request:', formData);
-    setLoading(true);
-    
-    try {
-      const response = await fetch('/api/workout-plans/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      console.log('Response status:', response.status);
-
-      if (response.ok) {
-        const plan = await response.json();
-        console.log('Plan generated successfully:', plan);
-        // Success! Redirect to view the plan
-        router.push(`/workouts/${plan.id}`);
-      } else {
-        const errorData = await response.json();
-        console.error('Error response:', errorData);
-        // Show detailed error including hints
-        const errorMessage = errorData.error || 'Failed to generate workout plan';
-        const details = errorData.details ? ` (${errorData.details})` : '';
-        const hint = errorData.hint ? `\n\nℹ️ ${errorData.hint}` : '';
-        setError(errorMessage + details + hint);
-      }
-    } catch (error) {
-      console.error('Failed to generate workout plan:', error);
-      setError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleEquipment = (eq: string) => {
-    setFormData(prev => ({
-      ...prev,
-      equipment: prev.equipment.includes(eq)
-        ? prev.equipment.filter(e => e !== eq)
-        : [...prev.equipment, eq],
-    }));
-  };
-
   return (
     <div className="min-h-screen bg-thrivv-bg-dark">
-      {/* Header */}
+      {/* Header with Save Status */}
       <div className="mb-8 animate-fade-in">
-        <Link
-          href="/workouts"
-          className="inline-flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors mb-6"
-        >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to Workouts
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            href="/workouts"
+            onClick={handleBackClick}
+            className="inline-flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Back to Workouts
+          </Link>
+          
+          {/* Save Status Indicator */}
+          {isDirty && (
+            <div className="flex items-center gap-2">
+              {saveStatus === 'saving' && (
+                <div className="flex items-center gap-2 text-thrivv-gold-500 text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Saving...
+                </div>
+              )}
+              {saveStatus === 'saved' && (
+                <div className="flex items-center gap-2 text-thrivv-neon-green text-sm">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Saved
+                </div>
+              )}
+              {saveStatus === 'error' && (
+                <div className="flex items-center gap-2 text-red-400 text-sm">
+                  <AlertCircle className="w-4 h-4" />
+                  Failed to save
+                </div>
+              )}
+              {saveStatus === 'idle' && (
+                <div className="text-thrivv-text-muted text-sm">
+                  Draft saved locally
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         
         <div className="flex items-center gap-4">
           <div className="icon-badge">
@@ -138,8 +256,14 @@ export default function GenerateWorkoutPlanPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="premium-card p-4 bg-red-500/10 border border-red-500/20 animate-fade-in">
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="premium-card p-4 bg-red-500/10 border border-red-500/20 animate-fade-in mb-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-red-400 text-sm font-medium mb-1">Failed to Generate Plan</p>
+              <p className="text-red-300 text-sm whitespace-pre-line">{error}</p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -175,7 +299,7 @@ export default function GenerateWorkoutPlanPage() {
                 <button
                   key={goal.value}
                   type="button"
-                  onClick={() => setFormData({ ...formData, goal: goal.value })}
+                  onClick={() => updateFormData({ goal: goal.value })}
                   className={`p-4 rounded-xl border-2 transition-all text-left ${
                     formData.goal === goal.value
                       ? 'border-thrivv-gold-500 bg-thrivv-gold-500/10'
@@ -200,7 +324,7 @@ export default function GenerateWorkoutPlanPage() {
                 <button
                   key={diff.value}
                   type="button"
-                  onClick={() => setFormData({ ...formData, difficulty: diff.value })}
+                  onClick={() => updateFormData({ difficulty: diff.value })}
                   className={`p-4 rounded-xl border-2 transition-all text-left ${
                     formData.difficulty === diff.value
                       ? 'border-thrivv-gold-500 bg-thrivv-gold-500/10'
@@ -227,7 +351,7 @@ export default function GenerateWorkoutPlanPage() {
                 min="1"
                 max="52"
                 value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || 4 })}
+                onChange={(e) => updateFormData({ duration: parseInt(e.target.value) || 4 })}
                 className="input-premium"
                 required
               />
@@ -245,7 +369,7 @@ export default function GenerateWorkoutPlanPage() {
                 min="1"
                 max="7"
                 value={formData.frequency}
-                onChange={(e) => setFormData({ ...formData, frequency: parseInt(e.target.value) || 3 })}
+                onChange={(e) => updateFormData({ frequency: parseInt(e.target.value) || 3 })}
                 className="input-premium"
                 required
               />
@@ -293,7 +417,7 @@ export default function GenerateWorkoutPlanPage() {
             <textarea
               id="limitations"
               value={formData.limitations}
-              onChange={(e) => setFormData({ ...formData, limitations: e.target.value })}
+              onChange={(e) => updateFormData({ limitations: e.target.value })}
               rows={4}
               placeholder="E.g., knee injury, lower back pain, shoulder mobility issues..."
               className="input-premium resize-none"
@@ -307,6 +431,7 @@ export default function GenerateWorkoutPlanPage() {
           <div className="flex items-center justify-end gap-4 pt-6 border-t border-thrivv-gold-500/10">
             <Link
               href="/workouts"
+              onClick={handleBackClick}
               className="btn-ghost px-6 py-3"
             >
               Cancel
@@ -314,7 +439,7 @@ export default function GenerateWorkoutPlanPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary px-8 py-3 flex items-center gap-2"
+              className="btn-primary px-8 py-3 flex items-center gap-2 relative"
             >
               {loading ? (
                 <>
