@@ -16,6 +16,13 @@ export interface LoggedMeal {
   recipeId: string;
   servings: number;
   addedAt: string; // ISO timestamp
+  // Store nutrition data with the meal so we don't need to look up recipe later
+  // This is especially important for custom recipes not in recipesData
+  recipeName?: string;
+  calories?: number;
+  protein_g?: number;
+  carbs_g?: number;
+  fat_g?: number;
 }
 
 export interface DailyLog {
@@ -59,13 +66,22 @@ export function computeTotals(log: DailyLog): NutritionTotals {
   let fat_g = 0;
 
   log.meals.forEach(meal => {
-    const recipe = getRecipeById(meal.recipeId);
-    if (recipe) {
-      const multiplier = meal.servings / recipe.servings;
-      calories += recipe.calories * multiplier;
-      protein_g += recipe.protein_g * multiplier;
-      carbs_g += recipe.carbs_g * multiplier;
-      fat_g += recipe.fat_g * multiplier;
+    // First, try to use stored nutrition data (for custom recipes)
+    if (meal.calories && meal.protein_g !== undefined && meal.carbs_g !== undefined && meal.fat_g !== undefined) {
+      calories += meal.calories * meal.servings;
+      protein_g += meal.protein_g * meal.servings;
+      carbs_g += meal.carbs_g * meal.servings;
+      fat_g += meal.fat_g * meal.servings;
+    } else {
+      // Fallback: look up recipe in recipesData
+      const recipe = getRecipeById(meal.recipeId);
+      if (recipe) {
+        const multiplier = meal.servings / recipe.servings;
+        calories += recipe.calories * multiplier;
+        protein_g += recipe.protein_g * multiplier;
+        carbs_g += recipe.carbs_g * multiplier;
+        fat_g += recipe.fat_g * multiplier;
+      }
     }
   });
 
@@ -164,19 +180,28 @@ export async function getTodayLog(memberId: string): Promise<DailyLog> {
 export async function addMealToToday(
   memberId: string,
   recipeId: string,
-  servings: number = 1
+  servings: number = 1,
+  recipeData?: { name: string; calories: number; protein_g: number; carbs_g: number; fat_g: number }
 ): Promise<DailyLog> {
-  console.log('[nutrition-log] addMealToToday called:', { memberId, recipeId, servings });
+  console.log('[nutrition-log] addMealToToday called:', { memberId, recipeId, servings, hasRecipeData: !!recipeData });
   
-  // Validate recipe exists
-  const recipe = getRecipeById(recipeId);
-  if (!recipe) {
-    console.error('[nutrition-log] Recipe not found in recipesData:', recipeId);
-    console.error('[nutrition-log] Available recipe IDs (first 10):', recipesData.slice(0, 10).map(r => r.id));
-    throw new Error(`Recipe not found: ${recipeId}`);
+  // Try to get recipe data if not provided
+  let mealData = recipeData;
+  if (!mealData) {
+    const recipe = getRecipeById(recipeId);
+    if (recipe) {
+      console.log('[nutrition-log] Recipe found in recipesData:', recipe.name);
+      mealData = {
+        name: recipe.name,
+        calories: recipe.calories,
+        protein_g: recipe.protein_g,
+        carbs_g: recipe.carbs_g,
+        fat_g: recipe.fat_g,
+      };
+    } else {
+      console.log('[nutrition-log] Recipe not in recipesData (likely a custom recipe):', recipeId);
+    }
   }
-
-  console.log('[nutrition-log] Recipe found:', recipe.name);
 
   if (isSupabaseAvailable()) {
     return await addMealToSupabase(memberId, recipeId, servings);
@@ -195,11 +220,22 @@ export async function addMealToToday(
     log.meals[existingIndex].servings += servings;
   } else {
     console.log('[nutrition-log] Adding new meal');
-    log.meals.push({
+    const newMeal: LoggedMeal = {
       recipeId,
       servings,
       addedAt: new Date().toISOString(),
-    });
+    };
+    
+    // Add nutrition data if available
+    if (mealData) {
+      newMeal.recipeName = mealData.name;
+      newMeal.calories = mealData.calories;
+      newMeal.protein_g = mealData.protein_g;
+      newMeal.carbs_g = mealData.carbs_g;
+      newMeal.fat_g = mealData.fat_g;
+    }
+    
+    log.meals.push(newMeal);
   }
   
   saveTodayLogToLocalStorage(memberId, log);
@@ -241,7 +277,32 @@ export async function updateMealServings(
 // ===== UTILITY FUNCTIONS =====
 
 export function getRecipeFromMeal(meal: LoggedMeal): Recipe | undefined {
-  return getRecipeById(meal.recipeId);
+  // First try to get from recipesData
+  const recipe = getRecipeById(meal.recipeId);
+  if (recipe) return recipe;
+  
+  // If not found but meal has stored nutrition data, create a minimal Recipe object
+  if (meal.recipeName && meal.calories !== undefined) {
+    return {
+      id: meal.recipeId,
+      name: meal.recipeName,
+      description: 'Custom recipe',
+      imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=900&h=600&auto=format&fit=crop&q=80',
+      imageId: '1546069901-ba9599a7e63c',
+      calories: meal.calories,
+      protein_g: meal.protein_g || 0,
+      carbs_g: meal.carbs_g || 0,
+      fat_g: meal.fat_g || 0,
+      prepMinutes: 0,
+      cookMinutes: 0,
+      servings: meal.servings,
+      ingredients: [],
+      instructions: [],
+      tags: ['custom'],
+    };
+  }
+  
+  return undefined;
 }
 
 export function getTodayTotals(memberId: string): NutritionTotals {

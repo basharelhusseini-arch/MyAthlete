@@ -15,25 +15,73 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
   const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [memberId, setMemberId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const id = localStorage.getItem('memberId');
-    if (!id) {
-      router.push('/member/login');
-      return;
-    }
-    setMemberId(id);
+    const loadRecipe = async () => {
+      const id = localStorage.getItem('memberId');
+      if (!id) {
+        router.push('/member/login');
+        return;
+      }
+      setMemberId(id);
 
-    const foundRecipe = getRecipeById(params.id);
-    if (!foundRecipe) {
-      router.push('/member/recipes');
-      return;
-    }
-    setRecipe(foundRecipe);
-    setServings(foundRecipe.servings);
+      // First, try to find in default recipes
+      let foundRecipe = getRecipeById(params.id);
+      
+      // If not found, try to fetch custom recipe from API
+      if (!foundRecipe) {
+        try {
+          const response = await fetch('/api/custom-recipes');
+          if (response.ok) {
+            const customRecipes = await response.json();
+            const customRecipe = customRecipes.find((r: any) => r.id === params.id);
+            
+            if (customRecipe) {
+              // Convert custom recipe to Recipe format
+              foundRecipe = {
+                id: customRecipe.id,
+                name: customRecipe.name,
+                description: customRecipe.description || 'Custom recipe',
+                imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=900&h=600&auto=format&fit=crop&q=80',
+                imageId: '1546069901-ba9599a7e63c',
+                calories: customRecipe.calories_per_serving,
+                protein_g: customRecipe.protein_per_serving,
+                carbs_g: customRecipe.carbs_per_serving,
+                fat_g: customRecipe.fat_per_serving,
+                prepMinutes: 0,
+                cookMinutes: 0,
+                servings: customRecipe.servings,
+                ingredients: customRecipe.ingredients.map((ing: any) => ({
+                  item: ing.ingredientName,
+                  quantity: ing.grams,
+                  unit: 'g'
+                })),
+                instructions: ['Custom recipe - instructions not provided'],
+                tags: ['custom'],
+              };
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching custom recipe:', error);
+        }
+      }
 
-    // Load today's log
-    loadTodayLog(id);
+      if (!foundRecipe) {
+        alert('Recipe not found');
+        router.push('/member/recipes');
+        return;
+      }
+      
+      setRecipe(foundRecipe);
+      setServings(foundRecipe.servings);
+      setLoading(false);
+
+      // Load today's log
+      loadTodayLog(id);
+    };
+
+    loadRecipe();
   }, [params.id, router]);
 
   const loadTodayLog = async (userId: string) => {
@@ -50,7 +98,16 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
 
     try {
       console.log('Adding meal:', { memberId, recipeId: recipe.id, servings });
-      await addMealToToday(memberId, recipe.id, servings);
+      
+      // Pass recipe nutrition data so custom recipes work
+      await addMealToToday(memberId, recipe.id, servings, {
+        name: recipe.name,
+        calories: recipe.calories,
+        protein_g: recipe.protein_g,
+        carbs_g: recipe.carbs_g,
+        fat_g: recipe.fat_g,
+      });
+      
       setAddedToToday(true);
       setShowToast(true);
       
@@ -85,7 +142,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
     }
   };
 
-  if (!recipe) {
+  if (loading || !recipe) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark">
         <p className="text-thrivv-text-secondary">Loading recipe...</p>
