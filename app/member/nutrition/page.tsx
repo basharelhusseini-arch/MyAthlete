@@ -43,6 +43,28 @@ export default function MemberNutritionPage() {
   const loadTodayLog = async (id: string) => {
     const log = await getTodayLog(id);
     setTodayLog(log);
+    
+    // Update health score if meals are logged
+    if (log.meals.length > 0) {
+      await updateHealthScore(id);
+    }
+  };
+
+  const updateHealthScore = async (userId: string) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const response = await fetch('/api/health/update-from-nutrition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, date: today }),
+      });
+      
+      if (!response.ok) {
+        console.warn('Failed to update health score:', await response.text());
+      }
+    } catch (error) {
+      console.error('Failed to update health score:', error);
+    }
   };
 
   const handleRemoveMeal = async (recipeId: string) => {
@@ -50,6 +72,10 @@ export default function MemberNutritionPage() {
 
     try {
       await removeMealFromToday(memberId, recipeId);
+      
+      // Update health score after removing meal
+      await updateHealthScore(memberId);
+      
       setRefreshKey(prev => prev + 1);
     } catch (error) {
       console.error('Failed to remove meal:', error);

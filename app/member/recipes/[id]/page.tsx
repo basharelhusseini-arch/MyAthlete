@@ -53,11 +53,31 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
       // Reload today's log
       await loadTodayLog(memberId);
 
+      // Update health score with new nutrition data
+      await updateHealthScore(memberId);
+
       // Hide toast after 3 seconds
       setTimeout(() => setShowToast(false), 3000);
     } catch (error) {
       console.error('Failed to add meal:', error);
       alert('Failed to add recipe to today. Please try again.');
+    }
+  };
+
+  const updateHealthScore = async (userId: string) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const response = await fetch('/api/health/update-from-nutrition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, date: today }),
+      });
+      
+      if (!response.ok) {
+        console.warn('Failed to update health score:', await response.text());
+      }
+    } catch (error) {
+      console.error('Failed to update health score:', error);
     }
   };
 
