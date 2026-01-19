@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     console.log(`Generated ${workouts.length} workouts for plan ${plan.id}`);
 
     // Insert workout plan into Supabase
+    console.log('Attempting to insert plan into Supabase...');
     const { data: insertedPlan, error: planError } = await supabase
       .from('workout_plans')
       .insert({
@@ -62,14 +63,21 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (planError) {
-      console.error('Failed to insert workout plan:', planError);
+      console.error('❌ Failed to insert workout plan:', planError);
+      console.error('Error details:', JSON.stringify(planError, null, 2));
+      console.error('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.error('Has Service Role Key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
       return NextResponse.json({ 
         error: 'Failed to save workout plan',
-        details: planError.message
+        details: planError.message,
+        hint: 'Check if workout_plans table exists in Supabase'
       }, { status: 500 });
     }
+    
+    console.log('✅ Plan inserted successfully:', insertedPlan?.id);
 
     // Insert all workouts into Supabase
+    console.log(`Attempting to insert ${workouts.length} workouts...`);
     const workoutRecords = workouts.map(w => ({
       id: w.id,
       workout_plan_id: w.workoutPlanId,
@@ -85,19 +93,26 @@ export async function POST(request: NextRequest) {
       session_type: w.sessionType,
     }));
 
-    const { error: workoutsError } = await supabase
+    console.log('Sample workout record:', JSON.stringify(workoutRecords[0], null, 2));
+
+    const { error: workoutsError, data: insertedWorkouts } = await supabase
       .from('workouts')
-      .insert(workoutRecords);
+      .insert(workoutRecords)
+      .select();
 
     if (workoutsError) {
-      console.error('Failed to insert workouts:', workoutsError);
+      console.error('❌ Failed to insert workouts:', workoutsError);
+      console.error('Error details:', JSON.stringify(workoutsError, null, 2));
       // Try to clean up the plan
       await supabase.from('workout_plans').delete().eq('id', plan.id);
       return NextResponse.json({ 
         error: 'Failed to save workouts',
-        details: workoutsError.message
+        details: workoutsError.message,
+        hint: 'Check if workouts table exists in Supabase'
       }, { status: 500 });
     }
+    
+    console.log(`✅ ${insertedWorkouts?.length || 0} workouts inserted successfully`);
 
     console.log(`Workout plan ${plan.id} saved successfully with ${workouts.length} workouts`);
     
