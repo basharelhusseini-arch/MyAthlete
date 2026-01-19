@@ -1,117 +1,769 @@
 /**
- * Athlete-Intelligent Workout Generator
+ * Athlete-Intelligent Workout Generator v2.0
  * 
  * Features:
- * - Exercise variety and anti-repetition
+ * - COHERENT SPLIT-BASED PROGRAMMING (not random exercises)
+ * - Each day has a clear theme and purpose
+ * - Exercise selection matches the day's muscle group focus
  * - Progressive overload and deload weeks
- * - Movement pattern rotation
- * - Warm-ups with %1RM progression
- * - Athlete programming (RPE, tempo, coaching cues)
+ * - Structured session blueprints (warm-up → main → accessories → core/finisher)
+ * - Athlete programming (RPE, tempo, %1RM, coaching cues)
  */
 
 import { Exercise, WorkoutPlan, Workout, WorkoutExercise, WarmupSection, WarmupSet } from '@/types';
 
-// Movement pattern categories for intelligent rotation
-export const MOVEMENT_PATTERNS = {
-  squat: ['squat', 'front squat', 'goblet squat', 'safety bar squat', 'box squat', 'split squat'],
-  hinge: ['deadlift', 'RDL', 'Romanian deadlift', 'trap bar deadlift', 'good morning', 'single leg RDL'],
-  push: ['bench press', 'incline press', 'overhead press', 'push press', 'dumbbell press', 'dip'],
-  pull: ['pull-up', 'chin-up', 'lat pulldown', 'barbell row', 'dumbbell row', 'cable row'],
-  carry: ['farmer carry', 'suitcase carry', 'overhead carry', 'loaded carry'],
-  core: ['plank', 'dead bug', 'pallof press', 'ab wheel', 'hanging leg raise'],
+// ========================================
+// SPLIT LIBRARY - Defines workout structure by goal & frequency
+// ========================================
+
+interface SplitDay {
+  theme: string; // e.g., "Push (Chest/Shoulders/Triceps)"
+  purpose: string; // 1-2 sentence description
+  sessionType: Workout['sessionType'];
+  primaryMuscles: string[]; // Muscles to prioritize for exercise selection
+  secondaryMuscles?: string[]; // Optional secondary muscles
+  mainLiftPattern?: string[]; // Movement patterns for main lift (e.g., ['push', 'press'])
+  accessoryPatterns?: string[]; // Movement patterns for accessories
+}
+
+interface WorkoutSplit {
+  name: string;
+  description: string;
+  days: SplitDay[];
+}
+
+const WORKOUT_SPLITS: Record<string, Record<number, WorkoutSplit>> = {
+  // STRENGTH TRAINING SPLITS
+  strength: {
+    3: {
+      name: 'Push / Pull / Legs',
+      description: 'Classic 3-day split focusing on compound strength',
+      days: [
+        {
+          theme: 'Push (Chest/Shoulders/Triceps)',
+          purpose: 'Build pressing strength and upper body power with compound movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['bench', 'press', 'push'],
+          accessoryPatterns: ['press', 'push', 'raise', 'extension']
+        },
+        {
+          theme: 'Pull (Back/Biceps)',
+          purpose: 'Develop pulling strength and back thickness with heavy rows and pull-ups.',
+          sessionType: 'strength',
+          primaryMuscles: ['back', 'biceps', 'lats'],
+          secondaryMuscles: ['rear delts', 'traps'],
+          mainLiftPattern: ['deadlift', 'row', 'pull'],
+          accessoryPatterns: ['row', 'pull', 'curl', 'shrug']
+        },
+        {
+          theme: 'Legs (Quads/Glutes/Hamstrings)',
+          purpose: 'Build lower body strength and power with squats and hip-dominant movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          secondaryMuscles: ['calves', 'core'],
+          mainLiftPattern: ['squat', 'lunge'],
+          accessoryPatterns: ['squat', 'lunge', 'leg press', 'leg curl', 'calf']
+        }
+      ]
+    },
+    4: {
+      name: 'Upper / Lower Split',
+      description: '4-day split alternating upper and lower body',
+      days: [
+        {
+          theme: 'Upper Strength (Chest/Back Focus)',
+          purpose: 'Heavy compound pressing and pulling for upper body strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          secondaryMuscles: ['biceps', 'triceps'],
+          mainLiftPattern: ['bench', 'press', 'row'],
+          accessoryPatterns: ['press', 'row', 'pull', 'push']
+        },
+        {
+          theme: 'Lower Strength (Squat Focus)',
+          purpose: 'Build leg strength with heavy squatting and quad-dominant movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes'],
+          secondaryMuscles: ['hamstrings', 'calves'],
+          mainLiftPattern: ['squat'],
+          accessoryPatterns: ['squat', 'lunge', 'leg press']
+        },
+        {
+          theme: 'Upper Hypertrophy (Shoulders/Arms)',
+          purpose: 'Volume work for upper body muscle growth and accessory strength.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['shoulders', 'biceps', 'triceps'],
+          secondaryMuscles: ['chest', 'back'],
+          mainLiftPattern: ['press', 'row'],
+          accessoryPatterns: ['press', 'raise', 'curl', 'extension', 'pull']
+        },
+        {
+          theme: 'Lower Strength (Hinge Focus)',
+          purpose: 'Develop posterior chain power with deadlifts and hip-dominant movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['hamstrings', 'glutes', 'back'],
+          secondaryMuscles: ['quads', 'core'],
+          mainLiftPattern: ['deadlift', 'rdl'],
+          accessoryPatterns: ['deadlift', 'rdl', 'good morning', 'leg curl']
+        }
+      ]
+    },
+    5: {
+      name: 'Push / Pull / Legs / Upper / Lower',
+      description: '5-day split with extra volume and variety',
+      days: [
+        {
+          theme: 'Push (Chest Focus)',
+          purpose: 'Heavy pressing for chest strength and power.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['bench', 'press'],
+          accessoryPatterns: ['press', 'push', 'fly', 'extension']
+        },
+        {
+          theme: 'Pull (Back Focus)',
+          purpose: 'Build back thickness and pulling strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['back', 'lats', 'biceps'],
+          mainLiftPattern: ['deadlift', 'row', 'pull'],
+          accessoryPatterns: ['row', 'pull', 'curl']
+        },
+        {
+          theme: 'Legs (Squat Focus)',
+          purpose: 'Quad-dominant leg strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes'],
+          mainLiftPattern: ['squat'],
+          accessoryPatterns: ['squat', 'lunge', 'leg press']
+        },
+        {
+          theme: 'Upper (Shoulders/Arms)',
+          purpose: 'Upper body volume and accessory work.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['shoulders', 'biceps', 'triceps'],
+          mainLiftPattern: ['press'],
+          accessoryPatterns: ['press', 'raise', 'curl', 'extension']
+        },
+        {
+          theme: 'Lower (Hinge Focus)',
+          purpose: 'Posterior chain strength and power.',
+          sessionType: 'strength',
+          primaryMuscles: ['hamstrings', 'glutes', 'back'],
+          mainLiftPattern: ['deadlift', 'rdl'],
+          accessoryPatterns: ['deadlift', 'rdl', 'leg curl']
+        }
+      ]
+    }
+  },
+
+  // HYPERTROPHY (MUSCLE GAIN) SPLITS
+  muscle_gain: {
+    3: {
+      name: 'Push / Pull / Legs (Volume)',
+      description: '3-day hypertrophy split with higher volume',
+      days: [
+        {
+          theme: 'Push (Chest/Shoulders/Triceps)',
+          purpose: 'Build upper body pressing muscles with moderate weight and high volume.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['bench', 'press'],
+          accessoryPatterns: ['press', 'fly', 'raise', 'extension']
+        },
+        {
+          theme: 'Pull (Back/Biceps/Rear Delts)',
+          purpose: 'Develop back width and thickness with rowing and pulling variations.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['back', 'biceps', 'lats'],
+          secondaryMuscles: ['rear delts', 'traps'],
+          mainLiftPattern: ['row', 'pull', 'deadlift'],
+          accessoryPatterns: ['row', 'pull', 'curl', 'shrug', 'raise']
+        },
+        {
+          theme: 'Legs (Quads/Glutes/Hamstrings/Calves)',
+          purpose: 'Complete lower body development with squat and hinge movements.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings', 'calves'],
+          mainLiftPattern: ['squat', 'leg press'],
+          accessoryPatterns: ['squat', 'lunge', 'leg curl', 'leg extension', 'calf']
+        }
+      ]
+    },
+    4: {
+      name: 'Upper / Lower (High Volume)',
+      description: '4-day split with extra volume for muscle growth',
+      days: [
+        {
+          theme: 'Upper A (Chest/Back Focus)',
+          purpose: 'High-volume pressing and rowing for upper body mass.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['chest', 'back'],
+          secondaryMuscles: ['shoulders', 'biceps', 'triceps'],
+          mainLiftPattern: ['bench', 'row'],
+          accessoryPatterns: ['press', 'row', 'fly', 'pull']
+        },
+        {
+          theme: 'Lower A (Quad Focus)',
+          purpose: 'Quad-dominant leg training for size and definition.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['quads', 'glutes'],
+          secondaryMuscles: ['hamstrings', 'calves'],
+          mainLiftPattern: ['squat', 'leg press'],
+          accessoryPatterns: ['squat', 'lunge', 'leg extension']
+        },
+        {
+          theme: 'Upper B (Shoulders/Arms)',
+          purpose: 'Shoulder and arm hypertrophy with isolation work.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['shoulders', 'biceps', 'triceps'],
+          secondaryMuscles: ['chest', 'back'],
+          mainLiftPattern: ['press', 'row'],
+          accessoryPatterns: ['press', 'raise', 'curl', 'extension', 'pull']
+        },
+        {
+          theme: 'Lower B (Hamstring/Glute Focus)',
+          purpose: 'Posterior chain development for balanced leg growth.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['hamstrings', 'glutes'],
+          secondaryMuscles: ['quads', 'calves', 'back'],
+          mainLiftPattern: ['deadlift', 'rdl'],
+          accessoryPatterns: ['rdl', 'leg curl', 'good morning', 'lunge']
+        }
+      ]
+    },
+    5: {
+      name: 'Push / Pull / Legs / Upper / Lower (Bodybuilding)',
+      description: '5-day bodybuilding split for maximum muscle growth',
+      days: [
+        {
+          theme: 'Push A (Chest Focus)',
+          purpose: 'Chest hypertrophy with pressing and fly variations.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['bench', 'press'],
+          accessoryPatterns: ['press', 'fly', 'extension']
+        },
+        {
+          theme: 'Pull A (Back Width)',
+          purpose: 'Lat development with vertical pulling movements.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['lats', 'back', 'biceps'],
+          mainLiftPattern: ['pull', 'row'],
+          accessoryPatterns: ['pull', 'pulldown', 'curl']
+        },
+        {
+          theme: 'Legs A (Quad Focus)',
+          purpose: 'Quad-dominant leg hypertrophy.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['quads', 'glutes'],
+          mainLiftPattern: ['squat', 'leg press'],
+          accessoryPatterns: ['squat', 'lunge', 'leg extension']
+        },
+        {
+          theme: 'Push B (Shoulders/Triceps)',
+          purpose: 'Shoulder and tricep isolation for arm development.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['shoulders', 'triceps'],
+          mainLiftPattern: ['press'],
+          accessoryPatterns: ['press', 'raise', 'extension']
+        },
+        {
+          theme: 'Pull B (Back Thickness)',
+          purpose: 'Back thickness with rowing variations and deadlifts.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['back', 'traps', 'biceps'],
+          mainLiftPattern: ['deadlift', 'row'],
+          accessoryPatterns: ['row', 'shrug', 'curl']
+        }
+      ]
+    }
+  },
+
+  // ATHLETIC PERFORMANCE SPLITS (Speed/Strength/Recovery)
+  athletic_performance: {
+    3: {
+      name: 'Speed / Strength / Recovery',
+      description: 'Athletic development with speed, power, and recovery work',
+      days: [
+        {
+          theme: 'Speed & Plyometrics',
+          purpose: 'Develop speed, acceleration, and explosive power with sprint work and plyometrics.',
+          sessionType: 'speed',
+          primaryMuscles: ['quads', 'glutes', 'calves'],
+          mainLiftPattern: ['jump', 'sprint', 'explosive'],
+          accessoryPatterns: ['jump', 'explosive', 'unilateral']
+        },
+        {
+          theme: 'Strength & Power',
+          purpose: 'Build strength and power with heavy compound lifts and explosive training.',
+          sessionType: 'power',
+          primaryMuscles: ['quads', 'glutes', 'back', 'chest'],
+          mainLiftPattern: ['squat', 'deadlift', 'press'],
+          accessoryPatterns: ['explosive', 'power', 'unilateral']
+        },
+        {
+          theme: 'Recovery & Mobility',
+          purpose: 'Active recovery, mobility work, and aerobic base development for tissue health and readiness.',
+          sessionType: 'recovery',
+          primaryMuscles: ['core'],
+          mainLiftPattern: ['mobility', 'stability'],
+          accessoryPatterns: ['mobility', 'stability', 'core', 'stretch']
+        }
+      ]
+    },
+    4: {
+      name: 'Speed / Lower Strength / Upper Power / Recovery',
+      description: '4-day athletic split with dedicated speed and recovery days',
+      days: [
+        {
+          theme: 'Speed & Acceleration',
+          purpose: 'Sprint mechanics, acceleration, and linear speed development.',
+          sessionType: 'speed',
+          primaryMuscles: ['quads', 'glutes', 'calves'],
+          mainLiftPattern: ['sprint', 'explosive'],
+          accessoryPatterns: ['jump', 'explosive', 'sprint']
+        },
+        {
+          theme: 'Lower Body Strength',
+          purpose: 'Maximal lower body strength with heavy squats and hinges.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat', 'deadlift'],
+          accessoryPatterns: ['squat', 'lunge', 'unilateral']
+        },
+        {
+          theme: 'Upper Body Power',
+          purpose: 'Upper body strength and power for athletic performance.',
+          sessionType: 'power',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          mainLiftPattern: ['bench', 'row', 'press'],
+          accessoryPatterns: ['press', 'row', 'pull', 'explosive']
+        },
+        {
+          theme: 'Recovery & Conditioning',
+          purpose: 'Zone 2 conditioning, mobility, and recovery work to build aerobic base.',
+          sessionType: 'recovery',
+          primaryMuscles: ['core'],
+          mainLiftPattern: ['cardio', 'mobility'],
+          accessoryPatterns: ['mobility', 'core', 'stability']
+        }
+      ]
+    },
+    5: {
+      name: 'Speed / Power / Strength Lower / Strength Upper / Recovery',
+      description: '5-day elite athletic program',
+      days: [
+        {
+          theme: 'Speed & Agility',
+          purpose: 'Maximum velocity sprinting and change-of-direction work.',
+          sessionType: 'speed',
+          primaryMuscles: ['quads', 'glutes', 'calves'],
+          mainLiftPattern: ['sprint', 'explosive'],
+          accessoryPatterns: ['jump', 'explosive']
+        },
+        {
+          theme: 'Power & Plyometrics',
+          purpose: 'Explosive power development with Olympic lifts and jumps.',
+          sessionType: 'power',
+          primaryMuscles: ['quads', 'glutes', 'back'],
+          mainLiftPattern: ['clean', 'snatch', 'jump'],
+          accessoryPatterns: ['explosive', 'jump', 'power']
+        },
+        {
+          theme: 'Lower Body Strength',
+          purpose: 'Maximal lower body strength development.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat', 'deadlift'],
+          accessoryPatterns: ['squat', 'lunge', 'rdl']
+        },
+        {
+          theme: 'Upper Body Strength',
+          purpose: 'Upper body strength and stability for athletic movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          mainLiftPattern: ['bench', 'row', 'press'],
+          accessoryPatterns: ['press', 'row', 'pull']
+        },
+        {
+          theme: 'Recovery & Aerobic Base',
+          purpose: 'Active recovery, aerobic conditioning, and mobility.',
+          sessionType: 'recovery',
+          primaryMuscles: ['core'],
+          mainLiftPattern: ['cardio', 'mobility'],
+          accessoryPatterns: ['mobility', 'core']
+        }
+      ]
+    }
+  },
+
+  // CONDITIONING / FAT LOSS SPLITS
+  weight_loss: {
+    3: {
+      name: 'Strength / Conditioning / Hybrid',
+      description: 'Mixed strength and conditioning for fat loss',
+      days: [
+        {
+          theme: 'Full Body Strength',
+          purpose: 'Maintain muscle mass with compound strength training.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'chest', 'back'],
+          mainLiftPattern: ['squat', 'press', 'row'],
+          accessoryPatterns: ['push', 'pull', 'squat']
+        },
+        {
+          theme: 'Conditioning & Circuits',
+          purpose: 'High-calorie burn with circuit training and intervals.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['full body'],
+          mainLiftPattern: ['cardio', 'circuit'],
+          accessoryPatterns: ['cardio', 'bodyweight', 'circuit']
+        },
+        {
+          theme: 'Upper/Lower Hybrid',
+          purpose: 'Combined strength and cardio for total-body conditioning.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['chest', 'back', 'legs'],
+          mainLiftPattern: ['press', 'row', 'squat'],
+          accessoryPatterns: ['press', 'row', 'cardio']
+        }
+      ]
+    },
+    4: {
+      name: 'Upper / Lower / Conditioning x2',
+      description: '2 strength days + 2 conditioning days',
+      days: [
+        {
+          theme: 'Upper Body Strength',
+          purpose: 'Preserve upper body muscle during fat loss.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          mainLiftPattern: ['press', 'row'],
+          accessoryPatterns: ['press', 'row', 'pull']
+        },
+        {
+          theme: 'Conditioning & Cardio',
+          purpose: 'High-intensity intervals for maximum calorie burn.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['full body'],
+          mainLiftPattern: ['cardio', 'circuit'],
+          accessoryPatterns: ['cardio', 'bodyweight']
+        },
+        {
+          theme: 'Lower Body Strength',
+          purpose: 'Maintain leg muscle and strength during cut.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat', 'deadlift'],
+          accessoryPatterns: ['squat', 'lunge', 'leg press']
+        },
+        {
+          theme: 'Metabolic Conditioning',
+          purpose: 'Full-body circuits for fat loss and conditioning.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['full body'],
+          mainLiftPattern: ['circuit', 'cardio'],
+          accessoryPatterns: ['cardio', 'bodyweight', 'circuit']
+        }
+      ]
+    },
+    5: {
+      name: 'PPL + Conditioning x2',
+      description: '3 strength days + 2 dedicated cardio days',
+      days: [
+        {
+          theme: 'Push (Chest/Shoulders/Triceps)',
+          purpose: 'Upper body push strength to maintain muscle.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['press', 'bench'],
+          accessoryPatterns: ['press', 'push', 'extension']
+        },
+        {
+          theme: 'HIIT Conditioning',
+          purpose: 'High-intensity interval training for fat burning.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['full body'],
+          mainLiftPattern: ['cardio', 'circuit'],
+          accessoryPatterns: ['cardio', 'bodyweight']
+        },
+        {
+          theme: 'Pull (Back/Biceps)',
+          purpose: 'Upper body pull strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['back', 'biceps'],
+          mainLiftPattern: ['row', 'pull'],
+          accessoryPatterns: ['row', 'pull', 'curl']
+        },
+        {
+          theme: 'Legs (Full Lower)',
+          purpose: 'Complete lower body strength work.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat', 'deadlift'],
+          accessoryPatterns: ['squat', 'lunge', 'leg curl']
+        },
+        {
+          theme: 'Steady-State Cardio',
+          purpose: 'Low-intensity steady cardio for additional calorie burn.',
+          sessionType: 'conditioning',
+          primaryMuscles: ['full body'],
+          mainLiftPattern: ['cardio'],
+          accessoryPatterns: ['cardio', 'core']
+        }
+      ]
+    }
+  },
+
+  // GENERAL FITNESS & FLEXIBILITY (use strength splits as base)
+  general_fitness: {
+    3: {
+      name: 'Full Body x3',
+      description: 'Balanced full-body training for general health',
+      days: [
+        {
+          theme: 'Full Body A (Push Focus)',
+          purpose: 'Total body workout with emphasis on pushing movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'quads', 'shoulders'],
+          mainLiftPattern: ['press', 'squat'],
+          accessoryPatterns: ['press', 'squat', 'push']
+        },
+        {
+          theme: 'Full Body B (Pull Focus)',
+          purpose: 'Total body workout with emphasis on pulling movements.',
+          sessionType: 'strength',
+          primaryMuscles: ['back', 'hamstrings', 'biceps'],
+          mainLiftPattern: ['row', 'deadlift'],
+          accessoryPatterns: ['row', 'pull', 'hinge']
+        },
+        {
+          theme: 'Full Body C (Legs & Core)',
+          purpose: 'Lower body and core strength for functional fitness.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'core'],
+          mainLiftPattern: ['squat', 'lunge'],
+          accessoryPatterns: ['squat', 'lunge', 'core']
+        }
+      ]
+    },
+    4: {
+      name: 'Upper / Lower x2',
+      description: 'Simple upper/lower split for general fitness',
+      days: [
+        {
+          theme: 'Upper Body A',
+          purpose: 'Upper body strength and conditioning.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          mainLiftPattern: ['press', 'row'],
+          accessoryPatterns: ['press', 'row', 'pull']
+        },
+        {
+          theme: 'Lower Body A',
+          purpose: 'Lower body strength and functional movement.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat'],
+          accessoryPatterns: ['squat', 'lunge', 'leg curl']
+        },
+        {
+          theme: 'Upper Body B',
+          purpose: 'Upper body volume and accessory work.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['shoulders', 'biceps', 'triceps'],
+          mainLiftPattern: ['press'],
+          accessoryPatterns: ['press', 'curl', 'extension']
+        },
+        {
+          theme: 'Lower Body B',
+          purpose: 'Lower body power and posterior chain.',
+          sessionType: 'strength',
+          primaryMuscles: ['hamstrings', 'glutes'],
+          mainLiftPattern: ['deadlift', 'rdl'],
+          accessoryPatterns: ['rdl', 'leg curl', 'lunge']
+        }
+      ]
+    },
+    5: {
+      name: 'PPL Split (Balanced)',
+      description: 'Classic push/pull/legs for general development',
+      days: [
+        {
+          theme: 'Push (Chest/Shoulders/Triceps)',
+          purpose: 'Upper body pushing strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['chest', 'shoulders', 'triceps'],
+          mainLiftPattern: ['press', 'bench'],
+          accessoryPatterns: ['press', 'push', 'extension']
+        },
+        {
+          theme: 'Pull (Back/Biceps)',
+          purpose: 'Upper body pulling strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['back', 'biceps', 'lats'],
+          mainLiftPattern: ['row', 'pull', 'deadlift'],
+          accessoryPatterns: ['row', 'pull', 'curl']
+        },
+        {
+          theme: 'Legs (Full Lower)',
+          purpose: 'Complete lower body strength.',
+          sessionType: 'strength',
+          primaryMuscles: ['quads', 'glutes', 'hamstrings'],
+          mainLiftPattern: ['squat'],
+          accessoryPatterns: ['squat', 'lunge', 'leg press']
+        },
+        {
+          theme: 'Upper Body (Hypertrophy)',
+          purpose: 'Volume work for upper body muscle.',
+          sessionType: 'hypertrophy',
+          primaryMuscles: ['chest', 'back', 'shoulders'],
+          mainLiftPattern: ['press', 'row'],
+          accessoryPatterns: ['press', 'row', 'fly']
+        },
+        {
+          theme: 'Lower Body (Posterior Chain)',
+          purpose: 'Hip-dominant leg training.',
+          sessionType: 'strength',
+          primaryMuscles: ['hamstrings', 'glutes'],
+          mainLiftPattern: ['deadlift', 'rdl'],
+          accessoryPatterns: ['rdl', 'leg curl', 'good morning']
+        }
+      ]
+    }
+  },
+
+  // ENDURANCE & FLEXIBILITY use conditioning splits
+  endurance: {
+    3: { name: 'Endurance Base', description: 'Cardio-focused training', days: [] }, // Will use conditioning logic
+    4: { name: 'Endurance Base', description: 'Cardio-focused training', days: [] },
+    5: { name: 'Endurance Base', description: 'Cardio-focused training', days: [] }
+  },
+  flexibility: {
+    3: { name: 'Mobility & Flexibility', description: 'Flexibility-focused training', days: [] },
+    4: { name: 'Mobility & Flexibility', description: 'Flexibility-focused training', days: [] },
+    5: { name: 'Mobility & Flexibility', description: 'Flexibility-focused training', days: [] }
+  }
 };
 
-// Main compound lifts that can repeat for progression
-const MAIN_LIFTS = [
-  'legs-barbell-back-squat',
-  'legs-barbell-front-squat',
-  'chest-barbell-bench-press',
-  'back-barbell-deadlift',
-  'back-trap-bar-deadlift',
-  'shoulders-barbell-overhead-press',
-  'shoulders-dumbbell-shoulder-press',
-];
+// ========================================
+// SESSION BLUEPRINTS - Structure for each workout type
+// ========================================
 
-interface ProgramTemplate {
-  name: string;
+interface ExerciseRole {
+  role: WorkoutExercise['sessionRole'];
+  count: number; // How many exercises
   sets: number;
-  reps: number | [number, number]; // single or range
+  reps: number | [number, number];
+  restSeconds: number;
   percent1RM?: number;
   rpe?: number;
-  restSeconds: number;
-  tempo?: string;
 }
 
-// Program templates based on goal
-const PROGRAM_TEMPLATES: Record<string, Record<string, ProgramTemplate>> = {
-  strength: {
-    beginner: { name: 'Strength - Beginner', sets: 3, reps: 5, percent1RM: 75, rpe: 7, restSeconds: 180, tempo: '3-1-1-0' },
-    intermediate: { name: 'Strength - Intermediate', sets: 4, reps: 5, percent1RM: 80, rpe: 8, restSeconds: 240, tempo: '3-0-1-0' },
-    advanced: { name: 'Strength - Advanced', sets: 5, reps: [3, 5], percent1RM: 85, rpe: 9, restSeconds: 300, tempo: '3-0-X-0' },
-  },
-  muscle_gain: {
-    beginner: { name: 'Hypertrophy - Beginner', sets: 3, reps: [8, 12], percent1RM: 65, rpe: 7, restSeconds: 90, tempo: '3-0-1-0' },
-    intermediate: { name: 'Hypertrophy - Intermediate', sets: 4, reps: [8, 12], percent1RM: 70, rpe: 8, restSeconds: 60, tempo: '3-1-1-0' },
-    advanced: { name: 'Hypertrophy - Advanced', sets: 5, reps: [8, 12], percent1RM: 75, rpe: 8, restSeconds: 60, tempo: '4-0-1-0' },
-  },
-  athletic_performance: {
-    beginner: { name: 'Athletic - Beginner', sets: 3, reps: [5, 8], percent1RM: 70, rpe: 7, restSeconds: 120, tempo: '2-0-X-0' },
-    intermediate: { name: 'Athletic - Intermediate', sets: 4, reps: [5, 8], percent1RM: 75, rpe: 8, restSeconds: 120, tempo: '2-0-X-0' },
-    advanced: { name: 'Athletic - Advanced', sets: 5, reps: [3, 6], percent1RM: 80, rpe: 8, restSeconds: 180, tempo: '2-0-X-0' },
-  },
+const SESSION_BLUEPRINTS: Record<Workout['sessionType'], ExerciseRole[]> = {
+  strength: [
+    { role: 'main', count: 1, sets: 4, reps: 5, restSeconds: 240, percent1RM: 80, rpe: 8 },
+    { role: 'secondary', count: 1, sets: 3, reps: 6, restSeconds: 180, percent1RM: 75, rpe: 7 },
+    { role: 'accessory', count: 3, sets: 3, reps: [8, 10], restSeconds: 90, rpe: 7 },
+    { role: 'core', count: 1, sets: 3, reps: [10, 15], restSeconds: 60, rpe: 7 }
+  ],
+  hypertrophy: [
+    { role: 'main', count: 1, sets: 4, reps: [8, 10], restSeconds: 120, percent1RM: 70, rpe: 8 },
+    { role: 'secondary', count: 1, sets: 4, reps: [10, 12], restSeconds: 90, rpe: 7 },
+    { role: 'accessory', count: 4, sets: 3, reps: [12, 15], restSeconds: 60, rpe: 7 },
+    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 45, rpe: 7 }
+  ],
+  power: [
+    { role: 'main', count: 1, sets: 5, reps: [3, 5], restSeconds: 240, percent1RM: 75, rpe: 8 },
+    { role: 'secondary', count: 1, sets: 4, reps: 6, restSeconds: 180, percent1RM: 70, rpe: 7 },
+    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 120, rpe: 7 },
+    { role: 'core', count: 1, sets: 3, reps: [10, 12], restSeconds: 60, rpe: 7 }
+  ],
+  conditioning: [
+    { role: 'main', count: 1, sets: 3, reps: 15, restSeconds: 60, rpe: 8 },
+    { role: 'accessory', count: 4, sets: 3, reps: 15, restSeconds: 45, rpe: 7 },
+    { role: 'finisher', count: 1, sets: 3, reps: [20, 30], restSeconds: 30, rpe: 9 }
+  ],
+  speed: [
+    { role: 'main', count: 1, sets: 5, reps: 5, restSeconds: 300, rpe: 9 }, // Sprint sets
+    { role: 'secondary', count: 1, sets: 3, reps: 8, restSeconds: 180, rpe: 8 }, // Plyos
+    { role: 'accessory', count: 2, sets: 3, reps: 8, restSeconds: 90, rpe: 6 } // Light strength
+  ],
+  recovery: [
+    { role: 'main', count: 1, sets: 1, reps: [20, 40], restSeconds: 0, rpe: 5 }, // Z2 cardio (minutes)
+    { role: 'accessory', count: 3, sets: 2, reps: [10, 12], restSeconds: 45, rpe: 5 }, // Mobility/stability
+    { role: 'core', count: 1, sets: 3, reps: [12, 15], restSeconds: 30, rpe: 5 }
+  ],
+  deload: [
+    { role: 'main', count: 1, sets: 2, reps: 5, restSeconds: 180, percent1RM: 65, rpe: 6 },
+    { role: 'accessory', count: 2, sets: 2, reps: 8, restSeconds: 90, rpe: 6 }
+  ]
 };
 
-/**
- * Get movement pattern from exercise name
- */
-function getMovementPattern(exerciseName: string): string {
-  const nameLower = exerciseName.toLowerCase();
-  
-  for (const [pattern, keywords] of Object.entries(MOVEMENT_PATTERNS)) {
-    if (keywords.some(keyword => nameLower.includes(keyword))) {
-      return pattern;
-    }
-  }
-  
-  return 'isolation';
-}
-
-/**
- * Check if exercise is a main compound lift
- */
-function isMainLift(exerciseId: string): boolean {
-  return MAIN_LIFTS.includes(exerciseId);
-}
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
 
 /**
  * Generate warm-up section with progressive ramp sets
  */
-export function generateWarmup(mainExercise: Exercise): WarmupSection {
+export function generateWarmup(mainExercise: Exercise, sessionType: Workout['sessionType']): WarmupSection {
   const isBarbell = mainExercise.equipment === 'barbell';
+  const isMainLift = ['bench', 'squat', 'deadlift', 'press'].some(pattern => 
+    mainExercise.name.toLowerCase().includes(pattern)
+  );
   
   const warmup: WarmupSection = {
     general: [
       '5 min light cardio (bike, row, or jog)',
       'Dynamic stretching (leg swings, arm circles)',
       '10 bodyweight squats',
-      '10 push-ups or wall push-ups',
+      '10 push-ups or incline push-ups',
     ],
     mobility: [
       '10 cat-cow stretches',
       '10 hip circles each direction',
-      '10 shoulder dislocations with band',
-      '5 deep bodyweight squats with pause',
+      '10 shoulder dislocations with band or dowel',
+      '5 deep bodyweight squats with 2-sec pause',
     ],
   };
   
-  // Add ramp sets for barbell main lifts
-  if (isBarbell && isMainLift(mainExercise.id)) {
+  // Add specific warm-up for athletic sessions
+  if (sessionType === 'speed') {
+    warmup.general = [
+      '5 min light jog',
+      'Dynamic warm-up: high knees, butt kicks, A-skips',
+      '3-4 build-up sprints (50-70% effort)',
+    ];
+    warmup.mobility = [
+      'Leg swings: 10 each direction per leg',
+      'Walking lunges with rotation: 10 reps',
+      'Ankle mobility: 10 circles each direction',
+    ];
+  }
+  
+  if (sessionType === 'recovery') {
+    warmup.general = [
+      '3-5 min easy movement (walking, light bike)',
+      'Gentle joint rotations',
+    ];
+    warmup.mobility = [
+      '90/90 hip stretch: 30 sec each side',
+      'Cat-cow: 10 reps',
+      'Child\'s pose: 30 sec',
+      'Thread the needle: 30 sec each side',
+    ];
+  }
+  
+  // Add ramp sets for barbell main lifts in strength/power sessions
+  if (isBarbell && isMainLift && (sessionType === 'strength' || sessionType === 'power' || sessionType === 'hypertrophy')) {
     warmup.rampSets = [
       { percent1RM: 0, reps: 10, notes: 'Bar only - focus on technique' },
-      { percent1RM: 40, reps: 8, notes: 'Easy - establish groove' },
+      { percent1RM: 40, reps: 8, notes: 'Light - establish groove' },
       { percent1RM: 55, reps: 5, notes: 'Moderate - speed work' },
-      { percent1RM: 65, reps: 3, notes: 'Heavy - feel the weight' },
-      { percent1RM: 75, reps: 1, notes: 'Very heavy - final prep' },
+      { percent1RM: 70, reps: 3, notes: 'Heavy - feel the weight' },
+      { percent1RM: 80, reps: 1, notes: 'Very heavy - final prep set' },
     ];
   }
   
@@ -119,74 +771,161 @@ export function generateWarmup(mainExercise: Exercise): WarmupSection {
 }
 
 /**
- * Track recently used exercises to enforce variety
+ * Filter exercises by muscle groups and patterns
  */
-class ExerciseTracker {
-  private recentExercises: Map<string, number[]> = new Map(); // memberId -> [exerciseIds by workout index]
-  
-  addExercises(memberId: string, workoutIndex: number, exerciseIds: string[]) {
-    if (!this.recentExercises.has(memberId)) {
-      this.recentExercises.set(memberId, []);
-    }
-    const history = this.recentExercises.get(memberId)!;
-    history[workoutIndex] = exerciseIds as any;
-  }
-  
-  wasRecentlyUsed(memberId: string, exerciseId: string, currentWorkoutIndex: number, lookbackWindow = 4): boolean {
-    const history = this.recentExercises.get(memberId);
-    if (!history) return false;
+function filterExercisesByMuscles(
+  exercises: Exercise[],
+  primaryMuscles: string[],
+  secondaryMuscles: string[] = [],
+  patterns?: string[]
+): Exercise[] {
+  return exercises.filter(ex => {
+    // Check if exercise targets primary muscles
+    const matchesPrimary = ex.muscleGroups.some(mg => 
+      primaryMuscles.some(pm => mg.toLowerCase().includes(pm.toLowerCase()) || pm.toLowerCase().includes(mg.toLowerCase()))
+    );
     
-    // Check last N workouts
-    for (let i = Math.max(0, currentWorkoutIndex - lookbackWindow); i < currentWorkoutIndex; i++) {
-      if (history[i] && (history[i] as any).includes(exerciseId)) {
-        return true;
-      }
-    }
+    // Check if exercise targets secondary muscles
+    const matchesSecondary = secondaryMuscles.length === 0 || ex.muscleGroups.some(mg =>
+      secondaryMuscles.some(sm => mg.toLowerCase().includes(sm.toLowerCase()) || sm.toLowerCase().includes(mg.toLowerCase()))
+    );
     
-    return false;
-  }
-  
-  getMovementPatternCount(memberId: string, pattern: string, currentWorkoutIndex: number, lookbackWindow = 2): number {
-    const history = this.recentExercises.get(memberId);
-    if (!history) return 0;
+    // Check if exercise name matches patterns
+    const matchesPattern = !patterns || patterns.some(pattern =>
+      ex.name.toLowerCase().includes(pattern.toLowerCase())
+    );
     
-    let count = 0;
-    for (let i = Math.max(0, currentWorkoutIndex - lookbackWindow); i < currentWorkoutIndex; i++) {
-      if (history[i]) {
-        count += (history[i] as any).filter((id: string) => {
-          // This would need exercise lookup - simplified for now
-          return false;
-        }).length;
-      }
-    }
-    
-    return count;
-  }
+    return (matchesPrimary || matchesSecondary) && matchesPattern;
+  });
 }
 
 /**
- * Generate athlete-intelligent workout plan with variety
+ * Select exercises for a workout based on the session blueprint and day theme
+ */
+function selectExercisesForSession(
+  splitDay: SplitDay,
+  blueprint: ExerciseRole[],
+  availableExercises: Exercise[],
+  difficulty: 'beginner' | 'intermediate' | 'advanced',
+  weekNumber: number
+): WorkoutExercise[] {
+  const workoutExercises: WorkoutExercise[] = [];
+  let order = 1;
+  
+  // Track used exercises to avoid duplicates within the workout
+  const usedExerciseIds = new Set<string>();
+  
+  for (const roleSpec of blueprint) {
+    // Filter exercises by role
+    let candidateExercises: Exercise[] = [];
+    
+    if (roleSpec.role === 'main' || roleSpec.role === 'secondary') {
+      // For main and secondary lifts, prioritize compound movements
+      candidateExercises = filterExercisesByMuscles(
+        availableExercises.filter(ex => 
+          ex.category === 'strength' && 
+          (difficulty !== 'beginner' || ex.difficulty !== 'advanced')
+        ),
+        splitDay.primaryMuscles,
+        splitDay.secondaryMuscles,
+        roleSpec.role === 'main' ? splitDay.mainLiftPattern : splitDay.accessoryPatterns
+      );
+      
+      // Fallback if no exercises match
+      if (candidateExercises.length === 0) {
+        candidateExercises = availableExercises.filter(ex => 
+          ex.category === 'strength' &&
+          ex.muscleGroups.some(mg => splitDay.primaryMuscles.includes(mg))
+        );
+      }
+    } else if (roleSpec.role === 'accessory') {
+      // For accessories, get all exercises targeting the day's muscles
+      candidateExercises = filterExercisesByMuscles(
+        availableExercises,
+        splitDay.primaryMuscles,
+        splitDay.secondaryMuscles,
+        splitDay.accessoryPatterns
+      );
+    } else if (roleSpec.role === 'core') {
+      // Core exercises
+      candidateExercises = availableExercises.filter(ex =>
+        ex.muscleGroups.includes('core') || ex.muscleGroups.includes('abs')
+      );
+    } else if (roleSpec.role === 'conditioning' || roleSpec.role === 'finisher') {
+      // Conditioning/finisher exercises
+      candidateExercises = availableExercises.filter(ex =>
+        ex.category === 'cardio' || ex.category === 'endurance' || ex.category === 'plyometric'
+      );
+    }
+    
+    // Select required number of exercises for this role
+    for (let i = 0; i < roleSpec.count && candidateExercises.length > 0; i++) {
+      // Filter out already-used exercises
+      const available = candidateExercises.filter(ex => !usedExerciseIds.has(ex.id));
+      if (available.length === 0) break;
+      
+      // Select exercise (rotate to add variety across weeks)
+      const selectionIndex = (weekNumber + i) % available.length;
+      const selectedExercise = available[selectionIndex];
+      usedExerciseIds.add(selectedExercise.id);
+      
+      // Determine reps
+      const reps = Array.isArray(roleSpec.reps) ? roleSpec.reps[0] : roleSpec.reps;
+      
+      // Build workout exercise
+      const workoutExercise: WorkoutExercise = {
+        exerciseId: selectedExercise.id,
+        sets: roleSpec.sets,
+        reps,
+        restSeconds: roleSpec.restSeconds,
+        order: order++,
+        sessionRole: roleSpec.role,
+        isMainLift: roleSpec.role === 'main',
+        rpe: roleSpec.rpe,
+      };
+      
+      // Add %1RM for barbell compound lifts
+      if (roleSpec.percent1RM && selectedExercise.equipment === 'barbell') {
+        workoutExercise.percent1RM = roleSpec.percent1RM;
+      }
+      
+      // Add tempo for main lifts
+      if (roleSpec.role === 'main' || roleSpec.role === 'secondary') {
+        workoutExercise.tempo = splitDay.sessionType === 'hypertrophy' ? '3-0-1-0' : '2-0-1-0';
+      }
+      
+      // Add coaching cues
+      if (selectedExercise.tips && selectedExercise.tips.length > 0) {
+        workoutExercise.coachingCues = selectedExercise.tips.slice(0, 2);
+      }
+      
+      workoutExercises.push(workoutExercise);
+    }
+  }
+  
+  return workoutExercises;
+}
+
+// ========================================
+// MAIN GENERATOR FUNCTION
+// ========================================
+
+/**
+ * Generate coherent split-based workout plan
  */
 export function generateAthleteWorkoutPlan(
   params: {
     memberId: string;
     goal: WorkoutPlan['goal'];
     difficulty: WorkoutPlan['difficulty'];
-    duration: number;
-    frequency: number;
+    duration: number; // weeks
+    frequency: number; // days per week
     equipment?: string[];
     limitations?: string[];
   },
   allExercises: Exercise[]
 ): { plan: WorkoutPlan; workouts: Workout[] } {
-  const tracker = new ExerciseTracker();
-  const workouts: Workout[] = [];
-  
-  // Get program template
-  const template = PROGRAM_TEMPLATES[params.goal]?.[params.difficulty] || 
-                   PROGRAM_TEMPLATES.muscle_gain[params.difficulty];
-  
-  // Filter available exercises
+  // Filter available exercises by equipment and difficulty
   const availableExercises = allExercises.filter(ex => {
     if (params.equipment && params.equipment.length > 0) {
       if (!params.equipment.includes(ex.equipment)) return false;
@@ -195,23 +934,8 @@ export function generateAthleteWorkoutPlan(
     return true;
   });
   
-  // Separate main lifts and accessories
-  let mainLifts = availableExercises.filter(ex => isMainLift(ex.id) && ex.category === 'strength');
-  const accessories = availableExercises.filter(ex => !isMainLift(ex.id));
-  
-  // Fallback: If no main lifts available (e.g., no barbell selected), use best strength exercises
-  if (mainLifts.length === 0) {
-    console.log('⚠️ No main lifts available with selected equipment, using strength exercises as substitutes');
-    mainLifts = availableExercises
-      .filter(ex => ex.category === 'strength')
-      .slice(0, 3); // Take top 3 strength exercises
-  }
-  
-  // Safety check: Must have some exercises
   if (availableExercises.length === 0) {
     console.error('❌ No exercises available after filtering!');
-    console.error('Params:', params);
-    // Return empty but valid result - will be caught by API validation
     return {
       plan: {
         id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
@@ -231,133 +955,93 @@ export function generateAthleteWorkoutPlan(
     };
   }
   
+  // Get the appropriate split for goal and frequency
+  const split = WORKOUT_SPLITS[params.goal]?.[params.frequency] || 
+                WORKOUT_SPLITS.general_fitness[params.frequency] ||
+                WORKOUT_SPLITS.general_fitness[3];
+  
+  if (!split.days || split.days.length === 0) {
+    console.error('❌ No split defined for this goal/frequency combination');
+    return {
+      plan: {
+        id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        memberId: params.memberId,
+        name: 'Invalid Split',
+        description: 'Could not generate a split for this combination',
+        goal: params.goal,
+        duration: params.duration,
+        frequency: params.frequency,
+        difficulty: params.difficulty,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        startDate: new Date().toISOString().split('T')[0],
+        createdBy: 'ai',
+      },
+      workouts: []
+    };
+  }
+  
   // Generate workouts
-  const totalWorkouts = params.duration * params.frequency;
-  const weeksCount = params.duration;
+  const workouts: Workout[] = [];
   const startDate = new Date();
+  const totalWorkouts = params.duration * params.frequency;
   
   for (let i = 0; i < totalWorkouts; i++) {
     const weekNum = Math.floor(i / params.frequency) + 1;
-    const isDeloadWeek = weekNum % 4 === 0 && weekNum > 0; // Every 4th week
-    const workoutInWeek = (i % params.frequency) + 1;
+    const dayInWeek = i % params.frequency;
+    const isDeloadWeek = weekNum % 4 === 0 && weekNum > 0;
     
+    // Calculate workout date
     const workoutDate = new Date(startDate);
     workoutDate.setDate(startDate.getDate() + Math.floor(i * (7 / params.frequency)));
     
-    // Select exercises with variety
-    const workoutExercises: WorkoutExercise[] = [];
-    const usedExercisesThisWorkout: string[] = [];
+    // Get the split day (cycle through the split)
+    const splitDay = split.days[dayInWeek % split.days.length];
     
-    // 1. Pick a main lift (allow repeats for progression)
-    const mainLift = mainLifts[workoutInWeek % mainLifts.length] || mainLifts[0];
-    if (mainLift) {
-      const mainLiftTemplate = isDeloadWeek
-        ? { ...template, sets: Math.max(2, template.sets - 1), percent1RM: template.percent1RM! - 15 }
-        : template;
-      
-      workoutExercises.push({
-        exerciseId: mainLift.id,
-        sets: mainLiftTemplate.sets,
-        reps: Array.isArray(mainLiftTemplate.reps) ? mainLiftTemplate.reps[0] : mainLiftTemplate.reps,
-        restSeconds: mainLiftTemplate.restSeconds,
-        order: 1,
-        isMainLift: true,
-        percent1RM: mainLiftTemplate.percent1RM,
-        rpe: mainLiftTemplate.rpe,
-        tempo: mainLiftTemplate.tempo,
-        movementPattern: getMovementPattern(mainLift.name) as any,
-        coachingCues: mainLift.tips?.slice(0, 2),
-      });
-      
-      usedExercisesThisWorkout.push(mainLift.id);
-    }
+    // Get session blueprint (use deload blueprint if it's a deload week)
+    const sessionType = isDeloadWeek ? 'deload' : splitDay.sessionType;
+    const blueprint = SESSION_BLUEPRINTS[sessionType] || SESSION_BLUEPRINTS.strength;
     
-    // 2. Pick accessories with variety (avoid recent exercises)
-    const accessoryCount = 4;
+    // Select exercises for this session
+    const exercises = selectExercisesForSession(
+      splitDay,
+      blueprint,
+      availableExercises,
+      params.difficulty,
+      weekNum
+    );
     
-    // Create weighted pool based on recent usage
-    const accessoryPool = accessories.map(acc => {
-      const wasVeryRecent = tracker.wasRecentlyUsed(params.memberId, acc.id, i, 1);  // Last workout only
-      const wasRecent = tracker.wasRecentlyUsed(params.memberId, acc.id, i, 3);      // Last 3 workouts
-      
-      // Penalize recent usage progressively
-      let weight = 1.0;
-      if (wasVeryRecent) weight = 0.05;  // Almost never repeat immediately
-      else if (wasRecent) weight = 0.4;   // Reduce chance for recent exercises
-      
-      return { exercise: acc, weight };
-    });
-    
-    // Select accessories using weighted random
-    for (let j = 0; j < accessoryCount && accessoryPool.length > 0; j++) {
-      // Filter out already-used exercises
-      const available = accessoryPool.filter(
-        item => !usedExercisesThisWorkout.includes(item.exercise.id)
-      );
-      
-      if (available.length === 0) break;
-      
-      // Weighted random selection
-      const totalWeight = available.reduce((sum, item) => sum + item.weight, 0);
-      let random = Math.random() * totalWeight;
-      let selected = available[0];
-      
-      for (const item of available) {
-        random -= item.weight;
-        if (random <= 0) {
-          selected = item;
-          break;
-        }
-      }
-      
-      const accessory = selected.exercise;
-      
-      // Add accessory with appropriate programming
-      const accessorySets = isDeloadWeek ? 2 : 3;
-      const accessoryReps = params.goal === 'strength' ? 8 : 12;
-      
-      workoutExercises.push({
-        exerciseId: accessory.id,
-        sets: accessorySets,
-        reps: accessoryReps,
-        restSeconds: 60,
-        order: workoutExercises.length + 1,
-        isMainLift: false,
-        rpe: isDeloadWeek ? 6 : 7,
-        movementPattern: getMovementPattern(accessory.name) as any,
-      });
-      
-      usedExercisesThisWorkout.push(accessory.id);
-    }
-    
-    // Track exercises for variety
-    tracker.addExercises(params.memberId, i, usedExercisesThisWorkout);
-    
-    // Generate warm-up for this workout
-    const warmup = mainLift ? generateWarmup(mainLift) : undefined;
+    // Generate warm-up (if there's a main lift)
+    const mainExercise = exercises.find(ex => ex.sessionRole === 'main');
+    const mainExerciseData = mainExercise ? availableExercises.find(ex => ex.id === mainExercise.exerciseId) : undefined;
+    const warmup = mainExerciseData ? generateWarmup(mainExerciseData, sessionType) : undefined;
     
     // Create workout
-    workouts.push({
+    const workout: Workout = {
       id: `workout-${params.memberId}-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 9)}`,
-      workoutPlanId: 'plan-placeholder', // Will be set by caller
+      workoutPlanId: 'plan-placeholder', // Will be set later
       memberId: params.memberId,
-      name: `Week ${weekNum}, Day ${workoutInWeek}${isDeloadWeek ? ' (Deload)' : ''}`,
+      name: `Week ${weekNum}, Day ${dayInWeek + 1}${isDeloadWeek ? ' (Deload)' : ''}`,
       date: workoutDate.toISOString().split('T')[0],
-      exercises: workoutExercises,
+      exercises,
       status: 'scheduled',
       warmup,
       weekNumber: weekNum,
-      sessionType: isDeloadWeek ? 'deload' : (params.goal === 'strength' ? 'strength' : 'hypertrophy'),
+      sessionType,
+      dayTheme: splitDay.theme,
+      purpose: splitDay.purpose,
       duration: 60,
-    });
+    };
+    
+    workouts.push(workout);
   }
   
   // Create plan
   const plan: WorkoutPlan = {
     id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     memberId: params.memberId,
-    name: `${template.name} - ${params.duration} Week Program`,
-    description: `Athlete-intelligent ${params.goal.replace('_', ' ')} program with progressive overload, deload weeks, and exercise variety.`,
+    name: `${split.name} - ${params.duration} Week Program`,
+    description: `${split.description}. Each workout follows a structured split with clear muscle group focus and progressive overload.`,
     goal: params.goal,
     duration: params.duration,
     frequency: params.frequency,
@@ -371,56 +1055,68 @@ export function generateAthleteWorkoutPlan(
   // Update workouts with correct plan ID
   workouts.forEach(w => w.workoutPlanId = plan.id);
   
+  console.log(`✅ Generated ${split.name} with ${workouts.length} workouts`);
+  console.log(`Split structure: ${split.days.map(d => d.theme).join(' → ')}`);
+  
   return { plan, workouts };
 }
 
 /**
- * Validate workout variety (for testing)
+ * Validate workout coherence (for testing)
  */
-export function validateWorkoutVariety(workouts: Workout[]): {
+export function validateWorkoutCoherence(workouts: Workout[], allExercises: Exercise[]): {
   isValid: boolean;
-  duplicateRate: number;
+  coherenceScore: number;
   issues: string[];
 } {
   const issues: string[] = [];
-  let totalAccessories = 0;
-  let duplicateAccessories = 0;
+  let totalCoherenceScore = 0;
   
-  for (let i = 1; i < workouts.length; i++) {
-    const prevExercises = workouts[i - 1].exercises.map(e => e.exerciseId);
-    const currExercises = workouts[i].exercises.map(e => e.exerciseId);
+  for (const workout of workouts) {
+    if (!workout.dayTheme) {
+      issues.push(`Workout ${workout.name}: Missing dayTheme`);
+      continue;
+    }
     
-    // Count only accessories (not main lifts)
-    const currAccessories = currExercises.filter(id => !MAIN_LIFTS.includes(id));
-    totalAccessories += currAccessories.length;
+    if (!workout.purpose) {
+      issues.push(`Workout ${workout.name}: Missing purpose description`);
+    }
     
-    // Count duplicate accessories from previous workout
-    const duplicatesThisWeek = currAccessories.filter(id => prevExercises.includes(id));
-    duplicateAccessories += duplicatesThisWeek.length;
+    // Check if exercises match the day's theme
+    const primaryMuscles = workout.dayTheme.match(/\((.*?)\)/)?.[1]?.toLowerCase() || '';
+    const muscleList = primaryMuscles.split('/').map(m => m.trim());
     
-    // Flag if more than 50% of accessories are repeated
-    if (duplicatesThisWeek.length > currAccessories.length * 0.5) {
-      issues.push(`Workout ${i}: Too many repeated accessories (${duplicatesThisWeek.length}/${currAccessories.length})`);
+    let matchingExercises = 0;
+    for (const ex of workout.exercises) {
+      const exerciseData = allExercises.find(e => e.id === ex.exerciseId);
+      if (!exerciseData) continue;
+      
+      const matches = exerciseData.muscleGroups.some(mg =>
+        muscleList.some(muscle => 
+          mg.toLowerCase().includes(muscle) || muscle.includes(mg.toLowerCase())
+        )
+      );
+      
+      if (matches || ex.sessionRole === 'core' || ex.sessionRole === 'finisher') {
+        matchingExercises++;
+      }
+    }
+    
+    const coherenceRate = workout.exercises.length > 0 ? matchingExercises / workout.exercises.length : 0;
+    totalCoherenceScore += coherenceRate;
+    
+    if (coherenceRate < 0.7) {
+      issues.push(`Workout ${workout.name}: Low coherence (${Math.round(coherenceRate * 100)}% exercises match theme)`);
+    }
+    
+    // Check for warm-ups in strength/power sessions
+    if ((workout.sessionType === 'strength' || workout.sessionType === 'power') && !workout.warmup) {
+      issues.push(`Workout ${workout.name}: Missing warm-up section`);
     }
   }
   
-  // Calculate duplicate rate for accessories only
-  const duplicateRate = totalAccessories > 0 ? duplicateAccessories / totalAccessories : 0;
+  const avgCoherence = workouts.length > 0 ? totalCoherenceScore / workouts.length : 0;
+  const isValid = avgCoherence >= 0.7 && issues.length < workouts.length * 0.2;
   
-  // Valid if less than 50% of accessories are repeated workout-to-workout
-  // This is realistic for athlete programs with limited exercise pools
-  const isValid = duplicateRate < 0.5;
-  
-  if (!workouts.every(w => w.warmup)) {
-    issues.push('Some workouts missing warm-up section');
-  }
-  
-  // Check %1RM values
-  const exercisesWithPercent = workouts.flatMap(w => w.exercises).filter(e => e.percent1RM);
-  const invalidPercents = exercisesWithPercent.filter(e => e.percent1RM! < 40 || e.percent1RM! > 95);
-  if (invalidPercents.length > 0) {
-    issues.push(`${invalidPercents.length} exercises have %1RM outside safe range (40-95%)`);
-  }
-  
-  return { isValid, duplicateRate, issues };
+  return { isValid, coherenceScore: avgCoherence, issues };
 }

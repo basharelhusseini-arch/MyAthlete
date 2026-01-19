@@ -250,7 +250,22 @@ export default function WorkoutPlanDetailPage() {
                 >
                   <div className="flex items-start justify-between mb-6">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-thrivv-text-primary mb-3">{workout.name}</h3>
+                      <h3 className="text-xl font-semibold text-thrivv-text-primary mb-2">{workout.name}</h3>
+                      
+                      {/* Day Theme & Purpose */}
+                      {workout.dayTheme && (
+                        <div className="mb-3 bg-thrivv-gold-500/10 border border-thrivv-gold-500/20 rounded-lg p-3">
+                          <p className="text-sm font-semibold text-thrivv-gold-500 mb-1">
+                            {workout.dayTheme}
+                          </p>
+                          {workout.purpose && (
+                            <p className="text-xs text-thrivv-text-secondary leading-relaxed">
+                              {workout.purpose}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      
                       <div className="flex items-center space-x-6 text-sm text-thrivv-text-secondary">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1.5 text-thrivv-gold-500" />
