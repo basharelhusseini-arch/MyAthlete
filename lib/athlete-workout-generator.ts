@@ -1049,39 +1049,89 @@ export function generateAthleteWorkoutPlan(
   },
   allExercises: Exercise[]
 ): { plan: WorkoutPlan; workouts: Workout[] } {
-  // Filter available exercises by equipment and difficulty
-  const availableExercises = allExercises.filter(ex => {
-    if (params.equipment && params.equipment.length > 0) {
-      if (!params.equipment.includes(ex.equipment)) return false;
-    }
-    if (params.difficulty === 'beginner' && ex.difficulty === 'advanced') return false;
-    return true;
+  // ========================================
+  // VALIDATE AND SANITIZE INPUTS
+  // ========================================
+  const duration = typeof params.duration === 'number' && params.duration > 0 ? params.duration : 4;
+  const frequency = typeof params.frequency === 'number' && params.frequency > 0 ? params.frequency : 3;
+  
+  console.log('='.repeat(60));
+  console.log('🏋️ WORKOUT PLAN GENERATION STARTED');
+  console.log('='.repeat(60));
+  console.log('Input parameters:', {
+    memberId: params.memberId,
+    goal: params.goal,
+    difficulty: params.difficulty,
+    duration: `${duration} weeks (input: ${params.duration})`,
+    frequency: `${frequency}x/week (input: ${params.frequency})`,
+    equipment: params.equipment || 'none specified',
+    limitations: params.limitations || 'none',
+    expectedWorkouts: duration * frequency
   });
   
+  // FALLBACK LADDER: Start strict, relax if needed
+  let availableExercises: Exercise[] = [];
+  let equipmentFilterApplied = 'strict';
+  
+  // ATTEMPT 1: Strict equipment filter
+  if (params.equipment && params.equipment.length > 0) {
+    availableExercises = allExercises.filter(ex => {
+      if (!params.equipment!.includes(ex.equipment)) return false;
+      if (params.difficulty === 'beginner' && ex.difficulty === 'advanced') return false;
+      return true;
+    });
+    console.log(`Equipment filter (strict): ${availableExercises.length} exercises`);
+  } else {
+    // No equipment filter specified, use all
+    availableExercises = allExercises.filter(ex => {
+      if (params.difficulty === 'beginner' && ex.difficulty === 'advanced') return false;
+      return true;
+    });
+  }
+  
+  // ATTEMPT 2: If too few exercises, add bodyweight + dumbbells (fallback)
+  if (availableExercises.length < 20 && params.equipment && params.equipment.length > 0) {
+    console.warn(`⚠️ Only ${availableExercises.length} exercises found with strict filter. Adding bodyweight + dumbbells as fallback.`);
+    availableExercises = allExercises.filter(ex => {
+      const isSelected = params.equipment!.includes(ex.equipment);
+      const isBodyweight = ex.equipment === 'bodyweight';
+      const isDumbbell = ex.equipment === 'dumbbells';
+      if (!isSelected && !isBodyweight && !isDumbbell) return false;
+      if (params.difficulty === 'beginner' && ex.difficulty === 'advanced') return false;
+      return true;
+    });
+    equipmentFilterApplied = 'relaxed (added bodyweight + dumbbells)';
+    console.log(`Equipment filter (relaxed): ${availableExercises.length} exercises`);
+  }
+  
+  // ATTEMPT 3: If STILL too few, ignore equipment filter entirely (emergency fallback)
+  if (availableExercises.length < 15) {
+    console.warn(`⚠️ Still only ${availableExercises.length} exercises. Using ALL equipment types.`);
+    availableExercises = allExercises.filter(ex => {
+      if (params.difficulty === 'beginner' && ex.difficulty === 'advanced') return false;
+      return true;
+    });
+    equipmentFilterApplied = 'none (using all equipment)';
+    console.log(`Equipment filter (none): ${availableExercises.length} exercises`);
+  }
+  
+  // ABSOLUTE SAFETY: Use ALL exercises if still empty (should never happen)
   if (availableExercises.length === 0) {
-    console.error('❌ No exercises available after filtering!');
-    return {
-      plan: {
-        id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-        memberId: params.memberId,
-        name: 'Empty Plan',
-        description: 'No exercises match your equipment selection',
-        goal: params.goal,
-        duration: params.duration,
-        frequency: params.frequency,
-        difficulty: params.difficulty,
-        status: 'active',
-        createdAt: new Date().toISOString(),
-        startDate: new Date().toISOString().split('T')[0],
-        createdBy: 'ai',
-      },
-      workouts: []
-    };
+    console.error('❌ CRITICAL: No exercises available even after all fallbacks! Using full database.');
+    availableExercises = [...allExercises];
+    equipmentFilterApplied = 'EMERGENCY - using full database';
+  }
+  
+  console.log(`✅ Final exercise pool: ${availableExercises.length} exercises (filter: ${equipmentFilterApplied})`);
+  
+  // Validate we have enough exercises
+  if (availableExercises.length === 0) {
+    throw new Error('FATAL: Exercise database is empty. Cannot generate workout plan.');
   }
   
   // Get the appropriate split for goal and frequency
-  const split = WORKOUT_SPLITS[params.goal]?.[params.frequency] || 
-                WORKOUT_SPLITS.general_fitness[params.frequency] ||
+  const split = WORKOUT_SPLITS[params.goal]?.[frequency] || 
+                WORKOUT_SPLITS.general_fitness[frequency] ||
                 WORKOUT_SPLITS.general_fitness[3];
   
   if (!split.days || split.days.length === 0) {
@@ -1093,8 +1143,8 @@ export function generateAthleteWorkoutPlan(
         name: 'Invalid Split',
         description: 'Could not generate a split for this combination',
         goal: params.goal,
-        duration: params.duration,
-        frequency: params.frequency,
+        duration: duration,
+        frequency: frequency,
         difficulty: params.difficulty,
         status: 'active',
         createdAt: new Date().toISOString(),
@@ -1108,16 +1158,16 @@ export function generateAthleteWorkoutPlan(
   // Generate workouts
   const workouts: Workout[] = [];
   const startDate = new Date();
-  const totalWorkouts = params.duration * params.frequency;
+  const totalWorkouts = duration * frequency;
   
   for (let i = 0; i < totalWorkouts; i++) {
-    const weekNum = Math.floor(i / params.frequency) + 1;
-    const dayInWeek = i % params.frequency;
+    const weekNum = Math.floor(i / frequency) + 1;
+    const dayInWeek = i % frequency;
     const isDeloadWeek = weekNum % 4 === 0 && weekNum > 0;
     
     // Calculate workout date
     const workoutDate = new Date(startDate);
-    workoutDate.setDate(startDate.getDate() + Math.floor(i * (7 / params.frequency)));
+    workoutDate.setDate(startDate.getDate() + Math.floor(i * (7 / frequency)));
     
     // Get the split day (cycle through the split)
     const splitDay = split.days[dayInWeek % split.days.length];
@@ -1164,11 +1214,11 @@ export function generateAthleteWorkoutPlan(
   const plan: WorkoutPlan = {
     id: `plan-${params.memberId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     memberId: params.memberId,
-    name: `${split.name} - ${params.duration} Week Program`,
+    name: `${split.name} - ${duration} Week Program`,
     description: `${split.description}. Each workout follows a structured split with clear muscle group focus and progressive overload.`,
     goal: params.goal,
-    duration: params.duration,
-    frequency: params.frequency,
+    duration: duration,
+    frequency: frequency,
     difficulty: params.difficulty,
     status: 'active',
     createdAt: new Date().toISOString(),
@@ -1179,8 +1229,34 @@ export function generateAthleteWorkoutPlan(
   // Update workouts with correct plan ID
   workouts.forEach(w => w.workoutPlanId = plan.id);
   
-  console.log(`✅ Generated ${split.name} with ${workouts.length} workouts`);
+  // ========================================
+  // VALIDATION: ENSURE WE NEVER RETURN 0 WORKOUTS
+  // ========================================
+  const expectedWorkouts = duration * frequency;
+  
+  if (workouts.length === 0) {
+    console.error('❌ CRITICAL: Generated 0 workouts! This should never happen.');
+    console.error('Debug info:', {
+      goal: params.goal,
+      difficulty: params.difficulty,
+      duration: duration,
+      frequency: frequency,
+      equipment: params.equipment,
+      splitName: split.name,
+      splitDays: split.days.length,
+      availableExercises: availableExercises.length,
+      expectedWorkouts
+    });
+    throw new Error(`FATAL: Generated 0 workouts (expected ${expectedWorkouts}). Check split configuration and exercise pool.`);
+  }
+  
+  if (workouts.length !== expectedWorkouts) {
+    console.warn(`⚠️ WARNING: Generated ${workouts.length} workouts but expected ${expectedWorkouts}`);
+  }
+  
+  console.log(`✅ Generated ${split.name} with ${workouts.length}/${expectedWorkouts} workouts`);
   console.log(`Split structure: ${split.days.map(d => d.theme).join(' → ')}`);
+  console.log(`Equipment filter: ${equipmentFilterApplied}`);
   
   return { plan, workouts };
 }

@@ -144,6 +144,8 @@ export async function POST(request: NextRequest) {
       warmup: w.warmup || null,
       week_number: w.weekNumber,
       session_type: w.sessionType,
+      day_theme: w.dayTheme || null,
+      purpose: w.purpose || null,
     }));
 
     console.log('Sample workout record:', JSON.stringify(workoutRecords[0], null, 2));
@@ -178,10 +180,20 @@ export async function POST(request: NextRequest) {
       workoutsCreated: insertedWorkouts?.length || 0
     }, { status: 201 });
   } catch (error) {
-    console.error('Error generating workout plan:', error);
+    console.error('❌ FATAL ERROR during workout plan generation:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Error type:', typeof error);
+    console.error('Error message:', error instanceof Error ? error.message : String(error));
+    
     return NextResponse.json({ 
       error: 'Failed to generate workout plan',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : String(error),
+      hint: 'Check server logs for full error details. Ensure exercise database is loaded and Supabase is configured.',
+      debug: {
+        errorType: typeof error,
+        errorName: error instanceof Error ? error.constructor.name : 'Unknown',
+        timestamp: new Date().toISOString()
+      }
     }, { status: 500 });
   }
 }
