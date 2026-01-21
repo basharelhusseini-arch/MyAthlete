@@ -149,14 +149,34 @@ export default function GenerateWorkoutPlanPage() {
       return; // Let the link navigate normally
     }
 
-    // If there are unsaved changes, warn the user
+    // If there are unsaved changes, offer to save
     e.preventDefault();
     
-    const confirmed = window.confirm(
-      'You have unsaved changes. Your form data has been saved as a draft. Do you want to leave?'
+    const choice = window.confirm(
+      'You have unsaved changes.\n\n' +
+      'Click OK to SAVE your workout plan and navigate back.\n' +
+      'Click Cancel to discard changes and go back.'
     );
     
-    if (confirmed) {
+    if (choice) {
+      // User wants to save - generate the workout plan
+      console.log('Saving workout before navigating back...');
+      setSaveStatus('saving');
+      
+      const saved = await saveAndGenerate();
+      
+      if (saved) {
+        // Successfully saved, navigate will happen automatically in saveAndGenerate
+        return;
+      } else {
+        // Save failed, don't navigate
+        alert('Failed to save workout plan. Please try again or click Back again to discard changes.');
+        return;
+      }
+    } else {
+      // User chose to discard - clear draft and navigate
+      localStorage.removeItem('workout-form-draft');
+      setIsDirty(false);
       router.push('/workouts');
     }
   };
@@ -200,14 +220,16 @@ export default function GenerateWorkoutPlanPage() {
       {/* Header with Save Status */}
       <div className="mb-8 animate-fade-in">
         <div className="flex items-center justify-between mb-6">
-          <Link
-            href="/workouts"
+          <button
             onClick={handleBackClick}
-            className="inline-flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors"
+            disabled={saveStatus === 'saving'}
+            className={`inline-flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors ${
+              saveStatus === 'saving' ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Workouts
-          </Link>
+            {saveStatus === 'saving' ? 'Saving...' : 'Back to Workouts'}
+          </button>
           
           {/* Save Status Indicator */}
           {isDirty && (
