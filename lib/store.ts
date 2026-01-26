@@ -886,6 +886,9 @@ class DataStore {
     const usedLunchIds = new Set<string>();
     const usedDinnerIds = new Set<string>();
     const usedSnackIds = new Set<string>();
+    
+    // Collect all meals for the plan (for API response)
+    const allMeals: Meal[] = [];
 
     // Helper function to select a unique recipe
     const selectUniqueRecipe = (
@@ -1107,9 +1110,18 @@ class DataStore {
         targetFats: macroTargets.fats,
         status: 'planned',
       });
+      
+      // Collect meals for the plan's meals array
+      allMeals.push(...meals);
     }
     
-    return plan;
+    // Attach all meals to the plan for API response
+    const planWithMeals: NutritionPlan = {
+      ...plan,
+      meals: allMeals,
+    };
+    
+    return planWithMeals;
   }
 
   // Phase 4: Habit methods

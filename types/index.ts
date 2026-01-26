@@ -292,6 +292,7 @@ export interface NutritionPlan {
   createdBy?: 'ai' | 'trainer' | 'member';
   dietaryRestrictions?: string[]; // e.g., 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'
   preferences?: string[]; // e.g., 'low-carb', 'high-protein', 'mediterranean'
+  meals?: Meal[]; // Optional: array of meals for the plan (flattened from daily meal plans)
 }
 
 export interface DailyMealPlan {
