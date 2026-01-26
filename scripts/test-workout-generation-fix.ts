@@ -38,7 +38,7 @@ console.log('\n📋 TEST 2: No equipment filter');
 const test2 = generateAthleteWorkoutPlan(
   {
     memberId: 'test-member-2',
-    goal: 'hypertrophy',
+    goal: 'muscle_gain',
     difficulty: 'intermediate',
     duration: 4,
     frequency: 4,
