@@ -186,6 +186,26 @@ export default function MemberDashboardPage() {
             <div className="premium-card p-8 flex flex-col items-center justify-center">
                 {healthScore ? (
                   <>
+                    {/* Total Rewards Score (if confidence score available) */}
+                    {confidenceScore && (() => {
+                      const multiplier = 1 + ((confidenceScore.score - 30) / 100) * 0.25;
+                      const totalScore = Math.round(healthScore.score * multiplier);
+                      return (
+                        <div className="w-full mb-6 p-4 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-amber-500/10 border border-thrivv-gold-500/30 rounded-xl">
+                          <div className="text-center">
+                            <p className="text-xs text-thrivv-text-muted mb-2 uppercase tracking-wide">Rewards Score</p>
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Trophy className="w-5 h-5 text-thrivv-gold-500" />
+                              <p className="text-3xl font-bold text-thrivv-gold-500">{totalScore}</p>
+                            </div>
+                            <p className="text-xs text-thrivv-text-muted">
+                              {healthScore.score} × {multiplier.toFixed(2)}x confidence
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* Circular Score Display */}
                     <div className="relative w-40 h-40 mb-8">
                       {/* Background Circle */}
@@ -222,9 +242,13 @@ export default function MemberDashboardPage() {
                         }`}>
                           {healthScore.score}
                         </div>
-                        <div className="text-thrivv-text-muted text-xs font-medium">Health Score</div>
+                        <div className="text-thrivv-text-muted text-xs font-medium">Base Health Score</div>
                       </div>
                     </div>
+                    
+                    <p className="text-xs text-thrivv-text-muted text-center mb-6">
+                      Your health behavior score
+                    </p>
 
                     {/* Score Breakdown */}
                     <div className="w-full space-y-4">
@@ -261,7 +285,7 @@ export default function MemberDashboardPage() {
                           </span>
                           <span className="text-thrivv-text-primary font-semibold">{confidenceScore.score}/100</span>
                         </div>
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center mb-2">
                           <ConfidenceBadge 
                             level={confidenceScore.level} 
                             score={confidenceScore.score}
@@ -269,6 +293,9 @@ export default function MemberDashboardPage() {
                             size="md"
                           />
                         </div>
+                        <p className="text-xs text-thrivv-text-muted text-center">
+                          Boosts your rewards by {Math.round(((confidenceScore.score - 30) / 100) * 25)}%
+                        </p>
                       </div>
                     )}
                   </>
