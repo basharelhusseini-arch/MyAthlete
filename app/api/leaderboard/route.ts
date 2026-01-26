@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { requireAuth } from '@/lib/auth';
+import { calculateConfidenceScore, getConfidenceLevel } from '@/lib/trust-scoring';
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,8 +66,11 @@ export async function GET(request: NextRequest) {
         })) || [];
       }
 
+      // Enrich with confidence scores
+      const enrichedLeaderboard = await enrichWithConfidenceScores(data || []);
+
       return NextResponse.json({
-        leaderboard: data || [],
+        leaderboard: enrichedLeaderboard,
         period: 'today',
       });
     } else {
@@ -124,8 +128,11 @@ export async function GET(request: NextRequest) {
         }))
         .slice(0, 100);
 
+      // Enrich with confidence scores
+      const enrichedLeaderboard = await enrichWithConfidenceScores(leaderboard);
+
       return NextResponse.json({
-        leaderboard,
+        leaderboard: enrichedLeaderboard,
         period: `last_${days}_days`,
       });
     }
@@ -142,4 +149,113 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Enrich leaderboard entries with confidence scores
+ * 
+ * CRITICAL: This is ADDITIVE ONLY
+ * - Health scores are NEVER reduced
+ * - Confidence is purely informational
+ * - All users are shown regardless of confidence level
+ * 
+ * OPTIMIZED: Batch queries to avoid N+1 problem
+ */
+async function enrichWithConfidenceScores(leaderboard: any[]) {
+  if (leaderboard.length === 0) return [];
+  
+  const userIds = leaderboard.map(entry => entry.id);
+  
+  // BATCH 1: Fetch all profiles
+  const { data: profiles } = await supabase
+    .from('user_health_profile')
+    .select('user_id, has_wearable')
+    .in('user_id', userIds);
+
+  const profileMap = new Map(
+    profiles?.map(p => [p.user_id, p]) || []
+  );
+
+  // BATCH 2: Fetch all consistency passes (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  const { data: consistencyEvents } = await supabase
+    .from('verification_events')
+    .select('user_id')
+    .in('user_id', userIds)
+    .eq('method', 'consistency_check')
+    .eq('status', 'verified')
+    .gte('created_at', thirtyDaysAgo.toISOString());
+
+  const consistencyCountMap = new Map<string, number>();
+  consistencyEvents?.forEach(event => {
+    consistencyCountMap.set(
+      event.user_id,
+      (consistencyCountMap.get(event.user_id) || 0) + 1
+    );
+  });
+
+  // BATCH 3: Fetch all survey completions (last 90 days)
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  
+  const { data: surveyEvents } = await supabase
+    .from('verification_events')
+    .select('user_id')
+    .in('user_id', userIds)
+    .eq('method', 'survey')
+    .eq('status', 'verified')
+    .gte('created_at', ninetyDaysAgo.toISOString());
+
+  const surveyCountMap = new Map<string, number>();
+  surveyEvents?.forEach(event => {
+    surveyCountMap.set(
+      event.user_id,
+      (surveyCountMap.get(event.user_id) || 0) + 1
+    );
+  });
+
+  // BATCH 4: Fetch first event for each user
+  const { data: firstEvents } = await supabase
+    .from('verification_events')
+    .select('user_id, created_at')
+    .in('user_id', userIds)
+    .order('created_at', { ascending: true });
+
+  const firstEventMap = new Map<string, string>();
+  firstEvents?.forEach(event => {
+    if (!firstEventMap.has(event.user_id)) {
+      firstEventMap.set(event.user_id, event.created_at);
+    }
+  });
+
+  // Calculate confidence scores for all users
+  const enrichedEntries = leaderboard.map((entry) => {
+    const profile = profileMap.get(entry.id);
+    const hasWearable = profile?.has_wearable || false;
+    const consistencyPasses = consistencyCountMap.get(entry.id) || 0;
+    const surveyCompletions = surveyCountMap.get(entry.id) || 0;
+    
+    const firstEventDate = firstEventMap.get(entry.id);
+    const daysActive = firstEventDate
+      ? Math.floor((Date.now() - new Date(firstEventDate).getTime()) / (1000 * 60 * 60 * 24))
+      : 0;
+
+    const confidenceScore = calculateConfidenceScore({
+      hasWearable,
+      consistencyPassesLast30Days: consistencyPasses,
+      surveyCompletionsLast90Days: surveyCompletions,
+      daysActive,
+    });
+
+    return {
+      ...entry,
+      confidence_score: confidenceScore.score,
+      confidence_level: confidenceScore.level,
+      has_wearable: hasWearable,
+    };
+  });
+
+  return enrichedEntries;
 }

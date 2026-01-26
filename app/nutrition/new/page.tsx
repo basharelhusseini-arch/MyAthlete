@@ -84,16 +84,47 @@ export default function GenerateNutritionPlanPage() {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const plan = await response.json();
-        router.push(`/nutrition/${plan.id}`);
-      } else {
-        const error = await response.json();
-        alert(error.error || 'Failed to generate nutrition plan');
+      const result = await response.json();
+
+      // Check for success field in response
+      if (result.success === false) {
+        // Only show error for truly invalid inputs
+        alert(result.error + (result.details ? `\n\n${result.details}` : ''));
+        setLoading(false);
+        return;
       }
+
+      // Success! Extract plan and warnings
+      const plan = result.plan || result; // Support both new and old format
+      const warnings = result.warnings;
+
+      // Show friendly message if there are warnings
+      if (warnings && warnings.length > 0) {
+        console.warn('⚠️  Plan generated with adjustments:', warnings);
+        
+        // Show success message with minor adjustments note
+        const warningMsg = warnings.length === 1 
+          ? 'Plan generated with a minor adjustment.'
+          : `Plan generated with ${warnings.length} minor adjustments.`;
+        
+        // Use a non-blocking toast if available, or brief alert
+        if (typeof window !== 'undefined' && 'showToast' in window) {
+          // @ts-ignore
+          window.showToast(warningMsg, 'warning');
+        } else {
+          // Brief, non-alarming message
+          setTimeout(() => {
+            console.log('ℹ️ ', warningMsg);
+          }, 100);
+        }
+      }
+
+      // Navigate to the plan (success!)
+      router.push(`/nutrition/${plan.id}`);
+      
     } catch (error) {
       console.error('Failed to generate nutrition plan:', error);
-      alert('An error occurred. Please try again.');
+      alert('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }

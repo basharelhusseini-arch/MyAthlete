@@ -429,3 +429,72 @@ export interface WhoopData {
   }>;
   syncedAt: string;
 }
+
+// ============================================================
+// TRUST & VERIFICATION SYSTEM
+// Philosophy: Additive confidence, never punitive
+// ============================================================
+
+export type HealthGoal = 'fat_loss' | 'maintenance' | 'muscle_gain' | 'performance' | 'general';
+export type WearableType = 'whoop' | 'garmin' | 'apple_watch' | 'fitbit' | 'oura' | 'other' | null;
+export type WearableInterest = 'yes' | 'no' | 'maybe';
+
+export interface UserHealthProfile {
+  user_id: string;
+  goal: HealthGoal;
+  has_wearable: boolean;
+  wearable_type: WearableType;
+  wants_wearable_provided: WearableInterest | null;
+  country: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type VerificationMethod = 'wearable' | 'manual' | 'survey' | 'consistency_check';
+export type VerificationStatus = 'none' | 'verified' | 'flagged' | 'skipped';
+export type ConfidenceLevel = 'low' | 'medium' | 'high';
+export type EntityType = 'sleep' | 'workout' | 'meal' | 'habit' | 'health_score';
+
+export interface VerificationEvent {
+  id: string;
+  user_id: string;
+  entity_type: EntityType;
+  entity_id: string | null;
+  method: VerificationMethod;
+  status: VerificationStatus;
+  confidence: ConfidenceLevel;
+  multiplier: number; // 1.0 to 1.25 (positive only)
+  metadata?: Record<string, any>;
+  created_at: string;
+}
+
+export interface WearableInterestLead {
+  id: string;
+  user_id: string;
+  wearable_preference: string | null;
+  country: string | null;
+  consent: boolean;
+  notes: string | null;
+  status: 'new' | 'contacted' | 'fulfilled' | 'declined';
+  created_at: string;
+}
+
+export interface ConfidenceScore {
+  score: number; // 0-100
+  breakdown: {
+    baseline: number; // 30
+    wearable: number; // 0 or 25
+    consistency: number; // 0 or 10
+    surveys: number; // 0 or 10
+    longTerm: number; // 0-25 (5 per 30 days)
+  };
+  level: ConfidenceLevel;
+}
+
+export interface HealthScoreWithConfidence {
+  health_score: number; // 0-100 (behavior only)
+  confidence_score: number; // 0-100 (data trust)
+  confidence_level: ConfidenceLevel;
+  has_wearable: boolean;
+  verification_count: number;
+}

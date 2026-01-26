@@ -61,9 +61,59 @@ const MAX_SERVINGS = 2.0;
 const SERVING_STEP = 0.25;
 
 /**
- * Generate 7 daily meal plans with automatic balancing
+ * GUARANTEED FALLBACK SNACKS
+ * These are simple, flexible recipes that work with most dietary restrictions
  */
-export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): DailyMealPlanSummary[] {
+const FALLBACK_SNACKS: Recipe[] = [
+  {
+    id: 'fallback-banana-pb',
+    name: 'Banana with Peanut Butter',
+    description: 'Simple, nutritious snack',
+    calories: 250,
+    protein_g: 8,
+    carbs_g: 30,
+    fat_g: 12,
+    ingredients: ['1 medium banana', '2 tbsp peanut butter'],
+    instructions: ['Slice banana', 'Spread peanut butter'],
+    prep_time: 2,
+    tags: ['snack', 'quick', 'vegetarian']
+  },
+  {
+    id: 'fallback-greek-yogurt',
+    name: 'Greek Yogurt with Honey',
+    description: 'High-protein snack',
+    calories: 180,
+    protein_g: 18,
+    carbs_g: 20,
+    fat_g: 4,
+    ingredients: ['200g Greek yogurt', '1 tbsp honey'],
+    instructions: ['Mix yogurt with honey'],
+    prep_time: 1,
+    tags: ['snack', 'quick', 'high-protein', 'vegetarian']
+  },
+  {
+    id: 'fallback-olive-toast',
+    name: 'Toast with Olive Oil',
+    description: 'Simple carb snack',
+    calories: 200,
+    protein_g: 5,
+    carbs_g: 25,
+    fat_g: 9,
+    ingredients: ['2 slices whole wheat bread', '1 tbsp olive oil'],
+    instructions: ['Toast bread', 'Drizzle with olive oil'],
+    prep_time: 3,
+    tags: ['snack', 'quick', 'vegan', 'vegetarian']
+  }
+];
+
+/**
+ * Generate 7 daily meal plans with automatic balancing
+ * NEVER THROWS - always returns a plan or best attempt
+ */
+export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): { 
+  mealPlans: DailyMealPlanSummary[];
+  warnings: string[];
+} {
   const {
     targetCalories,
     targetProtein,
@@ -74,11 +124,17 @@ export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): DailyM
     recipes
   } = params;
 
-  // Filter recipes by dietary restrictions
-  const availableRecipes = filterRecipesByRestrictions(recipes, dietaryRestrictions);
+  const warnings: string[] = [];
+
+  // Filter recipes by dietary restrictions and ADD FALLBACK SNACKS
+  let availableRecipes = filterRecipesByRestrictions(recipes, dietaryRestrictions);
+  
+  // Add fallback snacks that match dietary restrictions
+  const fallbackSnacks = filterRecipesByRestrictions(FALLBACK_SNACKS, dietaryRestrictions);
+  availableRecipes = [...availableRecipes, ...fallbackSnacks];
 
   if (availableRecipes.length === 0) {
-    throw new Error('No recipes available after filtering by dietary restrictions');
+    warnings.push('Very limited recipes available - using fallback options');
   }
 
   // Categorize recipes by meal type
@@ -110,10 +166,23 @@ export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): DailyM
 
   for (let day = 1; day <= 7; day++) {
     let successfulDay: DailyMealPlanSummary | null = null;
+    let bestAttempt: { meals: DayMeal[]; totals: any; error: number } | null = null;
 
-    // Try up to MAX_RETRY_ATTEMPTS times to generate a valid day
+    // Try up to MAX_RETRY_ATTEMPTS times with progressive tolerance relaxation
     for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
       try {
+        // Determine tolerance level based on attempt
+        let toleranceLevel: 'strict' | 'relaxed' | 'loose' = 'strict';
+        if (attempt === 4) {
+          toleranceLevel = 'relaxed';
+          if (attempt === 4) {
+            console.warn(`⚠️  Day ${day}: Relaxing tolerances (attempt ${attempt})`);
+          }
+        } else if (attempt === 5) {
+          toleranceLevel = 'loose';
+          console.warn(`⚠️  Day ${day}: Using loose tolerances (attempt ${attempt})`);
+        }
+
         // Add variety between attempts by shuffling recipes
         const shuffledBreakfast = attempt > 1 ? shuffleArray([...breakfastRecipes]) : breakfastRecipes;
         const shuffledLunchDinner = attempt > 1 ? shuffleArray([...lunchDinnerRecipes]) : lunchDinnerRecipes;
@@ -130,12 +199,28 @@ export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): DailyM
           usedRecipeIds,
         });
 
-        // Balance the day to hit targets
-        const balancedMeals = balanceDayToTargets(dayMeals, targets, availableRecipes);
+        // Balance the day to hit targets (NEVER THROWS)
+        const balanceResult = balanceDayToTargets(dayMeals, targets, availableRecipes);
 
-        // Validate the balanced day
-        const totals = calculateDayTotals(balancedMeals);
-        const isValid = validateDayWithinTolerance(totals, targets, attempt > 1);
+        if (!balanceResult.success) {
+          console.warn(`⚠️  Day ${day} attempt ${attempt}: Balance failed - ${balanceResult.errorReason}`);
+          continue;
+        }
+
+        const { dayMeals: balancedMeals, totals } = balanceResult;
+
+        // Track best attempt by calorie error
+        const calorieError = Math.abs(totals.calories - targets.calories);
+        if (!bestAttempt || calorieError < bestAttempt.error) {
+          bestAttempt = {
+            meals: balancedMeals,
+            totals,
+            error: calorieError
+          };
+        }
+
+        // Validate with progressive tolerance
+        const isValid = validateDayWithinTolerance(totals, targets, toleranceLevel, false);
 
         if (isValid) {
           // Convert to API format with scaled nutrition
@@ -167,29 +252,100 @@ export function generateWeeklyMealPlans(params: MealPlanGeneratorParams): DailyM
             balancedMeals.forEach(meal => usedRecipeIds.add(meal.recipe_id));
           }
 
+          // Add warning if using degraded tolerance
+          if (toleranceLevel !== 'strict') {
+            console.warn(`⚠️  Day ${day} generated with ${toleranceLevel} tolerance (attempt ${attempt})`);
+            warnings.push(`Day ${day} uses approximate macros (${toleranceLevel} match)`);
+          }
+
           console.log(`✅ Day ${day} generated successfully (attempt ${attempt}/${MAX_RETRY_ATTEMPTS})`);
-          console.log(`   Totals: ${totals.calories} cal | ${totals.protein}g P | ${totals.carbs}g C | ${totals.fat}g F`);
+          console.log(`   Totals: ${Math.round(totals.calories)} cal | ${totals.protein.toFixed(1)}g P | ${totals.carbs.toFixed(1)}g C | ${totals.fat.toFixed(1)}g F`);
           break;
         } else {
-          console.log(`⚠️  Day ${day} attempt ${attempt} failed validation. Retrying...`);
+          console.warn(`⚠️  Day ${day} attempt ${attempt} (${toleranceLevel}): Validation failed, retrying...`);
         }
       } catch (error) {
-        console.error(`❌ Day ${day} attempt ${attempt} failed:`, error);
+        console.warn(`⚠️  Day ${day} attempt ${attempt} error:`, error);
+        // Don't throw - continue to next attempt
       }
     }
 
+    // ABSOLUTE FALLBACK: Use best attempt even if not perfect
+    if (!successfulDay && bestAttempt) {
+      console.warn(`⚠️  Day ${day}: Using best attempt (${bestAttempt.error}cal error)`);
+      
+      const mealsFormatted = bestAttempt.meals.map(meal => ({
+        recipe_id: meal.recipe_id,
+        recipe_name: meal.recipe_name,
+        calories: Math.round(meal.calories * meal.servings),
+        protein_g: Math.round(meal.protein_g * meal.servings * 10) / 10,
+        carbs_g: Math.round(meal.carbs_g * meal.servings * 10) / 10,
+        fat_g: Math.round(meal.fat_g * meal.servings * 10) / 10,
+        servings: meal.servings,
+        meal_slot: meal.meal_slot,
+      }));
+
+      successfulDay = {
+        day,
+        label: `Day ${day}`,
+        meals: mealsFormatted,
+        totals: {
+          calories: Math.round(bestAttempt.totals.calories),
+          protein_g: Math.round(bestAttempt.totals.protein * 10) / 10,
+          carbs_g: Math.round(bestAttempt.totals.carbs * 10) / 10,
+          fat_g: Math.round(bestAttempt.totals.fat * 10) / 10,
+        },
+      };
+
+      warnings.push(`Day ${day} uses approximate macros (best available match)`);
+    }
+
+    // If still no day (extremely unlikely), create minimal fallback
     if (!successfulDay) {
-      throw new Error(
-        `Failed to generate Day ${day} after ${MAX_RETRY_ATTEMPTS} attempts. ` +
-        `Unable to meet targets: ${targets.calories} cal, ${targets.protein}g protein. ` +
-        `Try adjusting dietary restrictions or targets.`
-      );
+      console.warn(`⚠️  Day ${day}: Creating minimal fallback day`);
+      
+      // Use fallback snacks to create a basic day
+      const fallbackMeals = fallbackSnacks.slice(0, 3).map((recipe, idx) => ({
+        recipe_id: recipe.id,
+        recipe_name: recipe.name,
+        calories: recipe.calories,
+        protein_g: recipe.protein_g,
+        carbs_g: recipe.carbs_g,
+        fat_g: recipe.fat_g,
+        servings: 1.5,
+        meal_slot: ['breakfast', 'lunch', 'dinner'][idx] as MealSlot,
+      }));
+
+      const totals = calculateDayTotals(fallbackMeals);
+
+      successfulDay = {
+        day,
+        label: `Day ${day}`,
+        meals: fallbackMeals.map(meal => ({
+          recipe_id: meal.recipe_id,
+          recipe_name: meal.recipe_name,
+          calories: Math.round(meal.calories * meal.servings),
+          protein_g: Math.round(meal.protein_g * meal.servings * 10) / 10,
+          carbs_g: Math.round(meal.carbs_g * meal.servings * 10) / 10,
+          fat_g: Math.round(meal.fat_g * meal.servings * 10) / 10,
+          servings: meal.servings,
+          meal_slot: meal.meal_slot,
+        })),
+        totals: {
+          calories: Math.round(totals.calories),
+          protein_g: Math.round(totals.protein * 10) / 10,
+          carbs_g: Math.round(totals.carbs * 10) / 10,
+          fat_g: Math.round(totals.fat * 10) / 10,
+        },
+      };
+
+      warnings.push(`Day ${day} uses simplified meal plan (limited recipe availability)`);
     }
 
     mealPlans.push(successfulDay);
   }
 
-  return mealPlans;
+  return { mealPlans, warnings };
 }
 
 /**
@@ -337,15 +493,38 @@ function generateDayMeals(params: {
   return meals;
 }
 
+interface BalanceResult {
+  success: boolean;
+  dayMeals: DayMeal[];
+  totals: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  errorReason?: string;
+}
+
 /**
  * Balance day meals to hit macro targets by adjusting serving sizes
  * This is the CRITICAL function that ensures we hit targets
+ * 
+ * NEVER THROWS - returns success state instead
  */
 function balanceDayToTargets(
   meals: DayMeal[],
   targets: DayTargets,
   availableRecipes: Recipe[]
-): DayMeal[] {
+): BalanceResult {
+  if (meals.length === 0) {
+    return {
+      success: false,
+      dayMeals: [],
+      totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+      errorReason: 'No meals provided'
+    };
+  }
+
   const balancedMeals = [...meals];
 
   // Calculate current totals
@@ -492,7 +671,14 @@ function balanceDayToTargets(
     }
   }
 
-  return balancedMeals;
+  // Calculate final totals and return success
+  const finalTotals = calculateDayTotals(balancedMeals);
+  
+  return {
+    success: true,
+    dayMeals: balancedMeals,
+    totals: finalTotals
+  };
 }
 
 /**
@@ -517,25 +703,50 @@ function calculateDayTotals(meals: DayMeal[]): {
 
 /**
  * Validate that day totals are within acceptable tolerance
+ * Supports progressive relaxation for graceful degradation
  */
 function validateDayWithinTolerance(
   totals: { calories: number; protein: number; carbs: number; fat: number },
   targets: DayTargets,
+  toleranceLevel: 'strict' | 'relaxed' | 'loose' = 'strict',
   debug = false
 ): boolean {
-  // Calories: ±5% or ±100 kcal, whichever is larger
-  const calorieTolerancePercent = targets.calories * 0.05;
-  const calorieTolerance = Math.max(calorieTolerancePercent, 100);
+  // Progressive tolerance based on attempt number
+  let calorieTolerancePercent: number;
+  let proteinTolerance: number;
+  let carbsTolerance: number;
+  let fatsTolerance: number;
+
+  switch (toleranceLevel) {
+    case 'strict':
+      // Attempts 1-3: strict (±5%)
+      calorieTolerancePercent = 0.05;
+      proteinTolerance = 10;
+      carbsTolerance = 15;
+      fatsTolerance = 15;
+      break;
+    case 'relaxed':
+      // Attempt 4: calories ±10%, macros ±15%
+      calorieTolerancePercent = 0.10;
+      proteinTolerance = Math.max(15, targets.protein * 0.15);
+      carbsTolerance = Math.max(20, targets.carbs * 0.15);
+      fatsTolerance = Math.max(20, targets.fat * 0.15);
+      break;
+    case 'loose':
+      // Attempt 5: calories ±15%, macros ±20%
+      calorieTolerancePercent = 0.15;
+      proteinTolerance = Math.max(20, targets.protein * 0.20);
+      carbsTolerance = Math.max(30, targets.carbs * 0.20);
+      fatsTolerance = Math.max(25, targets.fat * 0.20);
+      break;
+  }
+
+  const calorieTolerance = Math.max(targets.calories * calorieTolerancePercent, 100);
   const calorieValid = Math.abs(totals.calories - targets.calories) <= calorieTolerance;
 
-  // Protein: ±10g
-  const proteinValid = Math.abs(totals.protein - targets.protein) <= 10;
-
-  // Carbs: ±25g (lenient for high carb targets which are hard to hit precisely)
-  const carbsValid = Math.abs(totals.carbs - targets.carbs) <= 25;
-
-  // Fats: ±15g (lenient for similar reasons)
-  const fatsValid = Math.abs(totals.fat - targets.fat) <= 15;
+  const proteinValid = Math.abs(totals.protein - targets.protein) <= proteinTolerance;
+  const carbsValid = Math.abs(totals.carbs - targets.carbs) <= carbsTolerance;
+  const fatsValid = Math.abs(totals.fat - targets.fat) <= fatsTolerance;
 
   if (debug) {
     console.log(`   Validation: Cal ${calorieValid ? '✓' : '✗'} (${Math.round(totals.calories)} / ${targets.calories} ±${Math.round(calorieTolerance)}), ` +

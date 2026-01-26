@@ -20,9 +20,43 @@ export async function POST(request: NextRequest) {
       preferences,
     } = body;
 
+    // Validate ONLY truly invalid inputs
     if (!memberId || !goal || !gender || !age || !height || !weight || !activityLevel || !duration) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { 
+          success: false,
+          error: 'Missing required fields',
+          details: 'memberId, goal, gender, age, height, weight, activityLevel, and duration are required'
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate ranges
+    if (age < 1 || age > 120) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid age', details: 'Age must be between 1 and 120' },
+        { status: 400 }
+      );
+    }
+
+    if (height < 50 || height > 300) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid height', details: 'Height must be between 50cm and 300cm' },
+        { status: 400 }
+      );
+    }
+
+    if (weight < 20 || weight > 500) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid weight', details: 'Weight must be between 20kg and 500kg' },
+        { status: 400 }
+      );
+    }
+
+    if (duration < 1 || duration > 90) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid duration', details: 'Duration must be between 1 and 90 days' },
         { status: 400 }
       );
     }
@@ -41,29 +75,21 @@ export async function POST(request: NextRequest) {
       preferences,
     });
 
-    // Generate 7-day meal plans from recipes
-    let mealPlans;
-    try {
-      mealPlans = generateWeeklyMealPlans({
-        targetCalories: generatedPlan.macroTargets.calories,
-        targetProtein: generatedPlan.macroTargets.protein,
-        targetCarbs: generatedPlan.macroTargets.carbohydrates,
-        targetFat: generatedPlan.macroTargets.fats,
-        goal: generatedPlan.goal,
-        dietaryRestrictions: dietaryRestrictions,
-        preferences: preferences,
-        recipes: recipesData,
-      });
-    } catch (error: any) {
-      console.error('Failed to generate meal plans:', error);
-      return NextResponse.json(
-        { 
-          error: 'Failed to generate meal plans',
-          details: error.message,
-          hint: 'Not enough recipes available for the selected dietary restrictions'
-        },
-        { status: 500 }
-      );
+    // Generate 7-day meal plans from recipes (NEVER FAILS)
+    const { mealPlans, warnings } = generateWeeklyMealPlans({
+      targetCalories: generatedPlan.macroTargets.calories,
+      targetProtein: generatedPlan.macroTargets.protein,
+      targetCarbs: generatedPlan.macroTargets.carbohydrates,
+      targetFat: generatedPlan.macroTargets.fats,
+      goal: generatedPlan.goal,
+      dietaryRestrictions: dietaryRestrictions,
+      preferences: preferences,
+      recipes: recipesData,
+    });
+
+    // Log warnings in development
+    if (warnings.length > 0) {
+      console.warn('⚠️  Meal plan generation warnings:', warnings);
     }
 
     // Save to Supabase for persistence
@@ -91,41 +117,54 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase insert error:', error);
-      return NextResponse.json(
-        { 
-          error: 'Failed to save nutrition plan',
-          details: error.message,
-          hint: error.hint || 'Check if nutrition_plans table exists and migration is run'
+      // Even if DB save fails, we generated a valid plan - return it with a warning
+      warnings.push('Plan generated but not saved to database - try again or contact support');
+      
+      return NextResponse.json({
+        success: true,
+        plan: {
+          ...generatedPlan,
+          mealPlans,
         },
-        { status: 500 }
-      );
+        warnings,
+        note: 'Plan generated successfully but could not be persisted. You can still use this plan.'
+      }, { status: 200 });
     }
 
     // Return the plan in the same format the UI expects
+    // ALWAYS return success: true with optional warnings
     return NextResponse.json({
-      id: plan.id,
-      memberId: plan.member_id,
-      name: plan.name,
-      description: plan.description,
-      goal: plan.goal,
-      duration: plan.duration,
-      status: plan.status,
-      macroTargets: plan.macro_targets,
-      meals: plan.meals,
-      mealPlans: plan.meal_plans, // Include 7-day meal plans
-      dietaryRestrictions: plan.dietary_restrictions,
-      preferences: plan.preferences,
-      createdBy: plan.created_by,
-      startDate: plan.start_date,
-      endDate: plan.end_date,
-      createdAt: plan.created_at,
+      success: true,
+      plan: {
+        id: plan.id,
+        memberId: plan.member_id,
+        name: plan.name,
+        description: plan.description,
+        goal: plan.goal,
+        duration: plan.duration,
+        status: plan.status,
+        macroTargets: plan.macro_targets,
+        meals: plan.meals,
+        mealPlans: plan.meal_plans, // Include 7-day meal plans
+        dietaryRestrictions: plan.dietary_restrictions,
+        preferences: plan.preferences,
+        createdBy: plan.created_by,
+        startDate: plan.start_date,
+        endDate: plan.end_date,
+        createdAt: plan.created_at,
+      },
+      warnings: warnings.length > 0 ? warnings : undefined,
     }, { status: 201 });
   } catch (error: any) {
-    console.error('Failed to generate nutrition plan:', error);
+    console.error('❌ Unexpected error during nutrition plan generation:', error);
+    
+    // Even in catastrophic failure, try to return useful info
+    // Only return success=false for truly unrecoverable errors
     return NextResponse.json(
       { 
-        error: 'Failed to generate nutrition plan',
-        details: error.message || error.toString()
+        success: false,
+        error: 'Unexpected server error',
+        details: process.env.NODE_ENV === 'development' ? error.message || error.toString() : 'Please try again or contact support'
       },
       { status: 500 }
     );

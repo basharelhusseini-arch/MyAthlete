@@ -1,0 +1,144 @@
+/**
+ * API: User Health Profile
+ * 
+ * GET /api/health/profile - Get user's health profile and onboarding status
+ * POST /api/health/profile - Create or update health profile
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export async function GET(request: NextRequest) {
+  try {
+    // Get user ID from header (in production, extract from session)
+    const userId = request.headers.get('x-user-id');
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized', needsAuth: true },
+        { status: 401 }
+      );
+    }
+
+    // Fetch profile
+    const { data: profile, error } = await supabase
+      .from('user_health_profile')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = not found (OK)
+      console.error('Error fetching profile:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch profile' },
+        { status: 500 }
+      );
+    }
+
+    // If no profile exists, user needs onboarding
+    if (!profile) {
+      return NextResponse.json({
+        exists: false,
+        needsOnboarding: true,
+        profile: null,
+      });
+    }
+
+    return NextResponse.json({
+      exists: true,
+      needsOnboarding: false,
+      profile,
+    });
+
+  } catch (error: any) {
+    console.error('Profile GET error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const userId = request.headers.get('x-user-id');
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const {
+      goal,
+      has_wearable,
+      wearable_type,
+      wants_wearable_provided,
+      country,
+    } = body;
+
+    // Validate required fields
+    if (!goal || !['fat_loss', 'maintenance', 'muscle_gain', 'performance', 'general'].includes(goal)) {
+      return NextResponse.json(
+        { error: 'Invalid goal' },
+        { status: 400 }
+      );
+    }
+
+    // Upsert profile (create or update)
+    const { data: profile, error } = await supabase
+      .from('user_health_profile')
+      .upsert({
+        user_id: userId,
+        goal,
+        has_wearable: has_wearable || false,
+        wearable_type: wearable_type || null,
+        wants_wearable_provided: wants_wearable_provided || null,
+        country: country || null,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error upserting profile:', error);
+      return NextResponse.json(
+        { error: 'Failed to save profile' },
+        { status: 500 }
+      );
+    }
+
+    // If user wants wearable provided, create lead
+    if (wants_wearable_provided === 'yes') {
+      await supabase
+        .from('wearable_interest_leads')
+        .insert({
+          user_id: userId,
+          wearable_preference: wearable_type,
+          country,
+          consent: true,
+        });
+    }
+
+    return NextResponse.json({
+      success: true,
+      profile,
+    }, { status: 200 });
+
+  } catch (error: any) {
+    console.error('Profile POST error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
