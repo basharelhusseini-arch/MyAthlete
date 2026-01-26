@@ -58,14 +58,16 @@ export default function RewardsPage() {
 
       // Fetch health score for display
       const response = await fetch('/api/health/summary');
+      let fetchedHealthScore = 0;
       if (response.ok) {
-        const data = await response.json();
+        const healthData = await response.json();
+        fetchedHealthScore = healthData.score || 0;
         setHealthScore({
-          total: data.score,
-          workoutScore: data.components.training,
-          dietScore: data.components.diet,
-          habitScore: data.components.habits,
-          sleepScore: data.components.sleep,
+          total: healthData.score,
+          workoutScore: healthData.components.training,
+          dietScore: healthData.components.diet,
+          habitScore: healthData.components.habits,
+          sleepScore: healthData.components.sleep,
         });
       }
 
@@ -73,7 +75,7 @@ export default function RewardsPage() {
       const confidenceResponse = await fetch('/api/health/confidence-score');
       if (confidenceResponse.ok) {
         const confData = await confidenceResponse.json();
-        const healthTotal = healthScore?.total || data?.score || 0;
+        const healthTotal = fetchedHealthScore;
         const multiplier = 1 + ((confData.score - 30) / 100) * 0.25;
         const totalRewards = Math.round(healthTotal * multiplier);
         
@@ -89,7 +91,7 @@ export default function RewardsPage() {
     } finally {
       setLoading(false);
     }
-  }, [healthScore?.total]);
+  }, []);
 
   useEffect(() => {
     const storedMemberId = localStorage.getItem('memberId');
