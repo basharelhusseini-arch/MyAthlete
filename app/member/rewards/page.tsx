@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Trophy, Star, Gift, TrendingUp, Zap, Award, DollarSign, Users, Dumbbell, UtensilsCrossed, Lock, CheckCircle, AlertTriangle, Shield } from 'lucide-react';
@@ -12,6 +12,13 @@ interface HealthScore {
   dietScore: number;
   habitScore: number;
   sleepScore: number;
+}
+
+interface ConfidenceData {
+  score: number;
+  level: string;
+  multiplier: number;
+  totalRewardsScore: number;
 }
 
 interface Reward {
@@ -29,6 +36,7 @@ interface Reward {
 export default function RewardsPage() {
   const router = useRouter();
   const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
+  const [confidenceData, setConfidenceData] = useState<ConfidenceData | null>(null);
   const [points, setPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const [memberId, setMemberId] = useState<string | null>(null);
@@ -39,17 +47,7 @@ export default function RewardsPage() {
   
   const typingFeatures = useTypingFeatures();
 
-  useEffect(() => {
-    const storedMemberId = localStorage.getItem('memberId');
-    if (!storedMemberId) {
-      router.push('/member/login');
-      return;
-    }
-    setMemberId(storedMemberId);
-    fetchHealthScore(storedMemberId);
-  }, [router]);
-
-  const fetchHealthScore = async (id: string) => {
+  const fetchHealthScore = useCallback(async (id: string) => {
     try {
       // Fetch actual reward points from API
       const rewardsResponse = await fetch('/api/rewards/points');
@@ -70,12 +68,38 @@ export default function RewardsPage() {
           sleepScore: data.components.sleep,
         });
       }
+
+      // Fetch confidence score
+      const confidenceResponse = await fetch('/api/health/confidence-score');
+      if (confidenceResponse.ok) {
+        const confData = await confidenceResponse.json();
+        const healthTotal = healthScore?.total || data?.score || 0;
+        const multiplier = 1 + ((confData.score - 30) / 100) * 0.25;
+        const totalRewards = Math.round(healthTotal * multiplier);
+        
+        setConfidenceData({
+          score: confData.score,
+          level: confData.level,
+          multiplier: multiplier,
+          totalRewardsScore: totalRewards
+        });
+      }
     } catch (error) {
       console.error('Failed to fetch health score:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [healthScore?.total]);
+
+  useEffect(() => {
+    const storedMemberId = localStorage.getItem('memberId');
+    if (!storedMemberId) {
+      router.push('/member/login');
+      return;
+    }
+    setMemberId(storedMemberId);
+    fetchHealthScore(storedMemberId);
+  }, [router, fetchHealthScore]);
 
   const handleRedeem = async (reward: Reward) => {
     if (points < reward.points || reward.redeemed) return;
@@ -346,7 +370,7 @@ export default function RewardsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Points Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* Total Points */}
           <div className="dark-card p-6">
             <div className="flex items-center justify-between mb-4">
@@ -359,7 +383,25 @@ export default function RewardsPage() {
             <div className="text-sm text-gray-400">Available Points</div>
           </div>
 
-          {/* Health Score */}
+          {/* Total Rewards Score */}
+          <div className="dark-card p-6 border border-yellow-500/30">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl">
+                <Trophy className="w-6 h-6 text-yellow-400" />
+              </div>
+            </div>
+            <div className="text-4xl font-bold text-yellow-400 mb-1">
+              {confidenceData?.totalRewardsScore || healthScore?.total || 0}
+            </div>
+            <div className="text-sm text-gray-400">Total Rewards Score</div>
+            {confidenceData && (
+              <div className="text-xs text-yellow-500 mt-2">
+                {healthScore?.total} × {confidenceData.multiplier.toFixed(2)}x
+              </div>
+            )}
+          </div>
+
+          {/* Base Health Score */}
           <div className="dark-card p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-xl">
@@ -367,18 +409,20 @@ export default function RewardsPage() {
               </div>
             </div>
             <div className="text-4xl font-bold text-white mb-1">{healthScore?.total || 0}</div>
-            <div className="text-sm text-gray-400">Today&apos;s Health Score</div>
+            <div className="text-sm text-gray-400">Base Health Score</div>
           </div>
 
-          {/* Next Reward */}
+          {/* Confidence Boost */}
           <div className="dark-card p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-500/20 rounded-xl">
-                <Gift className="w-6 h-6 text-purple-400" />
+                <Shield className="w-6 h-6 text-purple-400" />
               </div>
             </div>
-            <div className="text-4xl font-bold text-white mb-1">{getPointsToNextTier()}</div>
-            <div className="text-sm text-gray-400">Points to Next Tier</div>
+            <div className="text-4xl font-bold text-white mb-1">
+              {confidenceData ? `+${Math.round(((confidenceData.score - 30) / 100) * 25)}%` : '+0%'}
+            </div>
+            <div className="text-sm text-gray-400">Confidence Boost</div>
           </div>
         </div>
 
@@ -388,29 +432,42 @@ export default function RewardsPage() {
             <Zap className="w-5 h-5 mr-2 text-yellow-400" />
             How to Earn Points
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-4">
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-blue-400 mb-2">Daily</div>
-              <div className="text-gray-300 mb-2">Health Score Based</div>
+              <div className="text-2xl font-bold text-blue-400 mb-2">Step 1</div>
+              <div className="text-gray-300 mb-2">Build Health Score</div>
               <div className="text-xs text-gray-500">
-                Score 50 → 1 pt<br/>
-                Score 110 → 25 pts
+                Train, eat well, sleep<br/>
+                Score 0-110 points
+              </div>
+            </div>
+            <div className="bg-gray-800/30 rounded-lg p-4 border border-yellow-700/50 border-2">
+              <div className="text-2xl font-bold text-yellow-400 mb-2">Step 2</div>
+              <div className="text-gray-300 mb-2">Boost with Confidence</div>
+              <div className="text-xs text-gray-500">
+                Connect wearable<br/>
+                Get 0-25% boost
               </div>
             </div>
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-green-400 mb-2">Threshold</div>
-              <div className="text-gray-300 mb-2">Score Below 50</div>
+              <div className="text-2xl font-bold text-green-400 mb-2">Result</div>
+              <div className="text-gray-300 mb-2">Total Rewards Score</div>
               <div className="text-xs text-gray-500">
-                No points earned
+                Health × Confidence<br/>
+                Max 137 points
               </div>
             </div>
             <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50">
-              <div className="text-2xl font-bold text-purple-400 mb-2">Max</div>
-              <div className="text-gray-300 mb-2">25 Points/Day</div>
+              <div className="text-2xl font-bold text-purple-400 mb-2">Points</div>
+              <div className="text-gray-300 mb-2">Earn Rewards</div>
               <div className="text-xs text-gray-500">
-                At score 110
+                Total 50 → 1 pt<br/>
+                Total 110 → 25 pts
               </div>
             </div>
+          </div>
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-xs text-yellow-300">
+            <strong>💡 Pro Tip:</strong> Higher confidence = more reward points! Connect a wearable or maintain consistent logging to boost your multiplier up to 1.25x
           </div>
         </div>
 
