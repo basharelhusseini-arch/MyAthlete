@@ -277,6 +277,27 @@ export interface Meal {
   notes?: string;
 }
 
+export interface DailyMealPlanSummary {
+  day: number; // 1-7
+  label: string; // e.g., "Day 1"
+  meals: {
+    recipe_id: string;
+    recipe_name: string;
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+    servings: number;
+    meal_slot: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  }[];
+  totals: {
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  };
+}
+
 export interface NutritionPlan {
   id: string;
   memberId: string;
@@ -293,6 +314,7 @@ export interface NutritionPlan {
   dietaryRestrictions?: string[]; // e.g., 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'
   preferences?: string[]; // e.g., 'low-carb', 'high-protein', 'mediterranean'
   meals?: Meal[]; // Optional: array of meals for the plan (flattened from daily meal plans)
+  mealPlans?: DailyMealPlanSummary[]; // 7-day structured meal plans
 }
 
 export interface DailyMealPlan {

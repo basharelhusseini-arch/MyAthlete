@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
       status: plan.status,
       macroTargets: plan.macro_targets,
       meals: plan.meals,
+      mealPlans: plan.meal_plans, // Include 7-day meal plans
       dietaryRestrictions: plan.dietary_restrictions || [],
       preferences: plan.preferences || [],
       createdBy: plan.created_by,
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
         status: body.status || 'active',
         macro_targets: body.macroTargets,
         meals: body.meals,
+        meal_plans: body.mealPlans, // Include 7-day meal plans
         dietary_restrictions: body.dietaryRestrictions || [],
         preferences: body.preferences || [],
         created_by: body.createdBy || 'manual',
@@ -93,6 +95,7 @@ export async function POST(request: NextRequest) {
       status: plan.status,
       macroTargets: plan.macro_targets,
       meals: plan.meals,
+      mealPlans: plan.meal_plans, // Include 7-day meal plans
       dietaryRestrictions: plan.dietary_restrictions,
       preferences: plan.preferences,
       createdBy: plan.created_by,

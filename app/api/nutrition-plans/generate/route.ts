@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { store } from '@/lib/store';
+import { generateWeeklyMealPlans } from '@/lib/meal-plan-generator';
+import { recipesData } from '@/lib/recipes';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,6 +41,31 @@ export async function POST(request: NextRequest) {
       preferences,
     });
 
+    // Generate 7-day meal plans from recipes
+    let mealPlans;
+    try {
+      mealPlans = generateWeeklyMealPlans({
+        targetCalories: generatedPlan.macroTargets.calories,
+        targetProtein: generatedPlan.macroTargets.protein,
+        targetCarbs: generatedPlan.macroTargets.carbohydrates,
+        targetFat: generatedPlan.macroTargets.fats,
+        goal: generatedPlan.goal,
+        dietaryRestrictions: dietaryRestrictions,
+        preferences: preferences,
+        recipes: recipesData,
+      });
+    } catch (error: any) {
+      console.error('Failed to generate meal plans:', error);
+      return NextResponse.json(
+        { 
+          error: 'Failed to generate meal plans',
+          details: error.message,
+          hint: 'Not enough recipes available for the selected dietary restrictions'
+        },
+        { status: 500 }
+      );
+    }
+
     // Save to Supabase for persistence
     const { data: plan, error } = await supabase
       .from('nutrition_plans')
@@ -52,6 +79,7 @@ export async function POST(request: NextRequest) {
         status: generatedPlan.status,
         macro_targets: generatedPlan.macroTargets,
         meals: generatedPlan.meals,
+        meal_plans: mealPlans, // Add 7-day meal plans
         dietary_restrictions: dietaryRestrictions || [],
         preferences: preferences || [],
         created_by: 'ai',
@@ -84,6 +112,7 @@ export async function POST(request: NextRequest) {
       status: plan.status,
       macroTargets: plan.macro_targets,
       meals: plan.meals,
+      mealPlans: plan.meal_plans, // Include 7-day meal plans
       dietaryRestrictions: plan.dietary_restrictions,
       preferences: plan.preferences,
       createdBy: plan.created_by,

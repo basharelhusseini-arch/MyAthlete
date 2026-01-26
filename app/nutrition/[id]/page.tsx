@@ -1,284 +1,248 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Target, Calendar, TrendingUp, UtensilsCrossed, Trash2, Clock } from 'lucide-react';
-import { NutritionPlan, DailyMealPlan, Recipe } from '@/types';
+import { 
+  ArrowLeft, 
+  Target, 
+  Calendar, 
+  TrendingUp,
+  UtensilsCrossed,
+  ChefHat
+} from 'lucide-react';
+import { NutritionPlan, DailyMealPlanSummary } from '@/types';
 
 export default function NutritionPlanDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const planId = params.id as string;
-  
   const [plan, setPlan] = useState<NutritionPlan | null>(null);
-  const [mealPlans, setMealPlans] = useState<DailyMealPlan[]>([]);
-  const [recipes, setRecipes] = useState<Record<string, Recipe>>({});
   const [loading, setLoading] = useState(true);
-
-  const fetchRecipes = useCallback(async () => {
-    try {
-      const response = await fetch('/api/recipes');
-      if (response.ok) {
-        const recipesData: Recipe[] = await response.json();
-        const recipesMap: Record<string, Recipe> = {};
-        recipesData.forEach(recipe => {
-          recipesMap[recipe.id] = recipe;
-        });
-        setRecipes(recipesMap);
-      }
-    } catch (error) {
-      console.error('Failed to fetch recipes:', error);
-    }
-  }, []);
-
-  const fetchPlanData = useCallback(async () => {
-    if (!planId) return;
-
-    try {
-      const [planRes, mealsRes] = await Promise.all([
-        fetch(`/api/nutrition-plans/${planId}`),
-        fetch(`/api/nutrition-plans/${planId}/meals`),
-      ]);
-
-      if (planRes.ok) {
-        const planData = await planRes.json();
-        setPlan(planData);
-      }
-
-      if (mealsRes.ok) {
-        const mealsData = await mealsRes.json();
-        setMealPlans(mealsData);
-      }
-    } catch (error) {
-      console.error('Failed to fetch plan data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [planId]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (planId) {
-      setLoading(true);
-      Promise.all([fetchPlanData(), fetchRecipes()]).finally(() => {
-        setLoading(false);
-      });
-    }
-  }, [planId, fetchPlanData, fetchRecipes]);
+    fetchPlan();
+  }, [params.id]);
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this nutrition plan?')) return;
-
+  const fetchPlan = async () => {
     try {
-      const response = await fetch(`/api/nutrition-plans/${planId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        router.push('/nutrition');
-      } else {
-        alert('Failed to delete nutrition plan');
+      const response = await fetch(`/api/nutrition-plans/${params.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch nutrition plan');
       }
-    } catch (error) {
-      console.error('Failed to delete nutrition plan:', error);
-      alert('Failed to delete nutrition plan');
+      const data = await response.json();
+      setPlan(data);
+    } catch (err: any) {
+      console.error('Failed to fetch plan:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Loading nutrition plan...</p>
+      <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark">
+        <p className="text-thrivv-text-secondary">Loading nutrition plan...</p>
       </div>
     );
   }
 
-  if (!plan) {
+  if (error || !plan) {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-gray-500 mb-4">Nutrition plan not found</p>
-        <Link
-          href="/nutrition"
-          className="text-blue-600 hover:text-blue-700"
-        >
-          Back to Nutrition Plans
-        </Link>
+      <div className="min-h-screen flex items-center justify-center bg-thrivv-bg-dark">
+        <div className="premium-card p-8 text-center max-w-md">
+          <h2 className="text-xl font-semibold text-thrivv-text-primary mb-4">Plan Not Found</h2>
+          <p className="text-thrivv-text-secondary mb-6">{error || 'This nutrition plan could not be loaded.'}</p>
+          <Link href="/member/nutrition" className="btn-primary px-6 py-3">
+            ← Back to Nutrition
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Link
-          href="/nutrition"
-          className="flex items-center text-gray-600 hover:text-gray-900"
+    <div className="min-h-screen bg-thrivv-bg-dark">
+      {/* Header */}
+      <div className="mb-8 animate-fade-in-up">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center text-thrivv-text-secondary hover:text-thrivv-gold-500 transition-colors mb-4"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to Nutrition Plans
-        </Link>
+          Back
+        </button>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-semibold text-thrivv-text-primary mb-2">
+              {plan.name}
+            </h1>
+            <p className="text-thrivv-text-secondary">{plan.description}</p>
+          </div>
+          <span className={`px-4 py-2 text-sm font-medium rounded-lg ${
+            plan.status === 'active' ? 'success-badge' :
+            plan.status === 'completed' ? 'bg-thrivv-gold-500/10 text-thrivv-gold-500 border border-thrivv-gold-500/20' :
+            'bg-thrivv-bg-card text-thrivv-text-muted border border-thrivv-gold-500/10'
+          }`}>
+            {plan.status}
+          </span>
+        </div>
       </div>
 
-      {/* Plan Header */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{plan.name}</h1>
-            <p className="text-gray-600 mb-4">{plan.description}</p>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-              <div className="flex items-center">
-                <Target className="w-4 h-4 mr-2" />
-                Goal: <span className="font-medium ml-1 capitalize">{plan.goal.replace('_', ' ')}</span>
-              </div>
-              <div className="flex items-center">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Calories: <span className="font-medium ml-1">{plan.macroTargets.calories}</span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="w-4 h-4 mr-2" />
-                Duration: <span className="font-medium ml-1">{plan.duration} days</span>
-              </div>
-            </div>
+      {/* Plan Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="premium-card p-6">
+          <div className="flex items-center mb-3">
+            <Target className="w-5 h-5 text-thrivv-gold-500 mr-2" />
+            <h3 className="text-sm font-medium text-thrivv-text-secondary">Goal</h3>
           </div>
-          <div className="flex items-center space-x-2">
-            <span className={`px-3 py-1 text-sm font-medium rounded-full ${
-              plan.status === 'active' ? 'bg-green-100 text-green-800' :
-              plan.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-              'bg-gray-100 text-gray-800'
-            }`}>
-              {plan.status}
-            </span>
-            <button
-              onClick={handleDelete}
-              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              title="Delete nutrition plan"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
+          <p className="text-xl font-semibold text-thrivv-text-primary capitalize">
+            {plan.goal.replace('_', ' ')}
+          </p>
         </div>
 
-        {/* Macro Targets */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Macro Targets</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-blue-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Calories</p>
-              <p className="text-2xl font-bold text-blue-600">{plan.macroTargets.calories}</p>
-            </div>
-            <div className="bg-green-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Protein</p>
-              <p className="text-2xl font-bold text-green-600">{plan.macroTargets.protein}g</p>
-            </div>
-            <div className="bg-orange-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Carbs</p>
-              <p className="text-2xl font-bold text-orange-600">{plan.macroTargets.carbohydrates}g</p>
-            </div>
-            <div className="bg-purple-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Fats</p>
-              <p className="text-2xl font-bold text-purple-600">{plan.macroTargets.fats}g</p>
-            </div>
+        <div className="premium-card p-6">
+          <div className="flex items-center mb-3">
+            <Calendar className="w-5 h-5 text-thrivv-gold-500 mr-2" />
+            <h3 className="text-sm font-medium text-thrivv-text-secondary">Duration</h3>
+          </div>
+          <p className="text-xl font-semibold text-thrivv-text-primary">
+            {plan.duration} days
+          </p>
+        </div>
+
+        <div className="premium-card p-6">
+          <div className="flex items-center mb-3">
+            <TrendingUp className="w-5 h-5 text-thrivv-gold-500 mr-2" />
+            <h3 className="text-sm font-medium text-thrivv-text-secondary">Daily Calories</h3>
+          </div>
+          <p className="text-xl font-semibold text-thrivv-text-primary">
+            {plan.macroTargets.calories} kcal
+          </p>
+        </div>
+      </div>
+
+      {/* Macro Targets */}
+      <div className="premium-card p-6 mb-8">
+        <h2 className="text-2xl font-semibold text-thrivv-text-primary mb-6">Daily Macro Targets</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="text-center">
+            <p className="text-sm text-thrivv-text-muted mb-2">Calories</p>
+            <p className="text-3xl font-semibold text-thrivv-gold-500">{plan.macroTargets.calories}</p>
+            <p className="text-xs text-thrivv-text-muted mt-1">kcal</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-thrivv-text-muted mb-2">Protein</p>
+            <p className="text-3xl font-semibold text-thrivv-text-primary">{Math.round(plan.macroTargets.protein)}</p>
+            <p className="text-xs text-thrivv-text-muted mt-1">grams</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-thrivv-text-muted mb-2">Carbs</p>
+            <p className="text-3xl font-semibold text-thrivv-text-primary">{Math.round(plan.macroTargets.carbohydrates)}</p>
+            <p className="text-xs text-thrivv-text-muted mt-1">grams</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-thrivv-text-muted mb-2">Fats</p>
+            <p className="text-3xl font-semibold text-thrivv-text-primary">{Math.round(plan.macroTargets.fats)}</p>
+            <p className="text-xs text-thrivv-text-muted mt-1">grams</p>
           </div>
         </div>
       </div>
 
       {/* Daily Meal Plans */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Daily Meal Plans</h2>
-        </div>
-        <div className="p-6">
-          {mealPlans.length === 0 ? (
-            <div className="text-center py-12">
-              <UtensilsCrossed className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg mb-2">No meal plans available</p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {mealPlans.map((mealPlan) => {
-                // Compute totals from actual meals displayed (source of truth)
-                const computedCalories = mealPlan.meals.reduce((sum, m) => sum + (m.calories || 0), 0);
-                const computedProtein = mealPlan.meals.reduce((sum, m) => sum + (m.protein || 0), 0);
-                const computedCarbs = mealPlan.meals.reduce((sum, m) => sum + (m.carbohydrates || 0), 0);
-                const computedFats = mealPlan.meals.reduce((sum, m) => sum + (m.fats || 0), 0);
-
-                // Log warning if stored totals don't match computed (development only)
-                if (process.env.NODE_ENV === 'development') {
-                  const calDiff = Math.abs(computedCalories - mealPlan.totalCalories);
-                  if (calDiff > 1) {
-                    console.warn(`Day ${mealPlan.date}: Stored calories (${mealPlan.totalCalories}) != computed (${computedCalories})`);
-                  }
-                }
-
-                return (
-                  <div
-                    key={mealPlan.id}
-                    className="border border-gray-200 rounded-lg p-6"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {new Date(mealPlan.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                      </h3>
-                      <div className="text-sm">
-                        <div className="font-semibold text-gray-900">
-                          Total: {Math.round(computedCalories)} cal | {Math.round(computedProtein)}g protein | {Math.round(computedCarbs)}g carbs | {Math.round(computedFats)}g fats
-                        </div>
-                        {mealPlan.targetCalories && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Target: {mealPlan.targetCalories} cal | {mealPlan.targetProtein ?? 0}g protein | {mealPlan.targetCarbohydrates ?? 0}g carbs | {mealPlan.targetFats ?? 0}g fats
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {mealPlan.meals.map((meal) => {
-                      const recipe = meal.recipeId ? recipes[meal.recipeId] : undefined;
-                      return (
-                        <div
-                          key={meal.id}
-                          className="bg-gray-50 rounded-lg p-4"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-medium text-blue-600 uppercase">
-                              {meal.mealType}
-                            </span>
-                            {meal.time && (
-                              <div className="flex items-center text-xs text-gray-500">
-                                <Clock className="w-3 h-3 mr-1" />
-                                {meal.time}
-                              </div>
-                            )}
-                          </div>
-                          <h4 className="font-semibold text-gray-900 mb-2">{meal.name}</h4>
-                          <div className="space-y-1 text-xs text-gray-600">
-                            <div>{meal.calories} calories</div>
-                            <div>P: {meal.protein}g | C: {meal.carbohydrates}g | F: {meal.fats}g</div>
-                          </div>
-                          {recipe && (
-                            <div className="mt-3 pt-3 border-t border-gray-200">
-                              {(recipe.prepTime ?? recipe.prepMinutes ?? 0) > 0 && (
-                                <p className="text-xs text-gray-500 mb-1">
-                                  Prep: {recipe.prepTime ?? recipe.prepMinutes} min
-                                </p>
-                              )}
-                              {(recipe.cookTime ?? recipe.cookMinutes ?? 0) > 0 && (
-                                <p className="text-xs text-gray-500">
-                                  Cook: {recipe.cookTime ?? recipe.cookMinutes} min
-                                </p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+      <div className="premium-card p-6 mb-8">
+        <h2 className="text-2xl font-semibold text-thrivv-text-primary mb-6">7-Day Meal Plans</h2>
+        
+        {plan.mealPlans && plan.mealPlans.length > 0 ? (
+          <div className="space-y-6">
+            {plan.mealPlans.map((dayPlan: DailyMealPlanSummary) => (
+              <div key={dayPlan.day} className="p-6 bg-thrivv-bg-card/50 rounded-xl border border-thrivv-gold-500/10">
+                {/* Day Header */}
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-thrivv-gold-500/10">
+                  <h3 className="text-xl font-semibold text-thrivv-text-primary">
+                    {dayPlan.label}
+                  </h3>
+                  <div className="flex items-center gap-4 text-sm text-thrivv-text-muted">
+                    <span>{dayPlan.totals.calories} kcal</span>
+                    <span>•</span>
+                    <span>{Math.round(dayPlan.totals.protein_g)}g protein</span>
                   </div>
                 </div>
-              );
-            })}
+
+                {/* Meals */}
+                <div className="space-y-3 mb-4">
+                  {dayPlan.meals.map((meal, index) => (
+                    <Link
+                      key={`${meal.recipe_id}-${index}`}
+                      href={`/member/recipes/${meal.recipe_id}`}
+                      className="flex items-center justify-between p-4 bg-thrivv-bg-dark/50 rounded-lg hover:bg-thrivv-bg-dark transition-colors group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-thrivv-gold-500/10 flex items-center justify-center">
+                          {meal.meal_slot === 'breakfast' && <ChefHat className="w-5 h-5 text-thrivv-gold-500" />}
+                          {meal.meal_slot === 'lunch' && <UtensilsCrossed className="w-5 h-5 text-thrivv-gold-500" />}
+                          {meal.meal_slot === 'dinner' && <UtensilsCrossed className="w-5 h-5 text-thrivv-gold-500" />}
+                          {meal.meal_slot === 'snack' && <ChefHat className="w-5 h-5 text-thrivv-gold-500" />}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-thrivv-text-primary group-hover:text-thrivv-gold-500 transition-colors">
+                            {meal.recipe_name}
+                          </p>
+                          <p className="text-xs text-thrivv-text-muted capitalize">{meal.meal_slot}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-thrivv-text-secondary">
+                        <span>{meal.calories} kcal</span>
+                        <span className="text-thrivv-gold-500">{Math.round(meal.protein_g)}g protein</span>
+                        <span className="text-xs text-thrivv-text-muted">→</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Day Totals */}
+                <div className="flex items-center justify-between pt-4 border-t border-thrivv-gold-500/10">
+                  <span className="text-sm font-medium text-thrivv-text-secondary">Daily Totals</span>
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="text-center">
+                      <p className="text-thrivv-text-muted mb-1">Calories</p>
+                      <p className="font-semibold text-thrivv-gold-500">{dayPlan.totals.calories}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-thrivv-text-muted mb-1">Protein</p>
+                      <p className="font-semibold text-thrivv-text-primary">{Math.round(dayPlan.totals.protein_g)}g</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-thrivv-text-muted mb-1">Carbs</p>
+                      <p className="font-semibold text-thrivv-text-primary">{Math.round(dayPlan.totals.carbs_g)}g</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-thrivv-text-muted mb-1">Fat</p>
+                      <p className="font-semibold text-thrivv-text-primary">{Math.round(dayPlan.totals.fat_g)}g</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="icon-badge w-20 h-20 mx-auto mb-4">
+              <UtensilsCrossed className="w-10 h-10 text-thrivv-gold-500" />
             </div>
-          )}
-        </div>
+            <h3 className="text-lg font-semibold text-thrivv-text-primary mb-2">No meal plans available</h3>
+            <p className="text-thrivv-text-secondary mb-6">
+              This plan was created before meal plan generation was available.
+            </p>
+            <button
+              onClick={() => alert('Meal plan regeneration coming soon!')}
+              className="btn-primary px-6 py-3"
+            >
+              Generate Meal Plans
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
