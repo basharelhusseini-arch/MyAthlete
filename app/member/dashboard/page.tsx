@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity, Watch, Trophy, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Users, CreditCard, LogOut, User, BookOpen, CheckCircle, Bell, DollarSign, Dumbbell, UtensilsCrossed, Target, Activity, Watch, Trophy, AlertCircle, Shield } from 'lucide-react';
+import ConfidenceBadge from '@/components/ConfidenceBadge';
+import { ConfidenceLevel } from '@/types';
 
 interface UserData {
   id: string;
@@ -37,10 +39,23 @@ interface CheckinData {
   created_at: string;
 }
 
+interface ConfidenceScoreData {
+  score: number;
+  level: ConfidenceLevel;
+  breakdown: {
+    baseline: number;
+    wearable: number;
+    consistency: number;
+    survey: number;
+    longTerm: number;
+  };
+}
+
 export default function MemberDashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<UserData | null>(null);
   const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
+  const [confidenceScore, setConfidenceScore] = useState<ConfidenceScoreData | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [scoreHistory, setScoreHistory] = useState<HealthScore[]>([]);
   const [todayCheckin, setTodayCheckin] = useState<CheckinData | null>(null);
@@ -84,6 +99,13 @@ export default function MemberDashboardPage() {
         if (checkinRes.ok) {
           const checkinData = await checkinRes.json();
           setTodayCheckin(checkinData.checkin);
+        }
+
+        // Fetch confidence score
+        const confidenceRes = await fetch('/api/health/confidence-score');
+        if (confidenceRes.ok) {
+          const confidenceData = await confidenceRes.json();
+          setConfidenceScore(confidenceData);
         }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
@@ -228,6 +250,27 @@ export default function MemberDashboardPage() {
                         <span className="text-thrivv-text-primary font-semibold">{healthScore.sleep_score}/30</span>
                       </div>
                     </div>
+
+                    {/* Confidence Score Badge */}
+                    {confidenceScore && (
+                      <div className="w-full pt-6 mt-6 border-t border-thrivv-gold-500/10">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-thrivv-text-secondary text-sm flex items-center">
+                            <Shield className="w-4 h-4 mr-2 text-thrivv-gold-500" />
+                            Data Confidence
+                          </span>
+                          <span className="text-thrivv-text-primary font-semibold">{confidenceScore.score}/100</span>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <ConfidenceBadge 
+                            level={confidenceScore.level} 
+                            score={confidenceScore.score}
+                            showScore={false}
+                            size="md"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="text-center py-8">
