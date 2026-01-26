@@ -531,11 +531,11 @@ function validateDayWithinTolerance(
   // Protein: ±10g
   const proteinValid = Math.abs(totals.protein - targets.protein) <= 10;
 
-  // Carbs: ±20g (slightly more lenient for performance goals with high carb targets)
-  const carbsValid = Math.abs(totals.carbs - targets.carbs) <= 20;
+  // Carbs: ±25g (lenient for high carb targets which are hard to hit precisely)
+  const carbsValid = Math.abs(totals.carbs - targets.carbs) <= 25;
 
-  // Fats: ±12g
-  const fatsValid = Math.abs(totals.fat - targets.fat) <= 12;
+  // Fats: ±15g (lenient for similar reasons)
+  const fatsValid = Math.abs(totals.fat - targets.fat) <= 15;
 
   if (debug) {
     console.log(`   Validation: Cal ${calorieValid ? '✓' : '✗'} (${Math.round(totals.calories)} / ${targets.calories} ±${Math.round(calorieTolerance)}), ` +
