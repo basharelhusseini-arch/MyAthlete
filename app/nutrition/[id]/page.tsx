@@ -186,9 +186,16 @@ export default function NutritionPlanDetailPage() {
                           {meal.meal_slot === 'snack' && <ChefHat className="w-5 h-5 text-thrivv-gold-500" />}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-thrivv-text-primary group-hover:text-thrivv-gold-500 transition-colors">
-                            {meal.recipe_name}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-thrivv-text-primary group-hover:text-thrivv-gold-500 transition-colors">
+                              {meal.recipe_name}
+                            </p>
+                            {meal.servings !== 1 && (
+                              <span className="text-xs px-2 py-0.5 rounded bg-thrivv-gold-500/10 text-thrivv-gold-500 font-medium">
+                                {meal.servings}x
+                              </span>
+                            )}
+                          </div>
                           <p className="text-xs text-thrivv-text-muted capitalize">{meal.meal_slot}</p>
                         </div>
                       </div>
