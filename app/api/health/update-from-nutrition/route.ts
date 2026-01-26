@@ -135,8 +135,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate reward points from health score
-    const rewardPointsEarned = healthToRewardPoints(score.totalScore);
+    // Get user's confidence score to calculate total rewards score
+    const { data: confidenceData } = await supabase.rpc('get_user_confidence_score', {
+      p_user_id: user.id
+    });
+    
+    const confidenceScore = confidenceData || 30; // Default baseline
+    
+    // Calculate confidence multiplier (1.0 to 1.25)
+    // Formula: 1 + ((confidenceScore - 30) / 100) * 0.25
+    const confidenceMultiplier = 1 + ((confidenceScore - 30) / 100) * 0.25;
+    
+    // Calculate total rewards score (health × confidence)
+    const totalRewardsScore = Math.round(score.totalScore * confidenceMultiplier);
+    
+    // Calculate reward points from TOTAL score (not just health score)
+    const rewardPointsEarned = healthToRewardPoints(totalRewardsScore);
 
     // Update reward history
     await supabase
@@ -146,6 +160,9 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           date: today,
           health_score: score.totalScore,
+          confidence_score: confidenceScore,
+          total_rewards_score: totalRewardsScore,
+          confidence_multiplier: confidenceMultiplier,
           points_earned: rewardPointsEarned,
         },
         {

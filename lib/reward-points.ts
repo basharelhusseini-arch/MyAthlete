@@ -1,23 +1,29 @@
 /**
  * Reward Points System
- * Converts daily Health Score to reward points
+ * Converts daily TOTAL Score (Health × Confidence) to reward points
  * 
  * Business Rules:
- * - healthScore < 50 → 0 reward points
- * - healthScore = 50 → 1 reward point
- * - healthScore = 110 → 25 reward points
+ * - Total Score = Health Score (0-110) × Confidence Multiplier (1.0-1.25)
+ * - totalScore < 50 → 0 reward points
+ * - totalScore = 50 → 1 reward point
+ * - totalScore = 110 → 25 reward points
  * - Linear increase between 50 and 110
+ * 
+ * Example:
+ * - Health: 85, Confidence: 30 (baseline) → 85 × 1.0 = 85 → 15 points
+ * - Health: 85, Confidence: 65 (medium) → 85 × 1.125 = 96 → 19.4 points
+ * - Health: 85, Confidence: 100 (max) → 85 × 1.25 = 106 → 23.4 points
  */
 
 /**
- * Calculate reward points from health score
- * Formula: 0 if < 50, else 1 + (healthScore - 50) * 0.4
+ * Calculate reward points from total score (health × confidence)
+ * Formula: 0 if < 50, else 1 + (totalScore - 50) * 0.4
  */
-export function healthToRewardPoints(healthScore: number): number {
-  if (healthScore < 50) return 0;
+export function healthToRewardPoints(totalScore: number): number {
+  if (totalScore < 50) return 0;
   
   // Linear formula: slope = (25 - 1) / (110 - 50) = 0.4
-  const raw = 1 + (healthScore - 50) * 0.4;
+  const raw = 1 + (totalScore - 50) * 0.4;
   
   // Keep 2 decimals for precision
   return Math.floor(raw * 100) / 100;
@@ -77,14 +83,16 @@ export function getRewardTier(points: number): {
 }
 
 /**
- * Examples of reward points calculation
+ * Examples of reward points calculation (using TOTAL score)
  * 
- * healthScore = 40  → 0 points (below threshold)
- * healthScore = 50  → 1 point
- * healthScore = 60  → 5 points
- * healthScore = 70  → 9 points
- * healthScore = 80  → 13 points
- * healthScore = 90  → 17 points
- * healthScore = 100 → 21 points
- * healthScore = 110 → 25 points
+ * totalScore = 40  → 0 points (below threshold)
+ * totalScore = 50  → 1 point
+ * totalScore = 60  → 5 points
+ * totalScore = 70  → 9 points
+ * totalScore = 80  → 13 points
+ * totalScore = 90  → 17 points
+ * totalScore = 100 → 21 points
+ * totalScore = 110 → 25 points
+ * totalScore = 120 → 29 points (with high confidence bonus)
+ * totalScore = 137 → 35.8 points (max possible: 110 × 1.25)
  */
