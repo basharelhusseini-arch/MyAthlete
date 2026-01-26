@@ -30,9 +30,13 @@ console.log(`  Fat:      ${testParams.targetFat}g`);
 console.log('\n' + '='.repeat(80));
 
 try {
-  const mealPlans = generateWeeklyMealPlans(testParams);
+  const result = generateWeeklyMealPlans(testParams);
+  const mealPlans = result.mealPlans;
 
   console.log('\n✅ Successfully generated 7-day meal plan!');
+  if (result.warnings.length > 0) {
+    console.log('\n⚠️  Warnings:', result.warnings.join(', '));
+  }
   console.log('\n📋 Daily Breakdown:\n');
 
   let allDaysValid = true;

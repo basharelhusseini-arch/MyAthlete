@@ -101,7 +101,7 @@ export function ConfidenceTooltip() {
         About Confidence Scores
       </h4>
       <p className="text-sm text-thrivv-text-secondary mb-3">
-        Confidence shows how complete and verified your data is. It's purely informational and never reduces your Health Score.
+        Confidence shows how complete and verified your data is. It&apos;s purely informational and never reduces your Health Score.
       </p>
       
       <div className="space-y-2">

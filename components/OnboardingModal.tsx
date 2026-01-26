@@ -141,7 +141,7 @@ export default function OnboardingModal({ isOpen, onComplete, userId }: Onboardi
                   Welcome to Thrivv
                 </h2>
                 <p className="text-sm text-thrivv-text-muted">
-                  Let's personalize your experience
+                  Let&apos;s personalize your experience
                 </p>
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function OnboardingModal({ isOpen, onComplete, userId }: Onboardi
             <div className="space-y-6 animate-slide-up">
               <div>
                 <h3 className="text-lg font-semibold text-thrivv-text-primary mb-2">
-                  What's your primary health goal?
+                  What&apos;s your primary health goal?
                 </h3>
                 <p className="text-sm text-thrivv-text-secondary">
                   This helps us tailor your experience. You can change this anytime.
@@ -319,7 +319,7 @@ export default function OnboardingModal({ isOpen, onComplete, userId }: Onboardi
                     ))}
                   </div>
                   <p className="text-xs text-thrivv-text-muted mt-2">
-                    We're exploring partnerships to provide wearables to users
+                    We&apos;re exploring partnerships to provide wearables to users
                   </p>
                 </div>
               )}

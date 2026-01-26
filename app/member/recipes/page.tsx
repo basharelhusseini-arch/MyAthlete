@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Filter, X, UtensilsCrossed, Trash2 } from 'lucide-react';
 import { recipesData, filterRecipes, sortRecipes, searchRecipes, type Recipe } from '@/lib/recipes';
 
@@ -59,32 +60,33 @@ export default function MemberRecipesPage() {
     }
   };
 
-  // Convert custom recipes to Recipe format
-  const formattedCustomRecipes: Recipe[] = customRecipes.map(cr => ({
-    id: cr.id,
-    name: cr.name,
-    description: cr.description || 'Custom recipe',
-    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=900&h=600&auto=format&fit=crop&q=80', // Default image
-    imageId: '1546069901-ba9599a7e63c',
-    calories: cr.calories_per_serving,
-    protein_g: cr.protein_per_serving,
-    carbs_g: cr.carbs_per_serving,
-    fat_g: cr.fat_per_serving,
-    prepMinutes: 0,
-    cookMinutes: 0,
-    servings: cr.servings,
-    ingredients: cr.ingredients.map((ing: any) => ({
-      item: ing.ingredientName,
-      quantity: ing.grams,
-      unit: 'g'
-    })),
-    instructions: ['Custom recipe - instructions not provided'],
-    tags: ['custom'],
-    isCustom: true
-  }));
+  // Convert custom recipes to Recipe format and combine with default recipes
+  const allRecipes = useMemo(() => {
+    const formattedCustomRecipes: Recipe[] = customRecipes.map(cr => ({
+      id: cr.id,
+      name: cr.name,
+      description: cr.description || 'Custom recipe',
+      imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=900&h=600&auto=format&fit=crop&q=80', // Default image
+      imageId: '1546069901-ba9599a7e63c',
+      calories: cr.calories_per_serving,
+      protein_g: cr.protein_per_serving,
+      carbs_g: cr.carbs_per_serving,
+      fat_g: cr.fat_per_serving,
+      prepMinutes: 0,
+      cookMinutes: 0,
+      servings: cr.servings,
+      ingredients: cr.ingredients.map((ing: any) => ({
+        item: ing.ingredientName,
+        quantity: ing.grams,
+        unit: 'g'
+      })),
+      instructions: ['Custom recipe - instructions not provided'],
+      tags: ['custom'],
+      isCustom: true
+    }));
 
-  // Combine default and custom recipes
-  const allRecipes = [...recipesData, ...formattedCustomRecipes];
+    return [...recipesData, ...formattedCustomRecipes];
+  }, [customRecipes]);
 
   // DEV: Verify no duplicate image URLs
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
@@ -344,10 +346,11 @@ export default function MemberRecipesPage() {
               >
                 {/* Recipe Image */}
                 <div className="relative h-48 overflow-hidden bg-thrivv-bg-card">
-                  <img
+                  <Image
                     src={`${recipe.imageUrl}&v=2`}
                     alt={recipe.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

@@ -69,39 +69,60 @@ const FALLBACK_SNACKS: Recipe[] = [
     id: 'fallback-banana-pb',
     name: 'Banana with Peanut Butter',
     description: 'Simple, nutritious snack',
+    imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=900&h=600&auto=format&fit=crop&q=80',
+    imageId: '1571771894821-ce9b6c11b08e',
     calories: 250,
     protein_g: 8,
     carbs_g: 30,
     fat_g: 12,
-    ingredients: ['1 medium banana', '2 tbsp peanut butter'],
+    prepMinutes: 2,
+    cookMinutes: 0,
+    servings: 1,
+    ingredients: [
+      { item: 'banana', quantity: 1, unit: 'medium' },
+      { item: 'peanut butter', quantity: 2, unit: 'tbsp' }
+    ],
     instructions: ['Slice banana', 'Spread peanut butter'],
-    prep_time: 2,
     tags: ['snack', 'quick', 'vegetarian']
   },
   {
     id: 'fallback-greek-yogurt',
     name: 'Greek Yogurt with Honey',
     description: 'High-protein snack',
+    imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=900&h=600&auto=format&fit=crop&q=80',
+    imageId: '1488477181946-6428a0291777',
     calories: 180,
     protein_g: 18,
     carbs_g: 20,
     fat_g: 4,
-    ingredients: ['200g Greek yogurt', '1 tbsp honey'],
+    prepMinutes: 1,
+    cookMinutes: 0,
+    servings: 1,
+    ingredients: [
+      { item: 'Greek yogurt', quantity: 200, unit: 'g' },
+      { item: 'honey', quantity: 1, unit: 'tbsp' }
+    ],
     instructions: ['Mix yogurt with honey'],
-    prep_time: 1,
     tags: ['snack', 'quick', 'high-protein', 'vegetarian']
   },
   {
     id: 'fallback-olive-toast',
     name: 'Toast with Olive Oil',
     description: 'Simple carb snack',
+    imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&h=600&auto=format&fit=crop&q=80',
+    imageId: '1509440159596-0249088772ff',
     calories: 200,
     protein_g: 5,
     carbs_g: 25,
     fat_g: 9,
-    ingredients: ['2 slices whole wheat bread', '1 tbsp olive oil'],
+    prepMinutes: 3,
+    cookMinutes: 0,
+    servings: 1,
+    ingredients: [
+      { item: 'whole wheat bread', quantity: 2, unit: 'slices' },
+      { item: 'olive oil', quantity: 1, unit: 'tbsp' }
+    ],
     instructions: ['Toast bread', 'Drizzle with olive oil'],
-    prep_time: 3,
     tags: ['snack', 'quick', 'vegan', 'vegetarian']
   }
 ];

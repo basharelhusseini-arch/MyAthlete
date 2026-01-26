@@ -48,13 +48,13 @@ export const CONFIDENCE_SCORE_COMPONENTS = {
  * Applied to individual data points, not overall scores
  * Range: 1.0 to 1.25 (max 25% boost)
  */
-export const VERIFICATION_MULTIPLIERS = {
+export const VERIFICATION_MULTIPLIERS: Record<string, number> = {
   MANUAL: 1.0,           // Baseline (no boost)
   SURVEY: 1.05,          // +5% for survey verification
   CONSISTENCY: 1.05,     // +5% for passing consistency checks
   WEARABLE: 1.15,        // +15% for wearable-verified data
   COMBINED_MAX: 1.25,    // Maximum possible boost (wearable + survey)
-} as const;
+};
 
 /**
  * Confidence Level Thresholds
@@ -326,7 +326,7 @@ export function validateMetricChange(params: {
   result: 'pass' | 'flag' | 'fail';
   reason?: string;
 } {
-  const change = Math.abs(newValue - oldValue);
+  const change = Math.abs(params.newValue - params.oldValue);
   
   if (params.metric === 'weight') {
     const weeksElapsed = params.daysBetween / 7;

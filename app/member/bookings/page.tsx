@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Clock, Users, CheckCircle, Star, Award, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trainersData, type Trainer } from '@/lib/trainers-data';
 
@@ -367,10 +368,12 @@ export default function MemberBookingsPage() {
               <div key={trainer.id} className="premium-card p-6">
                 {/* Trainer Avatar */}
                 <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center overflow-hidden">
-                    <img 
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center overflow-hidden relative">
+                    <Image 
                       src={trainer.avatar} 
                       alt={trainer.fullName}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -465,9 +468,11 @@ export default function MemberBookingsPage() {
 
             <div className="mb-6">
               <div className="flex items-center space-x-3 mb-4">
-                <img 
+                <Image 
                   src={selectedTrainer.avatar} 
                   alt={selectedTrainer.fullName}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-xl"
                 />
                 <div>

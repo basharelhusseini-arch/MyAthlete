@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, Calendar, Target, TrendingUp, UtensilsCrossed, Trash2, ChefHat, CheckCircle } from 'lucide-react';
@@ -15,42 +15,7 @@ export default function MemberNutritionPage() {
   const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    const storedMemberId = localStorage.getItem('memberId');
-    if (!storedMemberId) {
-      router.push('/member/login');
-      return;
-    }
-    setMemberId(storedMemberId);
-    fetchPlans(storedMemberId);
-    loadTodayLog(storedMemberId);
-  }, [router, refreshKey]);
-
-  const fetchPlans = async (id: string) => {
-    try {
-      const response = await fetch(`/api/nutrition-plans?memberId=${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setPlans(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch nutrition plans:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadTodayLog = async (id: string) => {
-    const log = await getTodayLog(id);
-    setTodayLog(log);
-    
-    // Update health score if meals are logged
-    if (log.meals.length > 0) {
-      await updateHealthScore(id, log);
-    }
-  };
-
-  const updateHealthScore = async (userId: string, log?: typeof todayLog) => {
+  const updateHealthScore = useCallback(async (userId: string, log?: typeof todayLog) => {
     try {
       // Get the log if not provided
       const nutritionLog = log || await getTodayLog(userId);
@@ -82,7 +47,42 @@ export default function MemberNutritionPage() {
     } catch (error) {
       console.error('Failed to update health score:', error);
     }
-  };
+  }, []);
+
+  const fetchPlans = useCallback(async (id: string) => {
+    try {
+      const response = await fetch(`/api/nutrition-plans?memberId=${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setPlans(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch nutrition plans:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const loadTodayLog = useCallback(async (id: string) => {
+    const log = await getTodayLog(id);
+    setTodayLog(log);
+    
+    // Update health score if meals are logged
+    if (log.meals.length > 0) {
+      await updateHealthScore(id, log);
+    }
+  }, [updateHealthScore]);
+
+  useEffect(() => {
+    const storedMemberId = localStorage.getItem('memberId');
+    if (!storedMemberId) {
+      router.push('/member/login');
+      return;
+    }
+    setMemberId(storedMemberId);
+    fetchPlans(storedMemberId);
+    loadTodayLog(storedMemberId);
+  }, [router, refreshKey, fetchPlans, loadTodayLog]);
 
   const handleRemoveMeal = async (recipeId: string) => {
     if (!memberId || !confirm('Remove this meal from today?')) return;

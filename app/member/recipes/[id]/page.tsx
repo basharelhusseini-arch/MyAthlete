@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Clock, Users, CheckCircle, X } from 'lucide-react';
 import { getRecipeById, type Recipe } from '@/lib/recipes';
 import { addMealToToday, getTodayLog, computeTotals, type DailyLog } from '@/lib/nutrition-log';
@@ -16,6 +17,12 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
   const [showToast, setShowToast] = useState(false);
   const [memberId, setMemberId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const loadTodayLog = useCallback(async (userId: string) => {
+    const log = await getTodayLog(userId);
+    setTodayLog(log);
+    setAddedToToday(log.meals.some(m => m.recipeId === params.id));
+  }, [params.id]);
 
   useEffect(() => {
     const loadRecipe = async () => {
@@ -82,13 +89,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
     };
 
     loadRecipe();
-  }, [params.id, router]);
-
-  const loadTodayLog = async (userId: string) => {
-    const log = await getTodayLog(userId);
-    setTodayLog(log);
-    setAddedToToday(log.meals.some(m => m.recipeId === params.id));
-  };
+  }, [params.id, router, loadTodayLog]);
 
   const handleAddToToday = async () => {
     if (!recipe || !memberId) {
@@ -183,11 +184,12 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
       {/* Hero Image */}
       <div className="premium-card p-0 overflow-hidden mb-8 animate-slide-up">
         <div className="relative h-80 md:h-96 overflow-hidden bg-thrivv-bg-card">
-          <img
+          <Image
             src={`${recipe.imageUrl}&v=2`}
             alt={recipe.name}
-            className="w-full h-full object-cover"
-            loading="eager"
+            fill
+            className="object-cover"
+            priority
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&auto=format&fit=crop&q=80';
