@@ -83,7 +83,7 @@ export default function LandingPage() {
       <nav className="relative z-50 glass-effect border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Logo variant="full" className="h-8 w-auto" linkTo="/" />
+            <Logo variant="gold" size="md" linkTo="/" />
             <div className="flex items-center space-x-4">
               <Link
                 href="/member/login"
@@ -111,7 +111,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto text-center relative z-20">
           <div className="animate-fade-in-up">
             <div className="flex justify-center mb-8">
-              <Logo variant="full" className="h-16 sm:h-20 lg:h-24 w-auto" />
+              <Logo variant="gold" size="hero" />
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
               <span className="text-white">Welcome to Your Transformation</span>

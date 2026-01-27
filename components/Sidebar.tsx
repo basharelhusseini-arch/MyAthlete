@@ -102,7 +102,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center h-20 px-3 border-b border-thrivv-gold-500/10">
-            <Logo variant="icon" linkTo={memberData ? '/member/dashboard' : '/'} width={40} height={40} />
+            <Logo variant="gold" size="md" linkTo={memberData ? '/member/dashboard' : '/'} />
           </div>
 
           {/* Member Avatar (if logged in) */}

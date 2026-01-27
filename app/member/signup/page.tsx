@@ -115,7 +115,7 @@ export default function MemberSignupPage() {
         {/* Logo */}
         <div className="text-center mb-12 animate-fade-in-up">
           <div className="mb-6 flex justify-center">
-            <Logo variant="full" className="h-12 w-auto" linkTo="/" />
+            <Logo variant="gold" size="xl" linkTo="/" />
           </div>
           <h1 className="text-3xl font-semibold text-gradient mb-2">Start Your Journey</h1>
           <p className="text-thrivv-text-secondary">Create your account to begin</p>

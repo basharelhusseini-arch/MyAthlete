@@ -3,153 +3,109 @@
 import Link from 'next/link';
 
 interface LogoProps {
-  variant?: 'full' | 'icon' | 'compact';
+  variant?: 'gold' | 'white';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero';
   className?: string;
   linkTo?: string;
-  width?: number;
-  height?: number;
 }
 
+// Size presets matching requirements
+const sizeClasses = {
+  sm: 'h-5',      // 20px - mobile navbar
+  md: 'h-6',      // 24px - desktop navbar, sidebar
+  lg: 'h-8',      // 32px - larger contexts
+  xl: 'h-12',     // 48px - section headers
+  hero: 'h-16 sm:h-20 lg:h-24', // 64-96px responsive - hero sections
+};
+
 export default function Logo({
-  variant = 'full',
+  variant = 'gold',
+  size = 'md',
   className = '',
   linkTo,
-  width,
-  height,
 }: LogoProps) {
-  const logoContent = (
-    <>
-      {variant === 'full' && (
-        <svg
-          viewBox="0 0 400 100"
-          className={className || 'h-8 w-auto'}
-          style={{ width: width ? `${width}px` : undefined, height: height ? `${height}px` : undefined }}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* THRIVV wordmark in italic style */}
-          <g transform="skewX(-12)">
-            {/* T */}
-            <path
-              d="M 15 20 L 55 20 L 55 35 L 42 35 L 42 80 L 28 80 L 28 35 L 15 35 Z"
-              fill="white"
-            />
-            
-            {/* H */}
-            <path
-              d="M 65 20 L 79 20 L 79 45 L 96 45 L 96 20 L 110 20 L 110 80 L 96 80 L 96 58 L 79 58 L 79 80 L 65 80 Z"
-              fill="white"
-            />
-            
-            {/* R */}
-            <path
-              d="M 120 20 L 155 20 C 162 20 167 22 170 26 C 173 30 175 35 175 42 C 175 48 173 52 169 55 C 166 58 161 59 155 59 L 134 59 L 134 80 L 120 80 Z M 134 33 L 134 47 L 152 47 C 155 47 157 46 158 44 C 159 42 160 40 160 37 C 160 34 159 32 158 30 C 157 28 155 27 152 27 L 134 27 Z"
-              fill="white"
-            />
-            <path
-              d="M 165 59 L 175 59 L 185 80 L 170 80 Z"
-              fill="white"
-            />
-            
-            {/* I */}
-            <path
-              d="M 195 20 L 209 20 L 209 80 L 195 80 Z"
-              fill="white"
-            />
-            
-            {/* V */}
-            <path
-              d="M 219 20 L 234 20 L 252 65 L 270 20 L 285 20 L 260 80 L 244 80 Z"
-              fill="white"
-            />
-            
-            {/* V (second) */}
-            <path
-              d="M 289 20 L 304 20 L 322 65 L 340 20 L 355 20 L 330 80 L 314 80 Z"
-              fill="white"
-            />
-          </g>
-          
-          {/* Optional glow effect */}
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
-      )}
-      
-      {variant === 'compact' && (
-        <svg
-          viewBox="0 0 200 100"
-          className={className || 'h-8 w-auto'}
-          style={{ width: width ? `${width}px` : undefined, height: height ? `${height}px` : undefined }}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Compact THRV wordmark (no double V) */}
-          <g transform="skewX(-12)">
-            <path
-              d="M 15 20 L 55 20 L 55 35 L 42 35 L 42 80 L 28 80 L 28 35 L 15 35 Z"
-              fill="white"
-            />
-            <path
-              d="M 65 20 L 79 20 L 79 45 L 96 45 L 96 20 L 110 20 L 110 80 L 96 80 L 96 58 L 79 58 L 79 80 L 65 80 Z"
-              fill="white"
-            />
-            <path
-              d="M 120 20 L 155 20 C 162 20 167 22 170 26 C 173 30 175 35 175 42 C 175 48 173 52 169 55 C 166 58 161 59 155 59 L 134 59 L 134 80 L 120 80 Z M 134 33 L 134 47 L 152 47 C 155 47 157 46 158 44 C 159 42 160 40 160 37 C 160 34 159 32 158 30 C 157 28 155 27 152 27 L 134 27 Z"
-              fill="white"
-            />
-            <path
-              d="M 165 59 L 175 59 L 185 80 L 170 80 Z"
-              fill="white"
-            />
-            <path
-              d="M 195 20 L 234 20 L 252 65 L 270 20 L 309 20 L 260 80 L 244 80 Z"
-              fill="white"
-            />
-          </g>
-        </svg>
-      )}
-      
-      {variant === 'icon' && (
-        <div
-          className={className || 'w-10 h-10 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center glow-gold'}
-          style={{ width: width ? `${width}px` : undefined, height: height ? `${height}px` : undefined }}
-        >
-          <svg
-            viewBox="0 0 100 100"
-            className="w-6 h-6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* T icon */}
-            <g transform="skewX(-12)">
-              <path
-                d="M 20 25 L 80 25 L 80 42 L 62 42 L 62 85 L 38 85 L 38 42 L 20 42 Z"
-                fill="black"
-                stroke="black"
-                strokeWidth="2"
-              />
-            </g>
-          </svg>
-        </div>
-      )}
-    </>
+  const fillColor = variant === 'gold' ? '#FFC300' : '#FFFFFF';
+  
+  // THRIVV wordmark SVG - exact replica of brand wordmark with forward slashes
+  const logoSvg = (
+    <svg
+      viewBox="0 0 538 100"
+      className={`${sizeClasses[size]} ${className} w-auto`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ filter: variant === 'gold' ? 'drop-shadow(0 0 12px rgba(255, 195, 0, 0.15))' : 'none' }}
+    >
+      {/* THRIVV wordmark with italic slant and forward slashes */}
+      <g transform="skewX(-8)">
+        {/* T */}
+        <path
+          d="M 10 15 L 70 15 L 70 28 L 52 28 L 52 85 L 35 85 L 35 28 L 17 28 Z"
+          fill={fillColor}
+        />
+        
+        {/* H */}
+        <path
+          d="M 78 15 L 95 15 L 95 43 L 118 43 L 118 15 L 135 15 L 135 85 L 118 85 L 118 58 L 95 58 L 95 85 L 78 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* R */}
+        <path
+          d="M 145 15 L 190 15 C 200 15 207 17 212 21 C 217 25 220 31 220 40 C 220 48 217 54 212 58 C 207 62 200 64 190 64 L 162 64 L 162 85 L 145 85 Z M 162 29 L 162 51 L 187 51 C 192 51 195 50 197 48 C 199 46 200 43 200 39 C 200 35 199 32 197 30 C 195 28 192 27 187 27 L 162 27 Z"
+          fill={fillColor}
+        />
+        {/* R tail */}
+        <path
+          d="M 180 64 L 195 64 L 210 85 L 190 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* I */}
+        <path
+          d="M 220 15 L 237 15 L 237 85 L 220 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* V */}
+        <path
+          d="M 247 15 L 265 15 L 287 68 L 309 15 L 327 15 L 295 85 L 279 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* V (second) */}
+        <path
+          d="M 332 15 L 350 15 L 372 68 L 394 15 L 412 15 L 380 85 L 364 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* Forward slash 1 */}
+        <path
+          d="M 425 15 L 440 15 L 460 85 L 445 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* Forward slash 2 */}
+        <path
+          d="M 465 15 L 480 15 L 500 85 L 485 85 Z"
+          fill={fillColor}
+        />
+        
+        {/* Forward slash 3 */}
+        <path
+          d="M 505 15 L 520 15 L 540 85 L 525 85 Z"
+          fill={fillColor}
+        />
+      </g>
+    </svg>
   );
 
   if (linkTo) {
     return (
       <Link href={linkTo} className="inline-block transition-opacity hover:opacity-80">
-        {logoContent}
+        {logoSvg}
       </Link>
     );
   }
 
-  return <div className="inline-block">{logoContent}</div>;
+  return <div className="inline-block">{logoSvg}</div>;
 }
