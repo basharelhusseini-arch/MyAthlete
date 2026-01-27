@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import BackgroundWordmark from '@/components/BackgroundWordmark';
+import Logo from '@/components/Logo';
 
 export default function LandingPage() {
   const features = [
@@ -82,13 +83,7 @@ export default function LandingPage() {
       <nav className="relative z-50 glass-effect border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <Sparkles className="w-10 h-10 text-yellow-400 animate-pulse" />
-                <div className="absolute inset-0 bg-yellow-400/20 blur-xl"></div>
-              </div>
-              <span className="text-3xl font-bold text-gradient">Thrivv</span>
-            </div>
+            <Logo variant="full" className="h-8 w-auto" linkTo="/" />
             <div className="flex items-center space-x-4">
               <Link
                 href="/member/login"
@@ -115,9 +110,11 @@ export default function LandingPage() {
 
         <div className="max-w-7xl mx-auto text-center relative z-20">
           <div className="animate-fade-in-up">
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-6">
-              <span className="text-white">Welcome to </span>
-              <span className="text-gradient">Thrivv</span>
+            <div className="flex justify-center mb-8">
+              <Logo variant="full" className="h-16 sm:h-20 lg:h-24 w-auto" />
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
+              <span className="text-white">Welcome to Your Transformation</span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
               The all-in-one fitness platform that unites AI-powered workouts, intelligent nutrition planning, 

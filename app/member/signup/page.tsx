@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Mail, Lock, Phone, Sparkles } from 'lucide-react';
 import BackgroundWordmark from '@/components/BackgroundWordmark';
+import Logo from '@/components/Logo';
 
 export default function MemberSignupPage() {
   const [formData, setFormData] = useState({
@@ -113,8 +114,8 @@ export default function MemberSignupPage() {
       <div className="relative max-w-md w-full z-20">
         {/* Logo */}
         <div className="text-center mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 mb-6 glow-gold">
-            <Sparkles className="w-8 h-8 text-black" />
+          <div className="mb-6 flex justify-center">
+            <Logo variant="full" className="h-12 w-auto" linkTo="/" />
           </div>
           <h1 className="text-3xl font-semibold text-gradient mb-2">Start Your Journey</h1>
           <p className="text-thrivv-text-secondary">Create your account to begin</p>

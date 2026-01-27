@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import BackgroundWordmark from '@/components/BackgroundWordmark';
+import Logo from '@/components/Logo';
 
 export default function MemberLoginPage() {
   const [email, setEmail] = useState('');
@@ -62,8 +63,8 @@ export default function MemberLoginPage() {
       <div className="relative max-w-md w-full z-20">
         {/* Logo */}
         <div className="text-center mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 mb-6 glow-gold">
-            <span className="text-2xl font-bold text-black">T</span>
+          <div className="mb-6 flex justify-center">
+            <Logo variant="full" className="h-12 w-auto" linkTo="/" />
           </div>
           <h1 className="text-3xl font-semibold text-gradient mb-2">Welcome Back</h1>
           <p className="text-thrivv-text-secondary">Sign in to continue your journey</p>

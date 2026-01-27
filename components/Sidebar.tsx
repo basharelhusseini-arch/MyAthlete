@@ -19,6 +19,7 @@ import {
   ChefHat
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Logo from './Logo';
 
 // Admin/Trainer navigation
 const adminNavigation = [
@@ -101,9 +102,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center h-20 px-3 border-b border-thrivv-gold-500/10">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center font-bold text-black text-lg">
-              T
-            </div>
+            <Logo variant="icon" linkTo={memberData ? '/member/dashboard' : '/'} width={40} height={40} />
           </div>
 
           {/* Member Avatar (if logged in) */}
