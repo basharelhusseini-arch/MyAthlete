@@ -26,16 +26,16 @@ export default function Logo({
 }: LogoProps) {
   const fillColor = variant === 'gold' ? '#FFC300' : '#FFFFFF';
   
-  // THRIVV wordmark SVG - exact replica of brand wordmark with forward slashes
+  // THRIV/// wordmark SVG - exact replica of brand wordmark with forward slashes
   const logoSvg = (
     <svg
-      viewBox="0 0 538 100"
+      viewBox="0 0 490 100"
       className={`${sizeClasses[size]} ${className} w-auto`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ filter: variant === 'gold' ? 'drop-shadow(0 0 12px rgba(255, 195, 0, 0.15))' : 'none' }}
     >
-      {/* THRIVV wordmark with italic slant and forward slashes */}
+      {/* THRIV/// wordmark with italic slant and forward slashes */}
       <g transform="skewX(-8)">
         {/* T */}
         <path
@@ -66,33 +66,27 @@ export default function Logo({
           fill={fillColor}
         />
         
-        {/* V */}
+        {/* V (single) */}
         <path
           d="M 247 15 L 265 15 L 287 68 L 309 15 L 327 15 L 295 85 L 279 85 Z"
           fill={fillColor}
         />
         
-        {/* V (second) */}
-        <path
-          d="M 332 15 L 350 15 L 372 68 L 394 15 L 412 15 L 380 85 L 364 85 Z"
-          fill={fillColor}
-        />
-        
         {/* Forward slash 1 */}
         <path
-          d="M 425 15 L 440 15 L 460 85 L 445 85 Z"
+          d="M 345 15 L 360 15 L 380 85 L 365 85 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 2 */}
         <path
-          d="M 465 15 L 480 15 L 500 85 L 485 85 Z"
+          d="M 390 15 L 405 15 L 425 85 L 410 85 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 3 */}
         <path
-          d="M 505 15 L 520 15 L 540 85 L 525 85 Z"
+          d="M 435 15 L 450 15 L 470 85 L 455 85 Z"
           fill={fillColor}
         />
       </g>
