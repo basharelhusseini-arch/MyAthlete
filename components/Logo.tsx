@@ -72,21 +72,21 @@ export default function Logo({
           fill={fillColor}
         />
         
-        {/* Forward slash 1 */}
+        {/* Forward slash 1 - / shape (bottom-left to top-right) */}
         <path
-          d="M 345 15 L 360 15 L 380 85 L 365 85 Z"
+          d="M 345 85 L 360 85 L 380 15 L 365 15 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 2 */}
+        {/* Forward slash 2 - / shape */}
         <path
-          d="M 390 15 L 405 15 L 425 85 L 410 85 Z"
+          d="M 390 85 L 405 85 L 425 15 L 410 15 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 3 */}
+        {/* Forward slash 3 - / shape */}
         <path
-          d="M 435 15 L 450 15 L 470 85 L 455 85 Z"
+          d="M 435 85 L 450 85 L 470 15 L 455 15 Z"
           fill={fillColor}
         />
       </g>
