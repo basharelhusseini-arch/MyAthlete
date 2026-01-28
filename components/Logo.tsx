@@ -24,7 +24,7 @@ export default function Logo({
   className = '',
   linkTo,
 }: LogoProps) {
-  const fillColor = variant === 'gold' ? '#FFC300' : '#FFFFFF';
+  const fillColor = variant === 'gold' ? '#FFD000' : '#FFFFFF';
   
   // THRIV/// wordmark SVG - exact replica of brand wordmark with forward slashes
   const logoSvg = (
@@ -33,7 +33,7 @@ export default function Logo({
       className={`${sizeClasses[size]} ${className} w-auto`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ filter: variant === 'gold' ? 'drop-shadow(0 0 12px rgba(255, 195, 0, 0.15))' : 'none' }}
+      style={{ filter: variant === 'gold' ? 'drop-shadow(0 0 12px rgba(255, 208, 0, 0.15))' : 'none' }}
     >
       {/* THRIV/// wordmark with italic slant and forward slashes */}
       <g transform="skewX(-8)">

@@ -34,7 +34,7 @@
   
   .premium-card:hover {
     @apply border-thrivv-gold-500/30 scale-[1.01];
-    box-shadow: 0 0 30px rgba(255, 195, 0, 0.08);
+    box-shadow: 0 0 30px rgba(255, 208, 0, 0.08);
   }
   
   /* Primary button - solid THRIVV gold */
@@ -44,7 +44,7 @@
   
   .btn-primary:hover {
     @apply bg-thrivv-gold-400 scale-[1.02];
-    box-shadow: 0 8px 30px rgba(255, 195, 0, 0.35);
+    box-shadow: 0 8px 30px rgba(255, 208, 0, 0.35);
   }
   
   /* Ghost button */
@@ -59,12 +59,12 @@
   
   .input-premium:focus {
     @apply outline-none border-thrivv-gold-500/40 bg-thrivv-bg-card;
-    box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.08);
+    box-shadow: 0 0 0 4px rgba(255, 208, 0, 0.08);
   }
   
   /* Glow effect for active states */
   .glow-gold {
-    box-shadow: 0 0 20px rgba(255, 195, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 208, 0, 0.15);
   }
   
   .glow-green {
