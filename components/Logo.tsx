@@ -29,7 +29,7 @@ export default function Logo({
   // THRIV/// wordmark SVG - exact replica of brand wordmark with forward slashes
   const logoSvg = (
     <svg
-      viewBox="0 0 450 100"
+      viewBox="0 0 445 100"
       className={`${sizeClasses[size]} ${className} w-auto`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -60,33 +60,33 @@ export default function Logo({
           fill={fillColor}
         />
         
-        {/* I */}
+        {/* I - moved right for better R-I spacing */}
         <path
-          d="M 220 15 L 237 15 L 237 85 L 220 85 Z"
+          d="M 225 15 L 242 15 L 242 85 L 225 85 Z"
           fill={fillColor}
         />
         
-        {/* V (single) */}
+        {/* V (single) - adjusted for better I-V flow */}
         <path
-          d="M 247 15 L 265 15 L 287 68 L 309 15 L 327 15 L 295 85 L 279 85 Z"
+          d="M 252 15 L 270 15 L 292 68 L 314 15 L 332 15 L 300 85 L 284 85 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 1 - / shape (bottom-left to top-right) */}
+        {/* Forward slash 1 - / shape (bottom-left to top-right) - tighter to V */}
         <path
-          d="M 335 85 L 348 85 L 365 15 L 352 15 Z"
+          d="M 338 85 L 350 85 L 366 15 L 354 15 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 2 - / shape */}
         <path
-          d="M 370 85 L 383 85 L 400 15 L 387 15 Z"
+          d="M 370 85 L 382 85 L 398 15 L 386 15 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 3 - / shape */}
         <path
-          d="M 405 85 L 418 85 L 435 15 L 422 15 Z"
+          d="M 402 85 L 414 85 L 430 15 L 418 15 Z"
           fill={fillColor}
         />
       </g>
