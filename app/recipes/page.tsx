@@ -25,7 +25,7 @@ function RecipeImage({ recipe }: { recipe: Recipe }) {
     return (
       <div className="w-full h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center">
         <div className="text-5xl mb-2">{getFallbackIcon()}</div>
-        <UtensilsCrossed className="w-8 h-8 text-yellow-500/30" />
+        <UtensilsCrossed className="w-8 h-8 text-thrivv-gold-500/30" />
       </div>
     );
   }
@@ -109,7 +109,7 @@ export default function RecipesPage() {
         <div className="flex gap-3">
           <Link
             href="/recipes/builder"
-            className="flex items-center px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+            className="flex items-center px-4 py-2 bg-thrivv-gold-500 text-black font-semibold rounded-lg hover:bg-thrivv-gold-400 transition-colors"
           >
             <UtensilsCrossed className="w-5 h-5 mr-2" />
             Build Your Recipe
@@ -127,21 +127,21 @@ export default function RecipesPage() {
       {/* Search and Filter */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-500/50 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-thrivv-gold-500/50 w-5 h-5" />
           <input
             type="text"
             placeholder="Search recipes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-black border border-yellow-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-black border border-thrivv-gold-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-thrivv-gold-500 focus:border-thrivv-gold-500 transition-all"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-500/50 w-5 h-5" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-thrivv-gold-500/50 w-5 h-5" />
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="pl-10 pr-8 py-2 bg-black border border-yellow-500/30 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all appearance-none"
+            className="pl-10 pr-8 py-2 bg-black border border-thrivv-gold-500/30 rounded-lg text-white focus:ring-2 focus:ring-thrivv-gold-500 focus:border-thrivv-gold-500 transition-all appearance-none"
           >
             <option value="">All Tags</option>
             {allTags.map(tag => (
@@ -154,7 +154,7 @@ export default function RecipesPage() {
       {/* Recipes Grid */}
       {filteredRecipes.length === 0 ? (
         <div className="dark-card p-12 text-center">
-          <UtensilsCrossed className="w-16 h-16 text-yellow-500/30 mx-auto mb-4" />
+          <UtensilsCrossed className="w-16 h-16 text-thrivv-gold-500/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">No recipes found</h3>
           <p className="text-gray-300 mb-6">
             {searchTerm || selectedTag ? 'Try adjusting your search or filters' : 'Get started by adding your first recipe'}

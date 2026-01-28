@@ -102,7 +102,7 @@ export default function MemberSignupPage() {
       {/* Layer A: Base background glow (z-index: 0) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-thrivv-gold-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-thrivv-amber-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-thrivv-gold-500/5 rounded-full blur-3xl" />
       </div>
 
       {/* Layer B: Background wordmark (z-index: 10) */}

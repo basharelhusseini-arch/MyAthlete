@@ -394,7 +394,7 @@ export default function WorkoutPlanDetailPage() {
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
-                                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 text-black flex items-center justify-center font-semibold text-sm">
+                                  <div className="w-8 h-8 rounded-lg bg-thrivv-gold-500 text-black flex items-center justify-center font-semibold text-sm">
                                     {index + 1}
                                   </div>
                                   <h5 className="font-semibold text-thrivv-text-primary text-base">{exercise.name}</h5>
@@ -452,7 +452,7 @@ export default function WorkoutPlanDetailPage() {
                                 </span>
                               )}
                               {ex.weight && (
-                                <span className="px-3 py-1 bg-thrivv-amber-500/10 text-thrivv-amber-500 border border-thrivv-amber-500/20 rounded-lg font-medium">
+                                <span className="px-3 py-1 bg-thrivv-gold-500/10 text-thrivv-gold-500 border border-thrivv-gold-500/20 rounded-lg font-medium">
                                   {ex.weight} lbs
                                 </span>
                               )}
@@ -560,7 +560,7 @@ export default function WorkoutPlanDetailPage() {
                                     {exercise.muscleGroups.map((muscle, i) => (
                                       <span
                                         key={i}
-                                        className="px-3 py-1 bg-thrivv-amber-500/10 text-thrivv-amber-500 text-sm rounded-lg border border-thrivv-amber-500/20 capitalize font-medium"
+                                        className="px-3 py-1 bg-thrivv-gold-500/10 text-thrivv-gold-500 text-sm rounded-lg border border-thrivv-gold-500/20 capitalize font-medium"
                                       >
                                         {muscle}
                                       </span>
@@ -587,8 +587,8 @@ export default function WorkoutPlanDetailPage() {
                                         {exercise.recommendedSets.intermediate.sets} sets × {exercise.recommendedSets.intermediate.reps || exercise.recommendedSets.intermediate.duration}
                                       </p>
                                     </div>
-                                    <div className="bg-thrivv-amber-500/10 border border-thrivv-amber-500/20 rounded-lg p-3">
-                                      <p className="text-xs font-semibold text-thrivv-amber-500 uppercase mb-1">Advanced</p>
+                                    <div className="bg-thrivv-gold-500/10 border border-thrivv-gold-500/20 rounded-lg p-3">
+                                      <p className="text-xs font-semibold text-thrivv-gold-500 uppercase mb-1">Advanced</p>
                                       <p className="text-sm font-medium text-thrivv-text-primary">
                                         {exercise.recommendedSets.advanced.sets} sets × {exercise.recommendedSets.advanced.reps || exercise.recommendedSets.advanced.duration}
                                       </p>

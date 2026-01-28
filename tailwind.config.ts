@@ -18,20 +18,18 @@ const config: Config = {
             darker: '#060708',
             card: '#13151A',
           },
+          // THRIVV Brand Gold - Single source of truth from logo
           gold: {
+            DEFAULT: '#FFC300', // Primary brand gold - use everywhere
             50: '#FFF9E5',
             100: '#FFF3CC',
             200: '#FFE799',
             300: '#FFDB66',
             400: '#FFCF33',
-            500: '#FFC300', // Primary gold
+            500: '#FFC300', // Primary gold (same as DEFAULT)
             600: '#E6B000',
             700: '#CC9D00',
             800: '#B38A00',
-          },
-          amber: {
-            500: '#FF9500',
-            600: '#E68600',
           },
           neon: {
             green: '#10B981',
@@ -42,6 +40,9 @@ const config: Config = {
             muted: '#6B7280',
           }
         },
+        // Aliases for common usage
+        'brand-primary': '#FFC300',
+        'brand-gold': '#FFC300',
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

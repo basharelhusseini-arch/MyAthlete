@@ -45,7 +45,7 @@ export default function NutritionPlansPage() {
         <div className="flex gap-3">
           <Link
             href="/nutrition/builder"
-            className="flex items-center px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-200 shadow-lg shadow-yellow-500/20"
+            className="flex items-center px-4 py-2 bg-thrivv-gold-500 text-black font-semibold rounded-lg hover:from-thrivv-gold-500 hover:to-thrivv-gold-500 transition-all duration-200 shadow-lg shadow-thrivv-gold-500/20"
           >
             <Sparkles className="w-5 h-5 mr-2" />
             AI Diet Builder
@@ -61,8 +61,8 @@ export default function NutritionPlansPage() {
       </div>
 
       {plans.length === 0 ? (
-        <div className="glass-effect rounded-lg shadow-lg shadow-yellow-500/10 p-12 text-center">
-          <Target className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+        <div className="glass-effect rounded-lg shadow-lg shadow-thrivv-gold-500/10 p-12 text-center">
+          <Target className="w-16 h-16 text-thrivv-gold-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">No nutrition plans yet</h3>
           <p className="text-gray-400 mb-6">Get started by generating a personalized nutrition plan</p>
           <Link
@@ -85,7 +85,7 @@ export default function NutritionPlansPage() {
                 <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
                 <span className={`px-3 py-1 text-xs font-medium rounded-full ${
                   plan.status === 'active' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
-                  plan.status === 'completed' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
+                  plan.status === 'completed' ? 'bg-thrivv-gold-500/20 text-yellow-300 border border-thrivv-gold-500/30' :
                   'bg-gray-500/20 text-gray-300 border border-gray-500/30'
                 }`}>
                   {plan.status}
@@ -95,15 +95,15 @@ export default function NutritionPlansPage() {
               
               <div className="space-y-2 mb-4">
                 <div className="flex items-center text-sm text-gray-400">
-                  <Target className="w-4 h-4 mr-2 text-yellow-400" />
+                  <Target className="w-4 h-4 mr-2 text-thrivv-gold-400" />
                   Goal: <span className="font-medium ml-1 capitalize text-white">{plan.goal.replace('_', ' ')}</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-400">
-                  <TrendingUp className="w-4 h-4 mr-2 text-yellow-400" />
+                  <TrendingUp className="w-4 h-4 mr-2 text-thrivv-gold-400" />
                   Calories: <span className="font-medium ml-1 text-white">{plan.macroTargets.calories}</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-400">
-                  <Calendar className="w-4 h-4 mr-2 text-yellow-400" />
+                  <Calendar className="w-4 h-4 mr-2 text-thrivv-gold-400" />
                   Duration: <span className="font-medium ml-1 text-white">{plan.duration} days</span>
                 </div>
               </div>

@@ -24,42 +24,42 @@ export default function LandingPage() {
       icon: Dumbbell,
       title: 'AI-Powered Workouts',
       description: 'Generate personalized workout plans tailored to your goals, experience level, and available equipment.',
-      color: 'from-yellow-400 to-orange-500',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-100',
     },
     {
       icon: Utensils,
       title: 'Smart Nutrition Plans',
       description: 'AI-driven meal plans optimized for your macros, dietary preferences, and fitness objectives.',
-      color: 'from-orange-400 to-yellow-500',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-200',
     },
     {
       icon: Activity,
       title: 'Health Score Tracking',
       description: 'Comprehensive health & lifestyle score analyzing diet, training, sleep, and habits out of 100.',
-      color: 'from-yellow-500 to-orange-400',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-300',
     },
     {
       icon: Calendar,
       title: 'Live Classes',
       description: 'Book and attend fitness classes led by expert trainers. Track attendance and progress.',
-      color: 'from-orange-500 to-yellow-400',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-[400ms]',
     },
     {
       icon: Trophy,
       title: 'Rewards System',
       description: 'Unlock points based on your health score for discounts on classes, trainers, and partner brands.',
-      color: 'from-yellow-400 to-orange-600',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-[500ms]',
     },
     {
       icon: Heart,
       title: 'Wearable Integration',
       description: 'Connect Whoop, Garmin, or Apple Health to sync your biometric data automatically.',
-      color: 'from-orange-400 to-yellow-600',
+      color: 'bg-thrivv-gold-500',
       delay: 'delay-[600ms]',
     },
   ];
@@ -73,10 +73,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-black overflow-hidden relative">
-      {/* Layer A: Base background gradient (z-index: 0) */}
+      {/* Layer A: Base background glow (z-index: 0) - THRIVV gold only */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-thrivv-gold-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-thrivv-gold-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
       {/* Navigation */}

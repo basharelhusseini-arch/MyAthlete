@@ -171,7 +171,7 @@ export default function MemberRecipesPage() {
         </div>
         <Link
           href="/recipes/builder"
-          className="flex items-center px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+          className="flex items-center px-4 py-2 bg-thrivv-gold-500 text-black font-semibold rounded-lg hover:bg-thrivv-gold-400 transition-colors"
         >
           <UtensilsCrossed className="w-5 h-5 mr-2" />
           Build Your Recipe
@@ -316,7 +316,7 @@ export default function MemberRecipesPage() {
         <p className="text-thrivv-text-secondary text-sm">
           Showing <span className="text-thrivv-gold-500 font-semibold">{filteredAndSortedRecipes.length}</span> of {allRecipes.length} recipes
           {customRecipes.length > 0 && (
-            <span className="text-yellow-500 ml-2">
+            <span className="text-thrivv-gold-500 ml-2">
               ({customRecipes.length} custom)
             </span>
           )}
@@ -361,7 +361,7 @@ export default function MemberRecipesPage() {
                   
                   {/* Custom Recipe Badge */}
                   {(recipe as any).isCustom && (
-                    <div className="absolute top-3 left-3 px-3 py-1 bg-yellow-500 text-black text-xs font-semibold rounded-full">
+                    <div className="absolute top-3 left-3 px-3 py-1 bg-thrivv-gold-500 text-black text-xs font-semibold rounded-full">
                       Your Recipe
                     </div>
                   )}

@@ -85,7 +85,7 @@ export default function Sidebar() {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 text-black hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 shadow-lg shadow-yellow-500/20"
+          className="p-2 rounded-lg bg-thrivv-gold-500 text-black hover:from-yellow-600 hover:to-thrivv-gold-600 transition-all duration-200 shadow-lg shadow-thrivv-gold-500/20"
         >
           <Menu className="w-6 h-6" />
         </button>
@@ -108,7 +108,7 @@ export default function Sidebar() {
           {/* Member Avatar (if logged in) */}
           {memberData && (
             <div className="px-3 py-4 border-b border-thrivv-gold-500/10">
-              <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center transition-all duration-200 hover:scale-105 glow-gold">
+              <div className="w-10 h-10 mx-auto rounded-xl bg-thrivv-gold-500 flex items-center justify-center transition-all duration-200 hover:scale-105 glow-gold">
                 <User className="w-5 h-5 text-black" />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function Sidebar() {
                     flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all duration-300 relative group
                     ${
                       isActive
-                        ? 'bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 glow-gold'
+                        ? 'bg-thrivv-gold-500 glow-gold'
                         : 'hover:bg-thrivv-gold-500/10'
                     }
                   `}

@@ -368,7 +368,7 @@ export default function MemberBookingsPage() {
               <div key={trainer.id} className="premium-card p-6">
                 {/* Trainer Avatar */}
                 <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center overflow-hidden relative">
+                  <div className="w-16 h-16 rounded-xl bg-thrivv-gold-500 flex items-center justify-center overflow-hidden relative">
                     <Image 
                       src={trainer.avatar} 
                       alt={trainer.fullName}

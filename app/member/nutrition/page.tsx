@@ -195,7 +195,7 @@ export default function MemberNutritionPage() {
 
               {/* Totals Summary */}
               {todayTotals && (
-                <div className="p-6 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-amber-500/10 border border-thrivv-gold-500/30 rounded-xl mt-6">
+                <div className="p-6 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-xl mt-6">
                   <h3 className="text-lg font-semibold text-thrivv-text-primary mb-4">Today&apos;s Totals</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">

@@ -99,7 +99,7 @@ export default function RecipeDetailPage() {
             <h3 className="text-lg font-semibold text-white mb-4">Nutrition Facts</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center space-x-3">
-                <Flame className="w-5 h-5 text-orange-400" />
+                <Flame className="w-5 h-5 text-thrivv-gold-400" />
                 <div>
                   <p className="text-sm text-gray-400">Calories</p>
                   <p className="text-xl font-bold text-white">{recipe.calories}</p>
@@ -120,7 +120,7 @@ export default function RecipeDetailPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <Flame className="w-5 h-5 text-yellow-400" />
+                <Flame className="w-5 h-5 text-thrivv-gold-400" />
                 <div>
                   <p className="text-sm text-gray-400">Fats</p>
                   <p className="text-xl font-bold text-white">{recipe.fats ?? recipe.fat_g}g</p>

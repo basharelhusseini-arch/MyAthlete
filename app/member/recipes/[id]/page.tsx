@@ -248,7 +248,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
             <div className="space-y-4">
               {recipe.instructions.map((instruction, index) => (
                 <div key={index} className="flex items-start">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-thrivv-gold-500 to-thrivv-amber-500 flex items-center justify-center mr-4 flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-thrivv-gold-500 flex items-center justify-center mr-4 flex-shrink-0">
                     <span className="text-lg font-semibold text-black">{index + 1}</span>
                   </div>
                   <div className="flex-1 pt-2">
@@ -267,7 +267,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
             <h3 className="text-xl font-semibold text-thrivv-text-primary mb-6">Nutrition Facts</h3>
             
             {/* Calories - Featured */}
-            <div className="p-4 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-amber-500/10 border border-thrivv-gold-500/30 rounded-xl mb-6">
+            <div className="p-4 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-xl mb-6">
               <p className="text-sm text-thrivv-text-secondary mb-1">Total Calories</p>
               <p className="text-4xl font-semibold text-thrivv-gold-500">{recipe.calories}</p>
               <p className="text-xs text-thrivv-text-muted mt-1">per serving</p>
@@ -282,7 +282,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
                 </div>
                 <div className="mt-2 h-2 bg-thrivv-bg-card rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-thrivv-gold-500 to-thrivv-amber-500"
+                    className="h-full bg-thrivv-gold-500"
                     style={{ width: `${Math.min((recipe.protein_g / 50) * 100, 100)}%` }}
                   />
                 </div>
@@ -295,7 +295,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
                 </div>
                 <div className="mt-2 h-2 bg-thrivv-bg-card rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-thrivv-gold-500 to-thrivv-amber-500"
+                    className="h-full bg-thrivv-gold-500"
                     style={{ width: `${Math.min((recipe.carbs_g / 80) * 100, 100)}%` }}
                   />
                 </div>
@@ -308,7 +308,7 @@ export default function RecipeDetailPage({ params }: { params: { id: string } })
                 </div>
                 <div className="mt-2 h-2 bg-thrivv-bg-card rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-thrivv-gold-500 to-thrivv-amber-500"
+                    className="h-full bg-thrivv-gold-500"
                     style={{ width: `${Math.min((recipe.fat_g / 40) * 100, 100)}%` }}
                   />
                 </div>

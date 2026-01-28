@@ -191,7 +191,7 @@ export default function MemberDashboardPage() {
                       const multiplier = 1 + ((confidenceScore.score - 30) / 100) * 0.25;
                       const totalScore = Math.round(healthScore.score * multiplier);
                       return (
-                        <div className="w-full mb-6 p-4 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-amber-500/10 border border-thrivv-gold-500/30 rounded-xl">
+                        <div className="w-full mb-6 p-4 bg-gradient-to-br from-thrivv-gold-500/10 to-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-xl">
                           <div className="text-center">
                             <p className="text-xs text-thrivv-text-muted mb-2 uppercase tracking-wide">Rewards Score</p>
                             <div className="flex items-center justify-center gap-2 mb-1">
@@ -345,7 +345,7 @@ export default function MemberDashboardPage() {
                             <div className={`flex items-center justify-center w-10 h-10 rounded-xl font-semibold ${
                               rank === 1 ? 'bg-thrivv-gold-500/20 text-thrivv-gold-500' :
                               rank === 2 ? 'bg-thrivv-text-secondary/20 text-thrivv-text-secondary' :
-                              rank === 3 ? 'bg-thrivv-amber-500/20 text-thrivv-amber-500' :
+                              rank === 3 ? 'bg-thrivv-gold-500/20 text-thrivv-gold-500' :
                               'bg-thrivv-bg-card text-thrivv-text-muted'
                             }`}>
                               {rank <= 3 ? (rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉') : rank}

@@ -186,21 +186,21 @@ export default function RecipeBuilderPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
       {/* Header */}
-      <div className="bg-black/40 backdrop-blur-sm border-b border-yellow-500/20 sticky top-0 z-10">
+      <div className="bg-black/40 backdrop-blur-sm border-b border-thrivv-gold-500/20 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link 
               href="/member/recipes"
-              className="text-yellow-500 hover:text-yellow-400 transition-colors"
+              className="text-thrivv-gold-500 hover:text-thrivv-gold-400 transition-colors"
             >
               ← Back to Recipes
             </Link>
-            <h1 className="text-2xl font-bold text-yellow-500">Recipe Builder</h1>
+            <h1 className="text-2xl font-bold text-thrivv-gold-500">Recipe Builder</h1>
           </div>
           <button
             onClick={saveRecipe}
             disabled={!recipeName || recipeIngredients.length === 0 || saving}
-            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-thrivv-gold-500 text-black font-semibold rounded-lg hover:bg-thrivv-gold-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? 'Saving...' : 'Save Recipe'}
           </button>
@@ -212,7 +212,7 @@ export default function RecipeBuilderPage() {
           {/* Left Column - Ingredient Search & Selection */}
           <div className="lg:col-span-2 space-y-6">
             {/* Recipe Name */}
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-yellow-500/20">
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-thrivv-gold-500/20">
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Recipe Name
               </label>
@@ -221,13 +221,13 @@ export default function RecipeBuilderPage() {
                 value={recipeName}
                 onChange={(e) => setRecipeName(e.target.value)}
                 placeholder="e.g., My High-Protein Breakfast Bowl"
-                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500 transition-colors"
+                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-thrivv-gold-500 transition-colors"
               />
             </div>
 
             {/* Ingredient Search */}
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-yellow-500/20">
-              <h2 className="text-xl font-bold text-yellow-500 mb-4">Search Ingredients</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-thrivv-gold-500/20">
+              <h2 className="text-xl font-bold text-thrivv-gold-500 mb-4">Search Ingredients</h2>
               
               {/* Search Input */}
               <input
@@ -235,7 +235,7 @@ export default function RecipeBuilderPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search ingredients (e.g., chicken, rice, broccoli...)"
-                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500 transition-colors mb-4"
+                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-thrivv-gold-500 transition-colors mb-4"
               />
 
               {/* Category Filter */}
@@ -246,7 +246,7 @@ export default function RecipeBuilderPage() {
                     onClick={() => setSelectedCategory(category)}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                       selectedCategory === category
-                        ? 'bg-yellow-500 text-black'
+                        ? 'bg-thrivv-gold-500 text-black'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                     }`}
                   >
@@ -260,7 +260,7 @@ export default function RecipeBuilderPage() {
                 {filteredIngredients.map(ingredient => (
                   <div
                     key={ingredient.id}
-                    className="bg-gray-900/50 rounded-lg p-4 border border-gray-700 hover:border-yellow-500/50 transition-colors"
+                    className="bg-gray-900/50 rounded-lg p-4 border border-gray-700 hover:border-thrivv-gold-500/50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -276,7 +276,7 @@ export default function RecipeBuilderPage() {
                       </div>
                       <button
                         onClick={() => addIngredient(ingredient)}
-                        className="ml-4 px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors text-sm"
+                        className="ml-4 px-4 py-2 bg-thrivv-gold-500 text-black font-semibold rounded-lg hover:bg-thrivv-gold-400 transition-colors text-sm"
                       >
                         + Add
                       </button>
@@ -295,8 +295,8 @@ export default function RecipeBuilderPage() {
           {/* Right Column - Recipe Summary */}
           <div className="space-y-6">
             {/* Current Recipe Ingredients */}
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-yellow-500/20 sticky top-24">
-              <h2 className="text-xl font-bold text-yellow-500 mb-4">Your Recipe</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-thrivv-gold-500/20 sticky top-24">
+              <h2 className="text-xl font-bold text-thrivv-gold-500 mb-4">Your Recipe</h2>
 
               {recipeIngredients.length === 0 ? (
                 <p className="text-gray-400 text-center py-8">
@@ -315,7 +315,7 @@ export default function RecipeBuilderPage() {
                       onChange={(e) => setServings(Math.max(0.5, parseFloat(e.target.value) || 1))}
                       step="0.5"
                       min="0.5"
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-thrivv-gold-500"
                     />
                   </div>
 
@@ -341,7 +341,7 @@ export default function RecipeBuilderPage() {
                               type="number"
                               value={ri.grams}
                               onChange={(e) => updateGrams(ri.id, parseFloat(e.target.value) || 0)}
-                              className="w-20 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-white focus:outline-none focus:border-yellow-500"
+                              className="w-20 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-sm text-white focus:outline-none focus:border-thrivv-gold-500"
                               min="0"
                               step="1"
                             />
@@ -360,7 +360,7 @@ export default function RecipeBuilderPage() {
 
                   {/* Total Nutrition */}
                   <div className="border-t border-gray-700 pt-4">
-                    <h3 className="font-semibold text-yellow-500 mb-3">Total Nutrition</h3>
+                    <h3 className="font-semibold text-thrivv-gold-500 mb-3">Total Nutrition</h3>
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="bg-gray-900/50 rounded-lg p-3">
                         <div className="text-2xl font-bold text-white">{totalNutrition.calories}</div>
@@ -382,7 +382,7 @@ export default function RecipeBuilderPage() {
 
                     {servings > 0 && servings !== 1 && (
                       <>
-                        <h3 className="font-semibold text-yellow-500 mb-3 mt-4">
+                        <h3 className="font-semibold text-thrivv-gold-500 mb-3 mt-4">
                           Per Serving ({servings} servings)
                         </h3>
                         <div className="grid grid-cols-2 gap-3">

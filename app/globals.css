@@ -17,9 +17,9 @@
 }
 
 @layer utilities {
-  /* Premium gradient text */
+  /* Premium gold text - THRIVV brand gold only */
   .text-gradient {
-    @apply bg-gradient-to-r from-thrivv-gold-400 via-thrivv-amber-500 to-thrivv-gold-500 bg-clip-text text-transparent;
+    @apply text-thrivv-gold-500;
   }
   
   /* Glass morphism card */
@@ -37,14 +37,14 @@
     box-shadow: 0 0 30px rgba(255, 195, 0, 0.08);
   }
   
-  /* Primary button with gold gradient */
+  /* Primary button - solid THRIVV gold */
   .btn-primary {
-    @apply relative bg-gradient-to-r from-thrivv-gold-500 to-thrivv-amber-500 text-black rounded-xl font-semibold transition-all duration-300 overflow-hidden;
+    @apply relative bg-thrivv-gold-500 text-black rounded-xl font-semibold transition-all duration-300 overflow-hidden;
   }
   
   .btn-primary:hover {
-    @apply from-thrivv-gold-400 to-thrivv-amber-500 scale-[1.02];
-    box-shadow: 0 8px 30px rgba(255, 195, 0, 0.25);
+    @apply bg-thrivv-gold-400 scale-[1.02];
+    box-shadow: 0 8px 30px rgba(255, 195, 0, 0.35);
   }
   
   /* Ghost button */

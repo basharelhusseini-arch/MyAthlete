@@ -228,7 +228,7 @@ export default function RewardsPage() {
       category: 'trainers',
       icon: Award,
       discount: '1 SESSION',
-      color: 'from-orange-500 to-amber-500',
+      color: 'from-thrivv-gold-500 to-amber-500',
       redeemed: redeemedRewards.includes('trainer_bronze')
     },
     {
@@ -250,7 +250,7 @@ export default function RewardsPage() {
       category: 'trainers',
       icon: Trophy,
       discount: 'UNLIMITED',
-      color: 'from-yellow-500 to-orange-500',
+      color: 'bg-thrivv-gold-500',
       redeemed: redeemedRewards.includes('trainer_gold')
     },
 
@@ -327,7 +327,7 @@ export default function RewardsPage() {
 
   const categories = [
     { id: 'classes', name: 'Classes', icon: Dumbbell, color: 'text-blue-400' },
-    { id: 'trainers', name: 'Trainers', icon: Award, color: 'text-orange-400' },
+    { id: 'trainers', name: 'Trainers', icon: Award, color: 'text-thrivv-gold-400' },
     { id: 'restaurants', name: 'Restaurants', icon: UtensilsCrossed, color: 'text-green-400' },
     { id: 'brands', name: 'Brands', icon: Star, color: 'text-purple-400' },
   ];
@@ -376,28 +376,28 @@ export default function RewardsPage() {
           {/* Total Points */}
           <div className="dark-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-yellow-500/20 rounded-xl">
-                <Trophy className="w-6 h-6 text-yellow-400" />
+              <div className="p-3 bg-thrivv-gold-500/20 rounded-xl">
+                <Trophy className="w-6 h-6 text-thrivv-gold-400" />
               </div>
-              <Zap className="w-5 h-5 text-yellow-400" />
+              <Zap className="w-5 h-5 text-thrivv-gold-400" />
             </div>
             <div className="text-4xl font-bold text-white mb-1">{points}</div>
             <div className="text-sm text-gray-400">Available Points</div>
           </div>
 
           {/* Total Rewards Score */}
-          <div className="dark-card p-6 border border-yellow-500/30">
+          <div className="dark-card p-6 border border-thrivv-gold-500/30">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl">
-                <Trophy className="w-6 h-6 text-yellow-400" />
+              <div className="p-3 bg-gradient-to-br from-thrivv-gold-500/20 to-thrivv-gold-500/20 rounded-xl">
+                <Trophy className="w-6 h-6 text-thrivv-gold-400" />
               </div>
             </div>
-            <div className="text-4xl font-bold text-yellow-400 mb-1">
+            <div className="text-4xl font-bold text-thrivv-gold-400 mb-1">
               {confidenceData?.totalRewardsScore || healthScore?.total || 0}
             </div>
             <div className="text-sm text-gray-400">Total Rewards Score</div>
             {confidenceData && (
-              <div className="text-xs text-yellow-500 mt-2">
+              <div className="text-xs text-thrivv-gold-500 mt-2">
                 {healthScore?.total} × {confidenceData.multiplier.toFixed(2)}x
               </div>
             )}
@@ -431,7 +431,7 @@ export default function RewardsPage() {
         {/* How It Works */}
         <div className="dark-card p-6 mb-8">
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-            <Zap className="w-5 h-5 mr-2 text-yellow-400" />
+            <Zap className="w-5 h-5 mr-2 text-thrivv-gold-400" />
             How to Earn Points
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-4">
@@ -444,7 +444,7 @@ export default function RewardsPage() {
               </div>
             </div>
             <div className="bg-gray-800/30 rounded-lg p-4 border border-yellow-700/50 border-2">
-              <div className="text-2xl font-bold text-yellow-400 mb-2">Step 2</div>
+              <div className="text-2xl font-bold text-thrivv-gold-400 mb-2">Step 2</div>
               <div className="text-gray-300 mb-2">Boost with Confidence</div>
               <div className="text-xs text-gray-500">
                 Connect wearable<br/>
@@ -468,7 +468,7 @@ export default function RewardsPage() {
               </div>
             </div>
           </div>
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-xs text-yellow-300">
+          <div className="bg-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-lg p-3 text-xs text-yellow-300">
             <strong>💡 Pro Tip:</strong> Higher confidence = more reward points! Connect a wearable or maintain consistent logging to boost your multiplier up to 1.25x
           </div>
         </div>
@@ -517,7 +517,7 @@ export default function RewardsPage() {
                   <p className="text-sm text-gray-400 mb-4">{reward.description}</p>
                   
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center text-yellow-400">
+                    <div className="flex items-center text-thrivv-gold-400">
                       <Star className="w-4 h-4 mr-1 fill-current" />
                       <span className="font-bold">{reward.points}</span>
                       <span className="text-xs text-gray-500 ml-1">points</span>
@@ -571,11 +571,11 @@ export default function RewardsPage() {
         </div>
 
         {/* Security Notice */}
-        <div className="dark-card p-4 mt-6 border border-yellow-500/30 bg-yellow-500/5">
+        <div className="dark-card p-4 mt-6 border border-thrivv-gold-500/30 bg-thrivv-gold-500/5">
           <div className="flex items-start gap-3">
-            <Shield className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+            <Shield className="w-5 h-5 text-thrivv-gold-400 mt-0.5 flex-shrink-0" />
             <div className="text-sm text-gray-300">
-              <span className="font-semibold text-yellow-400">Security Protected</span> - All redemptions are monitored for fraud prevention to protect your account.
+              <span className="font-semibold text-thrivv-gold-400">Security Protected</span> - All redemptions are monitored for fraud prevention to protect your account.
             </div>
           </div>
         </div>
@@ -586,8 +586,8 @@ export default function RewardsPage() {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="dark-card max-w-md w-full p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-yellow-500/20 rounded-xl">
-                <AlertTriangle className="w-6 h-6 text-yellow-400" />
+              <div className="p-3 bg-thrivv-gold-500/20 rounded-xl">
+                <AlertTriangle className="w-6 h-6 text-thrivv-gold-400" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">Additional Verification Required</h3>
@@ -618,7 +618,7 @@ export default function RewardsPage() {
               </button>
               <button
                 onClick={handleStepUpVerify}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg hover:opacity-90 transition-all font-semibold"
+                className="flex-1 px-4 py-2 bg-thrivv-gold-500 text-white rounded-lg hover:opacity-90 transition-all font-semibold"
               >
                 Verify & Redeem
               </button>

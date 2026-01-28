@@ -64,7 +64,7 @@ export default function MemberHealthPage() {
     if (score >= 90) return 'text-thrivv-neon-green';
     if (score >= 80) return 'text-green-400';
     if (score >= 60) return 'text-thrivv-gold-500';
-    if (score >= 40) return 'text-orange-400';
+    if (score >= 40) return 'text-thrivv-gold-400';
     return 'text-red-400';
   };
 
@@ -72,7 +72,7 @@ export default function MemberHealthPage() {
     if (score >= 90) return 'bg-thrivv-neon-green/20 border-thrivv-neon-green/30';
     if (score >= 80) return 'bg-green-500/20 border-green-500/30';
     if (score >= 60) return 'bg-thrivv-gold-500/20 border-thrivv-gold-500/30';
-    if (score >= 40) return 'bg-orange-500/20 border-orange-500/30';
+    if (score >= 40) return 'bg-thrivv-gold-500/20 border-thrivv-gold-500/30';
     return 'bg-red-500/20 border-red-500/30';
   };
 
@@ -117,8 +117,8 @@ export default function MemberHealthPage() {
 
       {/* Error Warning (if any) */}
       {error && (
-        <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4">
-          <p className="text-sm text-orange-400">
+        <div className="bg-thrivv-gold-500/10 border border-thrivv-gold-500/30 rounded-lg p-4">
+          <p className="text-sm text-thrivv-gold-400">
             ⚠️ We couldn&apos;t load your complete health history. Your latest score is shown below.
           </p>
         </div>
@@ -179,7 +179,7 @@ export default function MemberHealthPage() {
             <div className="glass-effect rounded-lg p-4 card-hover">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-thrivv-text-secondary">Habits</span>
-                <Target className="w-4 h-4 text-orange-400" />
+                <Target className="w-4 h-4 text-thrivv-gold-400" />
               </div>
               <p className="text-2xl font-bold text-thrivv-text-primary">{Math.round(components.habits)}</p>
               <p className="text-xs text-thrivv-text-muted mt-1">of 10 points</p>
@@ -282,7 +282,7 @@ export default function MemberHealthPage() {
                   <p className="text-xs text-thrivv-text-muted">Apple Health</p>
                 </div>
                 <div className="text-center p-3 bg-thrivv-bg-card/50 rounded-lg">
-                  <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-br from-red-500 to-thrivv-gold-500 rounded-lg flex items-center justify-center">
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <p className="text-xs text-thrivv-text-muted">Whoop</p>
@@ -350,8 +350,8 @@ export default function MemberHealthPage() {
           href="/member/habits"
           className="premium-card p-6 card-hover cursor-pointer group"
         >
-          <div className="p-3 rounded-lg bg-orange-500/20 w-fit mb-3 group-hover:bg-orange-500/30 transition-colors">
-            <Target className="w-8 h-8 text-orange-400" />
+          <div className="p-3 rounded-lg bg-thrivv-gold-500/20 w-fit mb-3 group-hover:bg-thrivv-gold-500/30 transition-colors">
+            <Target className="w-8 h-8 text-thrivv-gold-400" />
           </div>
           <h3 className="font-semibold text-thrivv-text-primary mb-1">Habits</h3>
           <p className="text-sm text-thrivv-text-secondary">Build consistency</p>
