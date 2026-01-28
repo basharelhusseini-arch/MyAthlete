@@ -29,7 +29,7 @@ export default function Logo({
   // THRIV/// wordmark SVG - exact replica of brand wordmark with forward slashes
   const logoSvg = (
     <svg
-      viewBox="0 0 490 100"
+      viewBox="0 0 450 100"
       className={`${sizeClasses[size]} ${className} w-auto`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -74,19 +74,19 @@ export default function Logo({
         
         {/* Forward slash 1 - / shape (bottom-left to top-right) */}
         <path
-          d="M 345 85 L 360 85 L 380 15 L 365 15 Z"
+          d="M 335 85 L 348 85 L 365 15 L 352 15 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 2 - / shape */}
         <path
-          d="M 390 85 L 405 85 L 425 15 L 410 15 Z"
+          d="M 370 85 L 383 85 L 400 15 L 387 15 Z"
           fill={fillColor}
         />
         
         {/* Forward slash 3 - / shape */}
         <path
-          d="M 435 85 L 450 85 L 470 15 L 455 15 Z"
+          d="M 405 85 L 418 85 L 435 15 L 422 15 Z"
           fill={fillColor}
         />
       </g>
