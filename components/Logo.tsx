@@ -26,67 +26,67 @@ export default function Logo({
 }: LogoProps) {
   const fillColor = variant === 'gold' ? '#FFD000' : '#FFFFFF';
   
-  // THRIV/// wordmark SVG - exact replica of brand wordmark with forward slashes
+  // THRIV/// wordmark SVG - exact match to reference logo spacing
   const logoSvg = (
     <svg
-      viewBox="0 0 445 100"
+      viewBox="0 0 420 100"
       className={`${sizeClasses[size]} ${className} w-auto`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ filter: variant === 'gold' ? 'drop-shadow(0 0 12px rgba(255, 208, 0, 0.15))' : 'none' }}
     >
-      {/* THRIV/// wordmark with italic slant and forward slashes */}
-      <g transform="skewX(-8)">
-        {/* T */}
+      {/* THRIV/// wordmark with tight spacing matching reference */}
+      <g transform="skewX(-10)">
+        {/* T - wider, bolder */}
         <path
-          d="M 10 15 L 70 15 L 70 28 L 52 28 L 52 85 L 35 85 L 35 28 L 17 28 Z"
+          d="M 8 18 L 65 18 L 65 30 L 48 30 L 48 82 L 32 82 L 32 30 L 15 30 Z"
           fill={fillColor}
         />
         
-        {/* H */}
+        {/* H - tight to T */}
         <path
-          d="M 78 15 L 95 15 L 95 43 L 118 43 L 118 15 L 135 15 L 135 85 L 118 85 L 118 58 L 95 58 L 95 85 L 78 85 Z"
+          d="M 72 18 L 88 18 L 88 44 L 110 44 L 110 18 L 126 18 L 126 82 L 110 82 L 110 58 L 88 58 L 88 82 L 72 82 Z"
           fill={fillColor}
         />
         
-        {/* R */}
+        {/* R - tight to H */}
         <path
-          d="M 145 15 L 190 15 C 200 15 207 17 212 21 C 217 25 220 31 220 40 C 220 48 217 54 212 58 C 207 62 200 64 190 64 L 162 64 L 162 85 L 145 85 Z M 162 29 L 162 51 L 187 51 C 192 51 195 50 197 48 C 199 46 200 43 200 39 C 200 35 199 32 197 30 C 195 28 192 27 187 27 L 162 27 Z"
+          d="M 133 18 L 175 18 C 184 18 190 20 195 24 C 199 28 201 33 201 41 C 201 48 199 53 195 57 C 190 61 184 63 175 63 L 149 63 L 149 82 L 133 82 Z M 149 31 L 149 51 L 172 51 C 177 51 180 50 182 48 C 184 46 185 43 185 40 C 185 36 184 33 182 31 C 180 29 177 28 172 28 L 149 28 Z"
           fill={fillColor}
         />
         {/* R tail */}
         <path
-          d="M 180 64 L 195 64 L 210 85 L 190 85 Z"
+          d="M 168 63 L 182 63 L 196 82 L 178 82 Z"
           fill={fillColor}
         />
         
-        {/* I - moved right for better R-I spacing */}
+        {/* I - very tight to R */}
         <path
-          d="M 225 15 L 242 15 L 242 85 L 225 85 Z"
+          d="M 203 18 L 219 18 L 219 82 L 203 82 Z"
           fill={fillColor}
         />
         
-        {/* V (single) - adjusted for better I-V flow */}
+        {/* V - tight to I */}
         <path
-          d="M 252 15 L 270 15 L 292 68 L 314 15 L 332 15 L 300 85 L 284 85 Z"
+          d="M 226 18 L 243 18 L 263 66 L 283 18 L 300 18 L 270 82 L 256 82 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 1 - / shape (bottom-left to top-right) - tighter to V */}
+        {/* Forward slash 1 - very tight to V, almost touching */}
         <path
-          d="M 338 85 L 350 85 L 366 15 L 354 15 Z"
+          d="M 304 82 L 315 82 L 330 18 L 319 18 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 2 - / shape */}
+        {/* Forward slash 2 - tight spacing */}
         <path
-          d="M 370 85 L 382 85 L 398 15 L 386 15 Z"
+          d="M 333 82 L 344 82 L 359 18 L 348 18 Z"
           fill={fillColor}
         />
         
-        {/* Forward slash 3 - / shape */}
+        {/* Forward slash 3 - tight spacing */}
         <path
-          d="M 402 85 L 414 85 L 430 15 L 418 15 Z"
+          d="M 362 82 L 373 82 L 388 18 L 377 18 Z"
           fill={fillColor}
         />
       </g>
