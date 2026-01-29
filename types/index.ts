@@ -112,6 +112,22 @@ export interface Exercise {
     moderate: { mets: number; caloriesPerMinute: number; description: string };
     high: { mets: number; caloriesPerMinute: number; description: string };
   };
+  
+  // ========================================
+  // NEW: INTELLIGENT AI METADATA for workout generator
+  // ========================================
+  primary_muscles?: string[]; // Primary movers (for precise targeting)
+  secondary_muscles?: string[]; // Secondary/synergist muscles
+  movement_pattern?: 'push' | 'pull' | 'hinge' | 'squat' | 'carry' | 'rotation' | 'anti-rotation' | 'lunge' | 'press'; // Fundamental movement pattern
+  plane_of_motion?: 'sagittal' | 'frontal' | 'transverse'; // Biomechanical plane
+  exercise_type?: 'compound' | 'isolation'; // Compound (multi-joint) or isolation (single-joint)
+  suitable_goals?: ('strength' | 'muscle_gain' | 'endurance' | 'athletic_performance' | 'general_fitness' | 'fat_loss' | 'rehab')[]; // Which goals this exercise serves best
+  recommended_reps?: string; // Optimal rep range (e.g., "6-10", "8-12", "12-15")
+  recommended_rest_seconds?: number; // Optimal rest in seconds
+  is_unilateral?: boolean; // True for single-limb exercises (balance, address asymmetries)
+  is_beginner_friendly?: boolean; // Safe for novices without much coaching
+  requires_spotter?: boolean; // True for heavy barbell movements
+  joint_stress_level?: 'low' | 'moderate' | 'high'; // How much stress on joints (for injury management)
 }
 
 export interface WorkoutExercise {

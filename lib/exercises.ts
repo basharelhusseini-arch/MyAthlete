@@ -2167,6 +2167,2604 @@ export const exercisesDatabase: Exercise[] = [
     mets: 5.5,
     caloriesPerMinute: 7,
     supportsTime: true
+  },
+
+  // ========================================
+  // CABLE EXERCISES - UPPER BODY (CHEST)
+  // ========================================
+  {
+    id: 'cable-chest-press-high',
+    name: 'Cable Chest Press (High)',
+    description: 'Upper chest press with constant tension from cables',
+    category: 'strength',
+    muscleGroups: ['chest', 'shoulders', 'triceps'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Set cables to high position on both sides',
+      'Grab handles and step forward into staggered stance',
+      'Start with hands at shoulder height, elbows slightly bent',
+      'Press forward and slightly downward in an arc',
+      'Bring handles together in front of your chest',
+      'Return with control to starting position'
+    ],
+    tips: [
+      'Keep core braced to prevent arching',
+      'Press in a slight downward angle for upper chest',
+      'Constant tension builds mind-muscle connection',
+      'Don\'t let handles go behind your shoulder line'
+    ],
+    breathing: 'Exhale as you press forward, inhale as you return',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['upper chest'],
+    secondary_muscles: ['front delts', 'triceps'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'endurance', 'general_fitness'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-chest-press-mid',
+    name: 'Cable Chest Press (Mid)',
+    description: 'Mid-chest pressing with cables for constant tension',
+    category: 'strength',
+    muscleGroups: ['chest', 'triceps', 'shoulders'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Set cables to mid-chest height',
+      'Grab handles and step forward, staggered stance',
+      'Start with hands at chest level, elbows back',
+      'Press forward in a straight line',
+      'Bring handles together at full extension',
+      'Control the return to starting position'
+    ],
+    tips: [
+      'Perfect for mid-chest development',
+      'Squeeze chest at full contraction',
+      'Keep shoulders back and down',
+      'Great machine alternative for hypertrophy'
+    ],
+    breathing: 'Exhale on press, inhale on return',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 4, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['chest'],
+    secondary_muscles: ['triceps', 'front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'endurance', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-chest-press-low',
+    name: 'Cable Chest Press (Low)',
+    description: 'Lower chest emphasis with upward pressing angle',
+    category: 'strength',
+    muscleGroups: ['lower chest', 'triceps', 'shoulders'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cables to lowest position',
+      'Grab handles and step forward',
+      'Start with hands at lower chest, elbows back',
+      'Press forward and slightly upward',
+      'Squeeze chest at the top',
+      'Return with control'
+    ],
+    tips: [
+      'Press upward angle targets lower chest',
+      'Keep core tight to avoid hyperextension',
+      'Great alternative to decline press',
+      'Focus on chest squeeze, not just moving weight'
+    ],
+    breathing: 'Exhale as you press up, inhale as you return',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '12-15' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['lower chest'],
+    secondary_muscles: ['triceps', 'front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-fly-low-to-high',
+    name: 'Single-Arm Cable Fly (Low to High)',
+    description: 'Unilateral cable fly emphasizing upper chest',
+    category: 'strength',
+    muscleGroups: ['chest', 'shoulders'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to lowest position',
+      'Grab handle with one hand, step forward',
+      'Start with arm extended down and back, slight elbow bend',
+      'Bring handle up and across your body to opposite shoulder',
+      'Squeeze chest at peak contraction',
+      'Return with control to starting position'
+    ],
+    tips: [
+      'Excellent for upper chest isolation',
+      'Maintain slight elbow bend throughout',
+      'Focus on chest doing the work, not arm',
+      'Address imbalances with unilateral training'
+    ],
+    breathing: 'Exhale as you fly up, inhale as you return',
+    tempo: '1-2-2',
+    rest: '60 seconds between arms',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15 per arm' },
+      intermediate: { sets: 3, reps: '12-15 per arm' },
+      advanced: { sets: 4, reps: '15-20 per arm' }
+    },
+    primary_muscles: ['upper chest'],
+    secondary_muscles: ['front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-fly-high-to-low',
+    name: 'Single-Arm Cable Fly (High to Low)',
+    description: 'Unilateral cable fly targeting lower chest',
+    category: 'strength',
+    muscleGroups: ['chest'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to highest position',
+      'Grab handle, step forward into stance',
+      'Start with arm extended high and back',
+      'Bring handle down and across body toward opposite hip',
+      'Squeeze lower chest at bottom',
+      'Control the return'
+    ],
+    tips: [
+      'Targets lower chest fibers',
+      'Keep slight bend in elbow constant',
+      'Don\'t rotate torso - isolate chest',
+      'Great for filling out lower chest'
+    ],
+    breathing: 'Exhale as you pull down, inhale as you return',
+    tempo: '1-2-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15 per arm' },
+      intermediate: { sets: 3, reps: '15-20 per arm' },
+      advanced: { sets: 4, reps: '15-20 per arm' }
+    },
+    primary_muscles: ['lower chest'],
+    secondary_muscles: ['front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // CABLE EXERCISES - BACK
+  // ========================================
+  {
+    id: 'cable-row-neutral-grip',
+    name: 'Cable Row (Neutral Grip)',
+    description: 'Seated cable row with neutral handles for back thickness',
+    category: 'strength',
+    muscleGroups: ['lats', 'rhomboids', 'traps', 'biceps'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit at cable row station with feet braced',
+      'Grab V-handle or neutral grip attachment',
+      'Sit upright with slight lean back',
+      'Pull handle to lower chest/upper abs',
+      'Squeeze shoulder blades together',
+      'Extend arms with control'
+    ],
+    tips: [
+      'Neutral grip allows heavy loading',
+      'Keep torso stable - no rocking',
+      'Lead with elbows, not hands',
+      'Perfect for building back thickness'
+    ],
+    breathing: 'Exhale as you row, inhale as you extend',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '10-12' }
+    },
+    primary_muscles: ['lats', 'rhomboids'],
+    secondary_muscles: ['traps', 'biceps', 'rear delts'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-row-wide-grip',
+    name: 'Wide-Grip Cable Row',
+    description: 'Cable row with wide grip for lat width and upper back',
+    category: 'strength',
+    muscleGroups: ['lats', 'upper back', 'rear delts'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Attach wide bar to cable row station',
+      'Sit with feet braced, grab bar wide (outside shoulders)',
+      'Pull bar to upper chest/lower neck area',
+      'Keep elbows flared out at 45 degrees',
+      'Squeeze upper back and rear delts',
+      'Control the extension'
+    ],
+    tips: [
+      'Emphasizes lat width and upper back',
+      'Pull to upper chest, not lower abs',
+      'Great for V-taper development',
+      'Keep chest up throughout'
+    ],
+    breathing: 'Exhale on pull, inhale on extension',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['lats', 'upper back'],
+    secondary_muscles: ['rear delts', 'traps', 'biceps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'athletic_performance'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-row-single-arm',
+    name: 'Single-Arm Cable Row',
+    description: 'Unilateral cable row for balanced back development',
+    category: 'strength',
+    muscleGroups: ['lats', 'rhomboids', 'traps'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to mid-height, use D-handle',
+      'Stand or sit, grab handle with one hand',
+      'Row handle to your hip/lower ribs',
+      'Keep elbow close to body',
+      'Squeeze lat and rotate slightly',
+      'Extend with control'
+    ],
+    tips: [
+      'Allows greater range of motion than bilateral',
+      'Address left-right imbalances',
+      'Can add slight rotation for extra lat engagement',
+      'Keep non-working hand on hip or bench for stability'
+    ],
+    breathing: 'Exhale as you row, inhale as you extend',
+    tempo: '1-1-2',
+    rest: '60 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12 per arm' },
+      intermediate: { sets: 3, reps: '12-15 per arm' },
+      advanced: { sets: 4, reps: '12-15 per arm' }
+    },
+    primary_muscles: ['lats'],
+    secondary_muscles: ['rhomboids', 'traps', 'biceps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'rehab'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-face-pull-rope',
+    name: 'Cable Face Pulls (Rope)',
+    description: 'Essential rear delt and upper back exercise with external rotation',
+    category: 'strength',
+    muscleGroups: ['rear delts', 'upper back', 'traps'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Set cable to upper chest height, attach rope',
+      'Grab rope ends with thumbs toward you',
+      'Step back until arms are extended',
+      'Pull rope toward your face, split rope as you pull',
+      'Aim for your temples, keep elbows high',
+      'Externally rotate - thumbs point back behind you',
+      'Control the return'
+    ],
+    tips: [
+      'Critical for shoulder health and posture',
+      'Focus on external rotation at peak',
+      'Keep elbows high throughout',
+      'Don\'t use too much weight - this is about activation'
+    ],
+    breathing: 'Exhale as you pull, inhale as you extend',
+    tempo: '1-2-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['rear delts'],
+    secondary_muscles: ['upper back', 'traps', 'rotator cuff'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'rehab', 'athletic_performance'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-rear-delt-fly',
+    name: 'Cable Rear Delt Fly',
+    description: 'Isolation exercise for rear deltoids using cables',
+    category: 'strength',
+    muscleGroups: ['rear delts', 'upper back'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cables to shoulder height on both sides',
+      'Cross over and grab left handle with right hand, vice versa',
+      'Step back, arms crossed in front',
+      'Pull handles apart in wide arc, leading with elbows',
+      'Squeeze shoulder blades together',
+      'Control the return'
+    ],
+    tips: [
+      'Keep slight bend in elbows constant',
+      'Don\'t use momentum',
+      'Focus on rear delt squeeze',
+      'Perfect for shoulder balance and health'
+    ],
+    breathing: 'Exhale as you fly apart, inhale as you return',
+    tempo: '1-2-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['rear delts'],
+    secondary_muscles: ['upper back', 'traps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'rehab'],
+    recommended_reps: '12-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // CABLE EXERCISES - SHOULDERS & ARMS
+  // ========================================
+  {
+    id: 'cable-lateral-raise',
+    name: 'Single-Arm Cable Lateral Raise',
+    description: 'Isolation exercise for side delts with constant tension',
+    category: 'strength',
+    muscleGroups: ['side delts', 'shoulders'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Set cable to lowest position, attach D-handle',
+      'Stand sideways to machine, grab handle with far hand',
+      'Let arm hang at your side with slight bend',
+      'Raise arm out to side until parallel to floor',
+      'Lead with elbow, keep wrist neutral',
+      'Lower with control'
+    ],
+    tips: [
+      'Constant tension is superior to dumbbells for hypertrophy',
+      'Don\'t swing or use momentum',
+      'Keep elbow slightly bent throughout',
+      'Focus on deltoid contraction, not just lifting'
+    ],
+    breathing: 'Exhale as you raise, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '60 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15 per arm' },
+      intermediate: { sets: 3, reps: '15-20 per arm' },
+      advanced: { sets: 4, reps: '15-20 per arm' }
+    },
+    primary_muscles: ['side delts'],
+    secondary_muscles: ['traps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'frontal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-tricep-pushdown-rope',
+    name: 'Cable Tricep Pushdown (Rope)',
+    description: 'Rope pushdowns for full tricep contraction',
+    category: 'strength',
+    muscleGroups: ['triceps'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Attach rope to high cable',
+      'Grab rope ends with neutral grip',
+      'Pin elbows to sides',
+      'Push rope down and pull ends apart at bottom',
+      'Squeeze triceps hard',
+      'Control the ascent'
+    ],
+    tips: [
+      'Pulling rope apart hits lateral head',
+      'Full extension is key',
+      'Don\'t use body English',
+      'Perfect pump exercise'
+    ],
+    breathing: 'Exhale on pushdown, inhale on return',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['triceps'],
+    secondary_muscles: [],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-overhead-tricep-extension',
+    name: 'Cable Overhead Tricep Extension (Rope)',
+    description: 'Overhead cable extension for long head of triceps',
+    category: 'strength',
+    muscleGroups: ['triceps'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Attach rope to low cable, face away from machine',
+      'Grab rope overhead with both hands',
+      'Step forward into split stance for stability',
+      'Start with elbows bent, rope behind head',
+      'Extend arms overhead until fully locked out',
+      'Control the descent'
+    ],
+    tips: [
+      'Emphasizes long head of triceps',
+      'Keep elbows pointed forward, don\'t flare',
+      'Lean forward slightly for stability',
+      'Great for building tricep peak'
+    ],
+    breathing: 'Exhale as you extend, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['triceps'],
+    secondary_muscles: ['shoulders'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'cable-rope-hammer-curl',
+    name: 'Cable Rope Hammer Curls',
+    description: 'Neutral-grip bicep curls for biceps and brachialis',
+    category: 'strength',
+    muscleGroups: ['biceps', 'brachialis', 'forearms'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Attach rope to low cable',
+      'Grab rope ends with neutral (palms facing) grip',
+      'Stand upright, elbows at sides',
+      'Curl rope up, keeping palms facing each other',
+      'Squeeze at the top',
+      'Control the descent'
+    ],
+    tips: [
+      'Builds arm thickness via brachialis',
+      'Neutral grip is easier on wrists',
+      'Don\'t let elbows drift forward',
+      'Can pull rope ends apart at top for extra contraction'
+    ],
+    breathing: 'Exhale on curl, inhale on lower',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['biceps', 'brachialis'],
+    secondary_muscles: ['forearms'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // CABLE EXERCISES - LEGS
+  // ========================================
+  {
+    id: 'cable-pull-through',
+    name: 'Cable Pull-Throughs',
+    description: 'Hip hinge movement for glutes and hamstrings',
+    category: 'strength',
+    muscleGroups: ['glutes', 'hamstrings', 'lower back'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to lowest position with rope attachment',
+      'Face away from machine, grab rope between legs',
+      'Walk forward to create tension',
+      'Hinge at hips, push butt back',
+      'Feel stretch in hamstrings',
+      'Drive hips forward explosively to stand',
+      'Squeeze glutes hard at top'
+    ],
+    tips: [
+      'This is a hip hinge, not a squat',
+      'Perfect deadlift teaching tool',
+      'Great for glute activation',
+      'Keep back flat throughout'
+    ],
+    breathing: 'Inhale as you hinge, exhale as you drive hips forward',
+    tempo: '2-0-1 (explosive concentric)',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['glutes', 'hamstrings'],
+    secondary_muscles: ['lower back', 'core'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'athletic_performance', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-glute-kickback',
+    name: 'Cable Glute Kickbacks',
+    description: 'Isolation exercise for glutes using cable',
+    category: 'strength',
+    muscleGroups: ['glutes'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Attach ankle strap to low cable',
+      'Strap on one ankle, face machine',
+      'Hold cable tower for balance',
+      'Kick leg back, squeezing glute',
+      'Don\'t arch lower back',
+      'Control the return'
+    ],
+    tips: [
+      'Squeeze glute at full extension',
+      'Don\'t swing or use momentum',
+      'Keep core braced to protect back',
+      'Great glute finisher'
+    ],
+    breathing: 'Exhale as you kick back, inhale as you return',
+    tempo: '1-1-2',
+    rest: '60 seconds per leg',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20 per leg' },
+      intermediate: { sets: 3, reps: '15-20 per leg' },
+      advanced: { sets: 4, reps: '20-25 per leg' }
+    },
+    primary_muscles: ['glutes'],
+    secondary_muscles: ['hamstrings'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'endurance', 'general_fitness'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // CABLE EXERCISES - CORE
+  // ========================================
+  {
+    id: 'cable-pallof-press',
+    name: 'Pallof Press',
+    description: 'Anti-rotation core exercise for stability',
+    category: 'strength',
+    muscleGroups: ['core', 'obliques', 'abs'],
+    equipment: 'cable',
+    difficulty: 'beginner',
+    instructions: [
+      'Set cable to chest height with D-handle',
+      'Stand sideways to machine',
+      'Hold handle at chest with both hands',
+      'Step away to create tension',
+      'Press handle straight out in front',
+      'Resist rotation - keep shoulders square',
+      'Pull back to chest'
+    ],
+    tips: [
+      'Core stability exercise - fight the rotation',
+      'Keep hips and shoulders square',
+      'Don\'t let cable pull you',
+      'Essential for functional core strength'
+    ],
+    breathing: 'Exhale as you press out, inhale as you return',
+    tempo: '1-2-1',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12 per side' },
+      intermediate: { sets: 3, reps: '12-15 per side' },
+      advanced: { sets: 4, reps: '15-20 per side' }
+    },
+    primary_muscles: ['core', 'obliques'],
+    secondary_muscles: ['abs', 'shoulders'],
+    movement_pattern: 'anti-rotation',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['general_fitness', 'athletic_performance', 'rehab'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-woodchop-high-to-low',
+    name: 'Cable Woodchop (High to Low)',
+    description: 'Rotational core exercise from high to low',
+    category: 'strength',
+    muscleGroups: ['obliques', 'core', 'abs'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to highest position',
+      'Stand sideways, grab handle with both hands',
+      'Start with arms extended high',
+      'Rotate and chop down across body toward opposite hip',
+      'Pivot on back foot',
+      'Control the return'
+    ],
+    tips: [
+      'Rotate from core, not just arms',
+      'Keep arms relatively straight',
+      'Great for rotational power',
+      'Common in athletic training'
+    ],
+    breathing: 'Exhale as you chop down, inhale as you return',
+    tempo: '1-0-2',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15 per side' },
+      intermediate: { sets: 3, reps: '12-15 per side' },
+      advanced: { sets: 4, reps: '15-20 per side' }
+    },
+    primary_muscles: ['obliques', 'core'],
+    secondary_muscles: ['abs', 'shoulders'],
+    movement_pattern: 'rotation',
+    plane_of_motion: 'transverse',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'general_fitness', 'muscle_gain'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'cable-woodchop-low-to-high',
+    name: 'Cable Woodchop (Low to High)',
+    description: 'Rotational power from low to high position',
+    category: 'strength',
+    muscleGroups: ['obliques', 'core', 'abs'],
+    equipment: 'cable',
+    difficulty: 'intermediate',
+    instructions: [
+      'Set cable to lowest position',
+      'Stand sideways, grab handle with both hands',
+      'Start in athletic squat, hands at low cable',
+      'Rotate and lift up across body',
+      'Extend to high position on opposite side',
+      'Control the return'
+    ],
+    tips: [
+      'Add power by incorporating leg drive',
+      'Rotate from hips and core',
+      'Excellent for athletes',
+      'Can be done explosively'
+    ],
+    breathing: 'Exhale as you lift and rotate, inhale as you return',
+    tempo: '1-0-2 (can be explosive)',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15 per side' },
+      intermediate: { sets: 3, reps: '12-15 per side' },
+      advanced: { sets: 4, reps: '15-20 per side' }
+    },
+    primary_muscles: ['obliques', 'core'],
+    secondary_muscles: ['abs', 'shoulders', 'legs'],
+    movement_pattern: 'rotation',
+    plane_of_motion: 'transverse',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // MACHINE EXERCISES - CHEST
+  // ========================================
+  {
+    id: 'machine-chest-press',
+    name: 'Chest Press Machine',
+    description: 'Plate-loaded or selectorized chest press for safe pressing',
+    category: 'strength',
+    muscleGroups: ['chest', 'triceps', 'shoulders'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat so handles are at mid-chest height',
+      'Sit with back flat against pad',
+      'Grab handles with full grip',
+      'Press forward until arms are extended',
+      'Squeeze chest at full extension',
+      'Control the return to starting position'
+    ],
+    tips: [
+      'Perfect for beginners learning pressing pattern',
+      'Allows heavy loading safely',
+      'Great for hypertrophy work',
+      'Can train to failure safely'
+    ],
+    breathing: 'Exhale as you press, inhale as you return',
+    tempo: '1-0-2',
+    rest: '75-90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '8-12' }
+    },
+    primary_muscles: ['chest'],
+    secondary_muscles: ['triceps', 'front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-incline-press',
+    name: 'Incline Press Machine',
+    description: 'Machine incline press for upper chest',
+    category: 'strength',
+    muscleGroups: ['upper chest', 'shoulders', 'triceps'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat for incline angle (30-45 degrees)',
+      'Sit with back supported',
+      'Grab handles at chest level',
+      'Press up and forward',
+      'Full extension at top',
+      'Control the descent'
+    ],
+    tips: [
+      'Targets upper chest fibers',
+      'Safe alternative to barbell incline',
+      'Good for high-rep hypertrophy',
+      'Adjust seat height for optimal angle'
+    ],
+    breathing: 'Exhale on press, inhale on return',
+    tempo: '1-0-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['upper chest'],
+    secondary_muscles: ['front delts', 'triceps'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-pec-deck',
+    name: 'Pec Deck Machine (Chest Fly)',
+    description: 'Isolation machine for chest with perfect form',
+    category: 'strength',
+    muscleGroups: ['chest'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat so handles are at chest height',
+      'Sit with back against pad',
+      'Grab handles or place forearms on pads',
+      'Bring arms together in front of chest',
+      'Squeeze chest hard at contraction',
+      'Control the stretch on the way back'
+    ],
+    tips: [
+      'Perfect for isolating chest',
+      'Keeps constant tension on pecs',
+      'Great for beginners and advanced',
+      'Focus on squeeze, not weight'
+    ],
+    breathing: 'Exhale as you bring arms together, inhale as you open',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['chest'],
+    secondary_muscles: [],
+    movement_pattern: 'push',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // MACHINE EXERCISES - BACK
+  // ========================================
+  {
+    id: 'machine-seated-row',
+    name: 'Seated Row Machine',
+    description: 'Horizontal pulling machine for back thickness',
+    category: 'strength',
+    muscleGroups: ['lats', 'rhomboids', 'traps', 'biceps'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust chest pad so you can reach handles comfortably',
+      'Sit with chest against pad',
+      'Grab handles with neutral or overhand grip',
+      'Pull handles to your torso',
+      'Squeeze shoulder blades together',
+      'Control the extension'
+    ],
+    tips: [
+      'Chest pad prevents cheating',
+      'Perfect for learning row mechanics',
+      'Focus on pulling with back, not arms',
+      'Great for hypertrophy'
+    ],
+    breathing: 'Exhale as you row, inhale as you extend',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['lats', 'rhomboids'],
+    secondary_muscles: ['traps', 'biceps', 'rear delts'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-lat-pulldown-wide',
+    name: 'Wide-Grip Lat Pulldown Machine',
+    description: 'Lat pulldown with wide grip for back width',
+    category: 'strength',
+    muscleGroups: ['lats', 'upper back', 'biceps'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit at lat pulldown, secure thighs under pads',
+      'Grab bar with wide overhand grip',
+      'Pull bar down to upper chest',
+      'Drive elbows down and back',
+      'Squeeze lats at bottom',
+      'Control the ascent'
+    ],
+    tips: [
+      'Builds lat width (V-taper)',
+      'Great pull-up progression',
+      'Don\'t lean back excessively',
+      'Think elbows, not hands'
+    ],
+    breathing: 'Exhale as you pull down, inhale as you return',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '10-12' }
+    },
+    primary_muscles: ['lats'],
+    secondary_muscles: ['upper back', 'biceps', 'rear delts'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'strength'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-assisted-pullup',
+    name: 'Assisted Pull-Up Machine',
+    description: 'Machine-assisted pull-ups for learning the movement',
+    category: 'strength',
+    muscleGroups: ['lats', 'biceps', 'upper back'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Set desired assistance weight',
+      'Step or kneel on platform',
+      'Grab handles with overhand grip',
+      'Pull yourself up until chin clears handles',
+      'Lower with control',
+      'Repeat for reps'
+    ],
+    tips: [
+      'Perfect for building pull-up strength',
+      'Reduce assistance over time',
+      'Focus on form, not speed',
+      'Full range of motion is key'
+    ],
+    breathing: 'Exhale as you pull up, inhale as you lower',
+    tempo: '1-0-2',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '6-8' },
+      intermediate: { sets: 4, reps: '8-10' },
+      advanced: { sets: 4, reps: '10-12' }
+    },
+    primary_muscles: ['lats', 'biceps'],
+    secondary_muscles: ['upper back', 'core'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'general_fitness'],
+    recommended_reps: '6-10',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-assisted-dip',
+    name: 'Assisted Dip Machine',
+    description: 'Machine-assisted dips for chest and triceps',
+    category: 'strength',
+    muscleGroups: ['chest', 'triceps', 'shoulders'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Set assistance weight',
+      'Step or kneel on platform',
+      'Grab handles, lean forward slightly for chest',
+      'Lower until upper arms are parallel to ground',
+      'Press back up to starting position',
+      'Control the movement'
+    ],
+    tips: [
+      'Learn dip movement safely',
+      'Forward lean = chest, upright = triceps',
+      'Reduce assistance as you get stronger',
+      'Don\'t go too deep if shoulders hurt'
+    ],
+    breathing: 'Inhale as you lower, exhale as you press',
+    tempo: '2-0-1',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '6-8' },
+      intermediate: { sets: 4, reps: '8-10' },
+      advanced: { sets: 4, reps: '10-12' }
+    },
+    primary_muscles: ['chest', 'triceps'],
+    secondary_muscles: ['front delts'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '6-10',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'machine-reverse-fly',
+    name: 'Reverse Pec Deck (Rear Delt Machine)',
+    description: 'Rear delt isolation on machine',
+    category: 'strength',
+    muscleGroups: ['rear delts', 'upper back'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat so handles are at shoulder height',
+      'Sit facing the machine (chest against pad)',
+      'Grab handles with neutral grip',
+      'Pull handles back in wide arc',
+      'Squeeze shoulder blades together',
+      'Control the return'
+    ],
+    tips: [
+      'Essential for shoulder health',
+      'Don\'t use momentum',
+      'Focus on rear delt squeeze',
+      'Perfect form over heavy weight'
+    ],
+    breathing: 'Exhale as you fly back, inhale as you return',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['rear delts'],
+    secondary_muscles: ['upper back', 'traps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'rehab'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // MACHINE EXERCISES - SHOULDERS
+  // ========================================
+  {
+    id: 'machine-shoulder-press',
+    name: 'Shoulder Press Machine',
+    description: 'Machine overhead press for deltoid development',
+    category: 'strength',
+    muscleGroups: ['shoulders', 'triceps'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat so handles are at shoulder height',
+      'Sit with back supported',
+      'Grab handles with full grip',
+      'Press overhead until arms are extended',
+      'Lower with control to starting position',
+      'Don\'t lock out completely'
+    ],
+    tips: [
+      'Safe way to overhead press heavy',
+      'Perfect for beginners',
+      'Can train to failure safely',
+      'Great for hypertrophy'
+    ],
+    breathing: 'Exhale as you press, inhale as you lower',
+    tempo: '1-0-2',
+    rest: '75-90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '8-12' }
+    },
+    primary_muscles: ['shoulders'],
+    secondary_muscles: ['triceps', 'upper chest'],
+    movement_pattern: 'press',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'machine-lateral-raise',
+    name: 'Lateral Raise Machine',
+    description: 'Machine lateral raise for side delts',
+    category: 'strength',
+    muscleGroups: ['side delts'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust seat height appropriately',
+      'Sit with back against pad',
+      'Place arms under or against pads',
+      'Raise arms out to sides until parallel',
+      'Control the descent',
+      'Don\'t use momentum'
+    ],
+    tips: [
+      'Perfect for isolating side delts',
+      'Machine ensures correct path',
+      'Great for beginners learning movement',
+      'Focus on deltoid contraction'
+    ],
+    breathing: 'Exhale as you raise, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['side delts'],
+    secondary_muscles: ['traps'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'frontal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // MACHINE EXERCISES - LEGS
+  // ========================================
+  {
+    id: 'machine-leg-press-standard',
+    name: 'Leg Press (Standard Foot Position)',
+    description: 'Machine leg press for overall leg development',
+    category: 'strength',
+    muscleGroups: ['quads', 'glutes', 'hamstrings'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit in leg press, back and head against pad',
+      'Place feet shoulder-width apart, mid-platform',
+      'Release safeties',
+      'Lower weight until knees are at 90 degrees',
+      'Press through heels to extend legs',
+      'Don\'t lock out knees completely'
+    ],
+    tips: [
+      'Keep lower back against pad',
+      'Don\'t let knees cave inward',
+      'Full range of motion',
+      'Great for loading legs heavily and safely'
+    ],
+    breathing: 'Inhale as you lower, exhale as you press',
+    tempo: '2-0-1',
+    rest: '90-120 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '8-12' },
+      advanced: { sets: 4, reps: '8-15' }
+    },
+    primary_muscles: ['quads', 'glutes'],
+    secondary_muscles: ['hamstrings', 'calves'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'machine-leg-press-high-feet',
+    name: 'Leg Press (High Foot Position)',
+    description: 'Leg press with high foot placement for glutes and hamstrings',
+    category: 'strength',
+    muscleGroups: ['glutes', 'hamstrings', 'quads'],
+    equipment: 'machine',
+    difficulty: 'intermediate',
+    instructions: [
+      'Sit in leg press',
+      'Place feet high on platform, shoulder-width',
+      'Release safeties',
+      'Lower with control to 90 degrees',
+      'Press through heels to extend',
+      'Focus on glute and hamstring engagement'
+    ],
+    tips: [
+      'High foot position emphasizes posterior chain',
+      'Great for glute development',
+      'Keep pressure in heels',
+      'Don\'t let lower back round'
+    ],
+    breathing: 'Inhale as you lower, exhale as you press',
+    tempo: '2-0-1',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 3, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['glutes', 'hamstrings'],
+    secondary_muscles: ['quads'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'athletic_performance'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-hack-squat',
+    name: 'Hack Squat Machine',
+    description: 'Machine squat for quad development',
+    category: 'strength',
+    muscleGroups: ['quads', 'glutes'],
+    equipment: 'machine',
+    difficulty: 'intermediate',
+    instructions: [
+      'Stand on platform, back against pad',
+      'Position shoulders under pads',
+      'Feet shoulder-width on platform',
+      'Release safeties',
+      'Squat down until thighs are parallel',
+      'Drive through heels to stand'
+    ],
+    tips: [
+      'Excellent quad builder',
+      'Keep back flat against pad',
+      'Full range of motion',
+      'Safer than barbell squats for some'
+    ],
+    breathing: 'Inhale as you descend, exhale as you drive up',
+    tempo: '2-0-1',
+    rest: '90-120 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10' },
+      intermediate: { sets: 4, reps: '8-12' },
+      advanced: { sets: 4, reps: '8-12' }
+    },
+    primary_muscles: ['quads'],
+    secondary_muscles: ['glutes', 'hamstrings'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'athletic_performance'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'machine-leg-extension',
+    name: 'Leg Extension Machine',
+    description: 'Isolation exercise for quadriceps',
+    category: 'strength',
+    muscleGroups: ['quads'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Adjust machine so pad is on lower shins',
+      'Sit with back against pad',
+      'Grip handles for stability',
+      'Extend legs until fully straight',
+      'Squeeze quads at the top',
+      'Lower with control'
+    ],
+    tips: [
+      'Isolates quads perfectly',
+      'Great for rehab and pre-exhaust',
+      'Full extension with squeeze',
+      'Control the negative'
+    ],
+    breathing: 'Exhale as you extend, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['quads'],
+    secondary_muscles: [],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'rehab'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'machine-lying-leg-curl',
+    name: 'Lying Leg Curl Machine',
+    description: 'Hamstring isolation lying face down',
+    category: 'strength',
+    muscleGroups: ['hamstrings'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Lie face down on machine',
+      'Position pad on back of lower legs/ankles',
+      'Grip handles',
+      'Curl heels toward glutes',
+      'Squeeze hamstrings at top',
+      'Lower with control'
+    ],
+    tips: [
+      'Don\'t lift hips off pad',
+      'Full contraction at top',
+      'Control the descent',
+      'Point toes down or flex for variation'
+    ],
+    breathing: 'Exhale as you curl, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['hamstrings'],
+    secondary_muscles: [],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-seated-leg-curl',
+    name: 'Seated Leg Curl Machine',
+    description: 'Hamstring isolation in seated position',
+    category: 'strength',
+    muscleGroups: ['hamstrings'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit in machine, back against pad',
+      'Position pad on back of lower legs',
+      'Secure thigh pad',
+      'Curl legs down as far as possible',
+      'Squeeze hamstrings',
+      'Control the return'
+    ],
+    tips: [
+      'Different stimulus than lying curl',
+      'Keep torso stable',
+      'Full range of motion',
+      'Great for hamstring development'
+    ],
+    breathing: 'Exhale as you curl, inhale as you extend',
+    tempo: '1-1-2',
+    rest: '60-75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 3, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['hamstrings'],
+    secondary_muscles: [],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-hip-abductor',
+    name: 'Hip Abduction Machine',
+    description: 'Glute medius and outer hip isolation',
+    category: 'strength',
+    muscleGroups: ['glutes', 'hip abductors'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit in machine with back supported',
+      'Place outer thighs against pads',
+      'Push legs apart against resistance',
+      'Squeeze glutes at full abduction',
+      'Control the return'
+    ],
+    tips: [
+      'Strengthens glute medius',
+      'Important for hip stability',
+      'Don\'t use momentum',
+      'Essential for injury prevention'
+    ],
+    breathing: 'Exhale as you push out, inhale as you return',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '20-25' }
+    },
+    primary_muscles: ['glutes', 'hip abductors'],
+    secondary_muscles: [],
+    movement_pattern: 'pull',
+    plane_of_motion: 'frontal',
+    exercise_type: 'isolation',
+    suitable_goals: ['general_fitness', 'rehab', 'athletic_performance'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-hip-adductor',
+    name: 'Hip Adduction Machine',
+    description: 'Inner thigh isolation machine',
+    category: 'strength',
+    muscleGroups: ['adductors', 'inner thighs'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit in machine with back supported',
+      'Place inner thighs against pads',
+      'Start with legs apart',
+      'Squeeze legs together',
+      'Hold contraction briefly',
+      'Control the opening'
+    ],
+    tips: [
+      'Strengthens inner thighs',
+      'Important for hip balance',
+      'Don\'t rush the movement',
+      'Focus on adductor squeeze'
+    ],
+    breathing: 'Exhale as you squeeze together, inhale as you open',
+    tempo: '1-1-2',
+    rest: '60 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20' },
+      intermediate: { sets: 3, reps: '15-20' },
+      advanced: { sets: 4, reps: '20-25' }
+    },
+    primary_muscles: ['adductors'],
+    secondary_muscles: [],
+    movement_pattern: 'pull',
+    plane_of_motion: 'frontal',
+    exercise_type: 'isolation',
+    suitable_goals: ['general_fitness', 'rehab'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'machine-glute-bridge',
+    name: 'Glute Bridge Machine',
+    description: 'Machine hip thrust for glute development',
+    category: 'strength',
+    muscleGroups: ['glutes', 'hamstrings'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Sit in machine, back against pad',
+      'Position pad across hips',
+      'Plant feet on platform',
+      'Drive hips forward against resistance',
+      'Squeeze glutes hard at full extension',
+      'Control the return'
+    ],
+    tips: [
+      'Best glute isolation machine',
+      'Full hip extension',
+      'Squeeze glutes, don\'t arch back',
+      'Easier to load than barbell hip thrust'
+    ],
+    breathing: 'Exhale as you thrust forward, inhale as you return',
+    tempo: '1-1-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '12-15' },
+      intermediate: { sets: 4, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['glutes'],
+    secondary_muscles: ['hamstrings'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'isolation',
+    suitable_goals: ['muscle_gain', 'athletic_performance', 'general_fitness'],
+    recommended_reps: '12-15',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // SMITH MACHINE EXERCISES
+  // ========================================
+  {
+    id: 'smith-machine-squat',
+    name: 'Smith Machine Squat',
+    description: 'Fixed-path squat for controlled quad development',
+    category: 'strength',
+    muscleGroups: ['quads', 'glutes', 'hamstrings'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Position bar on upper traps',
+      'Step under bar, unhook safeties',
+      'Feet slightly forward of bar',
+      'Squat down to parallel or below',
+      'Drive through heels to stand',
+      'Re-rack at top'
+    ],
+    tips: [
+      'Fixed path allows different foot positions',
+      'Safer for training alone',
+      'Can focus purely on legs',
+      'Good for learning squat pattern'
+    ],
+    breathing: 'Inhale as you descend, exhale as you drive up',
+    tempo: '2-0-1',
+    rest: '90-120 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10' },
+      intermediate: { sets: 4, reps: '8-12' },
+      advanced: { sets: 4, reps: '8-12' }
+    },
+    primary_muscles: ['quads', 'glutes'],
+    secondary_muscles: ['hamstrings', 'core'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'smith-machine-rdl',
+    name: 'Smith Machine Romanian Deadlift',
+    description: 'Fixed-path RDL for hamstrings and glutes',
+    category: 'strength',
+    muscleGroups: ['hamstrings', 'glutes', 'lower back'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Stand with bar at hip height',
+      'Grip bar shoulder-width',
+      'Unhook and stand tall',
+      'Hinge at hips, push butt back',
+      'Lower bar down thighs to mid-shin',
+      'Drive hips forward to stand'
+    ],
+    tips: [
+      'Perfect for learning hip hinge',
+      'Keep bar close to body',
+      'Focus on hamstring stretch',
+      'Safer than free weight for beginners'
+    ],
+    breathing: 'Inhale as you hinge, exhale as you return',
+    tempo: '2-1-1',
+    rest: '75-90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '10-12' }
+    },
+    primary_muscles: ['hamstrings', 'glutes'],
+    secondary_muscles: ['lower back', 'core'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'general_fitness', 'strength'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'smith-machine-incline-press',
+    name: 'Smith Machine Incline Press',
+    description: 'Fixed-path incline press for upper chest',
+    category: 'strength',
+    muscleGroups: ['upper chest', 'shoulders', 'triceps'],
+    equipment: 'machine',
+    difficulty: 'beginner',
+    instructions: [
+      'Set bench to 30-45 degree incline under Smith machine',
+      'Position so bar path is over upper chest',
+      'Grip bar slightly wider than shoulders',
+      'Unhook and lower to upper chest',
+      'Press bar up until arms extended',
+      'Re-hook at top'
+    ],
+    tips: [
+      'Safe for training without spotter',
+      'Can go heavy safely',
+      'Focus on upper chest contraction',
+      'Adjust bench position for optimal path'
+    ],
+    breathing: 'Inhale as you lower, exhale as you press',
+    tempo: '2-0-1',
+    rest: '75-90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10' },
+      intermediate: { sets: 4, reps: '8-10' },
+      advanced: { sets: 4, reps: '8-12' }
+    },
+    primary_muscles: ['upper chest'],
+    secondary_muscles: ['front delts', 'triceps'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '8-10',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // KETTLEBELL EXERCISES - POWER/ATHLETIC
+  // ========================================
+  {
+    id: 'kettlebell-swing',
+    name: 'Kettlebell Swings',
+    description: 'Explosive hip hinge for power and conditioning',
+    category: 'hybrid',
+    muscleGroups: ['glutes', 'hamstrings', 'core', 'shoulders'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Stand with feet shoulder-width, KB between feet',
+      'Hinge at hips, grab KB with both hands',
+      'Hike KB back between legs',
+      'Explosively drive hips forward',
+      'KB swings to shoulder height (arms relaxed)',
+      'Let KB fall back between legs and repeat'
+    ],
+    tips: [
+      'Power comes from hip drive, not arms',
+      'Keep back flat throughout',
+      'Explosive hip snap',
+      'Perfect for conditioning and power'
+    ],
+    breathing: 'Exhale forcefully on hip drive',
+    tempo: 'Explosive',
+    rest: '60-90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '15-20' },
+      intermediate: { sets: 4, reps: '15-20' },
+      advanced: { sets: 5, reps: '20-25' }
+    },
+    primary_muscles: ['glutes', 'hamstrings'],
+    secondary_muscles: ['core', 'shoulders', 'back'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'fat_loss', 'endurance', 'general_fitness'],
+    recommended_reps: '15-20',
+    recommended_rest_seconds: 60,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'kettlebell-clean',
+    name: 'Kettlebell Clean',
+    description: 'Explosive lift bringing KB to rack position',
+    category: 'strength',
+    muscleGroups: ['glutes', 'back', 'shoulders', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'advanced',
+    instructions: [
+      'Start with KB on ground between feet',
+      'Hinge and grip KB with one hand',
+      'Drive hips explosively',
+      'Pull KB up and catch in rack position at shoulder',
+      'KB rests on forearm and chest',
+      'Lower with control and repeat'
+    ],
+    tips: [
+      'Catch KB softly in rack',
+      'Don\'t curl it - drive with hips',
+      'Master swing before attempting clean',
+      'Great for power development'
+    ],
+    breathing: 'Exhale on drive, inhale during reset',
+    tempo: 'Explosive',
+    rest: '90 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 0, reps: '0' },
+      intermediate: { sets: 3, reps: '6-8 per arm' },
+      advanced: { sets: 4, reps: '8-10 per arm' }
+    },
+    primary_muscles: ['glutes', 'back'],
+    secondary_muscles: ['shoulders', 'core', 'traps'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'strength', 'muscle_gain'],
+    recommended_reps: '6-10',
+    recommended_rest_seconds: 90,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'kettlebell-snatch',
+    name: 'Kettlebell Snatch',
+    description: 'Explosive full-body lift overhead in one motion',
+    category: 'strength',
+    muscleGroups: ['full body', 'shoulders', 'glutes', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'advanced',
+    instructions: [
+      'Start with KB on ground',
+      'Hinge and grip with one hand',
+      'Explosively drive hips and pull KB up',
+      'Punch hand through at top to catch overhead',
+      'Lock out arm overhead',
+      'Lower with control'
+    ],
+    tips: [
+      'Most explosive KB movement',
+      'Master clean and swing first',
+      'Punch through to avoid banging wrist',
+      'Excellent for conditioning and power'
+    ],
+    breathing: 'Exhale explosively on drive',
+    tempo: 'Explosive',
+    rest: '90-120 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 0, reps: '0' },
+      intermediate: { sets: 3, reps: '5-8 per arm' },
+      advanced: { sets: 4, reps: '8-10 per arm' }
+    },
+    primary_muscles: ['glutes', 'shoulders'],
+    secondary_muscles: ['back', 'core', 'hamstrings'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'strength', 'endurance'],
+    recommended_reps: '5-10',
+    recommended_rest_seconds: 90,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'kettlebell-push-press',
+    name: 'Kettlebell Push Press',
+    description: 'Explosive overhead press using leg drive',
+    category: 'strength',
+    muscleGroups: ['shoulders', 'legs', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Start with KB in rack position',
+      'Dip knees slightly',
+      'Explosively drive through legs',
+      'Press KB overhead using momentum',
+      'Lock out arm at top',
+      'Lower to rack and repeat'
+    ],
+    tips: [
+      'Leg drive initiates the press',
+      'Great for building pressing power',
+      'Can lift heavier than strict press',
+      'Full lockout overhead'
+    ],
+    breathing: 'Inhale on dip, exhale on press',
+    tempo: 'Explosive',
+    rest: '75 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '6-8 per arm' },
+      intermediate: { sets: 3, reps: '8-10 per arm' },
+      advanced: { sets: 4, reps: '10-12 per arm' }
+    },
+    primary_muscles: ['shoulders'],
+    secondary_muscles: ['triceps', 'legs', 'core'],
+    movement_pattern: 'press',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'athletic_performance', 'muscle_gain'],
+    recommended_reps: '6-10',
+    recommended_rest_seconds: 75,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  // ========================================
+  // KETTLEBELL EXERCISES - STRENGTH
+  // ========================================
+  {
+    id: 'kettlebell-goblet-squat',
+    name: 'Goblet Squat',
+    description: 'Front-loaded squat teaching perfect form',
+    category: 'strength',
+    muscleGroups: ['quads', 'glutes', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Hold KB at chest, cupped under bell',
+      'Stand with feet shoulder-width',
+      'Squat down, elbows tracking inside knees',
+      'Go to full depth if mobility allows',
+      'Drive through heels to stand',
+      'Keep chest up and core braced'
+    ],
+    tips: [
+      'Perfect squat teaching tool',
+      'KB at chest keeps torso upright',
+      'Use elbows to push knees out',
+      'Great for mobility and strength'
+    ],
+    breathing: 'Inhale as you descend, exhale as you stand',
+    tempo: '2-0-1',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '12-15' },
+      advanced: { sets: 4, reps: '15-20' }
+    },
+    primary_muscles: ['quads', 'glutes'],
+    secondary_muscles: ['core', 'hamstrings'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'general_fitness'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-front-rack-split-squat',
+    name: 'Front Rack Kettlebell Split Squat',
+    description: 'Single-leg squat with KB in rack position',
+    category: 'strength',
+    muscleGroups: ['quads', 'glutes'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Hold KB in rack position (one or both hands)',
+      'Step into split stance',
+      'Lower back knee toward ground',
+      'Keep front shin vertical',
+      'Drive through front heel to stand',
+      'Complete reps, then switch legs'
+    ],
+    tips: [
+      'Front load challenges core stability',
+      'Great for single-leg strength',
+      'Keep torso upright',
+      'Address imbalances'
+    ],
+    breathing: 'Inhale as you lower, exhale as you drive up',
+    tempo: '2-0-1',
+    rest: '60 seconds per leg',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10 per leg' },
+      intermediate: { sets: 3, reps: '10-12 per leg' },
+      advanced: { sets: 4, reps: '12-15 per leg' }
+    },
+    primary_muscles: ['quads', 'glutes'],
+    secondary_muscles: ['hamstrings', 'core'],
+    movement_pattern: 'lunge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain', 'athletic_performance'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  {
+    id: 'kettlebell-deadlift',
+    name: 'Kettlebell Deadlift',
+    description: 'Hip hinge pattern with KB for posterior chain',
+    category: 'strength',
+    muscleGroups: ['glutes', 'hamstrings', 'lower back'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Stand with KB between feet',
+      'Hinge at hips, grip KB with both hands',
+      'Keep back flat, chest up',
+      'Drive through heels and extend hips to stand',
+      'Squeeze glutes at top',
+      'Lower with control'
+    ],
+    tips: [
+      'Perfect deadlift teaching tool',
+      'Keep KB close to body',
+      'Drive with hips, not back',
+      'Great for learning hinge pattern'
+    ],
+    breathing: 'Inhale before lift, exhale at lockout',
+    tempo: '1-0-2',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['glutes', 'hamstrings'],
+    secondary_muscles: ['lower back', 'traps', 'core'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'general_fitness', 'muscle_gain'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-single-leg-rdl',
+    name: 'Single-Leg KB Romanian Deadlift',
+    description: 'Unilateral hip hinge for balance and hamstrings',
+    category: 'strength',
+    muscleGroups: ['hamstrings', 'glutes', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Hold KB in one hand',
+      'Stand on opposite leg',
+      'Hinge at hip, extending free leg behind',
+      'Lower KB toward ground',
+      'Keep back flat, hips square',
+      'Return to standing using glutes and hamstrings'
+    ],
+    tips: [
+      'Excellent for balance and unilateral strength',
+      'Keep hips square - don\'t rotate',
+      'Focus on hamstring stretch',
+      'Touch toe to ground if needed for balance'
+    ],
+    breathing: 'Inhale as you hinge, exhale as you return',
+    tempo: '2-1-1',
+    rest: '60 seconds per leg',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10 per leg' },
+      intermediate: { sets: 3, reps: '10-12 per leg' },
+      advanced: { sets: 4, reps: '12-15 per leg' }
+    },
+    primary_muscles: ['hamstrings', 'glutes'],
+    secondary_muscles: ['core', 'lower back'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'athletic_performance', 'general_fitness'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-floor-press',
+    name: 'Kettlebell Floor Press',
+    description: 'Horizontal press from floor with KB',
+    category: 'strength',
+    muscleGroups: ['chest', 'triceps', 'shoulders'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Lie on floor with knees bent',
+      'Hold KB(s) in rack or press position',
+      'Lower KB until triceps touch floor',
+      'Pause briefly',
+      'Press KB back up to start',
+      'Keep wrist straight'
+    ],
+    tips: [
+      'Great for lockout strength',
+      'Shoulder-friendly pressing',
+      'Can use one or two KBs',
+      'Floor prevents over-stretching'
+    ],
+    breathing: 'Inhale as you lower, exhale as you press',
+    tempo: '2-1-1',
+    rest: '75 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10' },
+      intermediate: { sets: 3, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['chest', 'triceps'],
+    secondary_muscles: ['shoulders'],
+    movement_pattern: 'push',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'muscle_gain'],
+    recommended_reps: '8-12',
+    recommended_rest_seconds: 75,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-row',
+    name: 'Kettlebell Row',
+    description: 'Unilateral row with KB for back thickness',
+    category: 'strength',
+    muscleGroups: ['lats', 'rhomboids', 'biceps'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Place one hand and knee on bench',
+      'Hold KB in opposite hand',
+      'Row KB to hip, leading with elbow',
+      'Squeeze lat at top',
+      'Lower with control',
+      'Keep back flat'
+    ],
+    tips: [
+      'Don\'t rotate torso',
+      'Pull with back, not arm',
+      'KB handle allows natural grip angle',
+      'Great alternative to dumbbell rows'
+    ],
+    breathing: 'Exhale as you row, inhale as you lower',
+    tempo: '1-1-2',
+    rest: '60 seconds per arm',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '10-12 per arm' },
+      intermediate: { sets: 3, reps: '12-15 per arm' },
+      advanced: { sets: 4, reps: '12-15 per arm' }
+    },
+    primary_muscles: ['lats'],
+    secondary_muscles: ['rhomboids', 'biceps', 'rear delts'],
+    movement_pattern: 'pull',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['muscle_gain', 'strength', 'general_fitness'],
+    recommended_reps: '10-15',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  // ========================================
+  // KETTLEBELL EXERCISES - CARRIES & CONDITIONING
+  // ========================================
+  {
+    id: 'kettlebell-farmers-walk',
+    name: 'Kettlebell Farmer\'s Walk',
+    description: 'Loaded carry for grip and full-body strength',
+    category: 'hybrid',
+    muscleGroups: ['grip', 'traps', 'core', 'legs'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Pick up KB in each hand',
+      'Stand tall with shoulders back',
+      'Walk forward with controlled steps',
+      'Keep core braced',
+      'Don\'t let torso lean',
+      'Walk for distance or time'
+    ],
+    tips: [
+      'Builds real-world strength',
+      'Great for grip and core',
+      'Keep shoulders packed',
+      'Can use heavy weight'
+    ],
+    breathing: 'Breathe normally, don\'t hold breath',
+    tempo: 'Steady walk',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, duration: '30 seconds' },
+      intermediate: { sets: 4, duration: '45 seconds' },
+      advanced: { sets: 4, duration: '60 seconds' }
+    },
+    primary_muscles: ['grip', 'traps'],
+    secondary_muscles: ['core', 'legs', 'shoulders'],
+    movement_pattern: 'carry',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['strength', 'general_fitness', 'athletic_performance'],
+    recommended_reps: '30-60s',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-suitcase-carry',
+    name: 'Kettlebell Suitcase Carry',
+    description: 'Single-arm carry for anti-lateral flexion core strength',
+    category: 'hybrid',
+    muscleGroups: ['core', 'obliques', 'grip'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Pick up KB in one hand',
+      'Stand tall, don\'t lean',
+      'Walk forward maintaining upright posture',
+      'Resist lateral bending',
+      'Core works to keep you straight',
+      'Switch hands and repeat'
+    ],
+    tips: [
+      'Anti-lateral flexion core exercise',
+      'Fight the weight pulling you sideways',
+      'Great for core stability',
+      'Can use heavy weight'
+    ],
+    breathing: 'Breathe normally throughout',
+    tempo: 'Steady walk',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 3, duration: '30 seconds per side' },
+      intermediate: { sets: 3, duration: '45 seconds per side' },
+      advanced: { sets: 4, duration: '60 seconds per side' }
+    },
+    primary_muscles: ['core', 'obliques'],
+    secondary_muscles: ['grip', 'shoulders', 'traps'],
+    movement_pattern: 'carry',
+    plane_of_motion: 'frontal',
+    exercise_type: 'isolation',
+    suitable_goals: ['general_fitness', 'athletic_performance', 'rehab'],
+    recommended_reps: '30-60s',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-rack-carry',
+    name: 'Kettlebell Front Rack Carry',
+    description: 'KB held in rack position during walk',
+    category: 'hybrid',
+    muscleGroups: ['core', 'shoulders', 'legs'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Clean KB to rack position',
+      'KB rests on forearm and chest',
+      'Walk forward maintaining upright posture',
+      'Keep elbow close to ribs',
+      'Core engaged throughout',
+      'Switch arms and repeat'
+    ],
+    tips: [
+      'Challenges posture and core',
+      'Great for rack position practice',
+      'Keeps shoulder packed',
+      'Can use two KBs (double rack)'
+    ],
+    breathing: 'Breathe normally, steady rhythm',
+    tempo: 'Steady walk',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 3, duration: '30 seconds per side' },
+      intermediate: { sets: 3, duration: '45 seconds per side' },
+      advanced: { sets: 4, duration: '60 seconds per side' }
+    },
+    primary_muscles: ['core', 'shoulders'],
+    secondary_muscles: ['legs', 'upper back'],
+    movement_pattern: 'carry',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'general_fitness', 'strength'],
+    recommended_reps: '30-60s',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-thruster',
+    name: 'Kettlebell Thrusters',
+    description: 'Squat to overhead press for conditioning',
+    category: 'hybrid',
+    muscleGroups: ['legs', 'shoulders', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'intermediate',
+    instructions: [
+      'Hold KB in goblet or rack position',
+      'Squat down to full depth',
+      'Drive up explosively',
+      'Use momentum to press KB overhead',
+      'Lock out at top',
+      'Lower to starting position and repeat'
+    ],
+    tips: [
+      'Fluid movement - squat flows into press',
+      'Great for conditioning',
+      'Use lighter weight than squats or presses alone',
+      'Breathe at top of each rep'
+    ],
+    breathing: 'Inhale on squat, exhale on press',
+    tempo: 'Fluid and continuous',
+    rest: '90 seconds',
+    recommendedSets: {
+      beginner: { sets: 3, reps: '8-10' },
+      intermediate: { sets: 4, reps: '10-12' },
+      advanced: { sets: 4, reps: '12-15' }
+    },
+    primary_muscles: ['quads', 'shoulders'],
+    secondary_muscles: ['glutes', 'core', 'triceps'],
+    movement_pattern: 'squat',
+    plane_of_motion: 'sagittal',
+    exercise_type: 'compound',
+    suitable_goals: ['fat_loss', 'endurance', 'athletic_performance'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 90,
+    is_unilateral: false,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'moderate'
+  },
+
+  // ========================================
+  // KETTLEBELL EXERCISES - CORE
+  // ========================================
+  {
+    id: 'kettlebell-turkish-getup',
+    name: 'Turkish Get-Up',
+    description: 'Complex full-body movement from ground to standing',
+    category: 'strength',
+    muscleGroups: ['core', 'shoulders', 'full body'],
+    equipment: 'kettlebell',
+    difficulty: 'advanced',
+    instructions: [
+      'Lie on back, press KB overhead with one arm',
+      'Bend same-side knee, foot flat',
+      'Roll up onto opposite elbow',
+      'Push up to hand',
+      'Lift hips into bridge',
+      'Sweep leg under and kneel',
+      'Stand up keeping KB overhead',
+      'Reverse sequence to return to ground'
+    ],
+    tips: [
+      'Complex movement - learn with no weight first',
+      'Keep eyes on KB throughout',
+      'Builds shoulder stability and coordination',
+      'Take your time, focus on control'
+    ],
+    breathing: 'Breathe at each position',
+    tempo: 'Slow and controlled',
+    rest: '90-120 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 2, reps: '2-3 per side' },
+      intermediate: { sets: 3, reps: '3-5 per side' },
+      advanced: { sets: 3, reps: '5-8 per side' }
+    },
+    primary_muscles: ['core', 'shoulders'],
+    secondary_muscles: ['full body'],
+    movement_pattern: 'anti-rotation',
+    plane_of_motion: 'transverse',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'general_fitness', 'rehab'],
+    recommended_reps: '3-5',
+    recommended_rest_seconds: 90,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-windmill',
+    name: 'Kettlebell Windmill',
+    description: 'Mobility and stability exercise for obliques and shoulders',
+    category: 'flexibility',
+    muscleGroups: ['obliques', 'shoulders', 'hamstrings'],
+    equipment: 'kettlebell',
+    difficulty: 'advanced',
+    instructions: [
+      'Press KB overhead with one arm',
+      'Feet wide, toes pointed at angle',
+      'Keep eyes on KB',
+      'Hinge at hip, reach down with free hand',
+      'Touch floor while keeping KB overhead',
+      'Return to standing position'
+    ],
+    tips: [
+      'Advanced movement requiring mobility',
+      'Keep arm locked overhead',
+      'Great for shoulder health',
+      'Master with bodyweight first'
+    ],
+    breathing: 'Breathe throughout movement',
+    tempo: 'Slow and controlled',
+    rest: '60 seconds per side',
+    recommendedSets: {
+      beginner: { sets: 0, reps: '0' },
+      intermediate: { sets: 2, reps: '5-8 per side' },
+      advanced: { sets: 3, reps: '8-10 per side' }
+    },
+    primary_muscles: ['obliques', 'shoulders'],
+    secondary_muscles: ['hamstrings', 'core'],
+    movement_pattern: 'hinge',
+    plane_of_motion: 'transverse',
+    exercise_type: 'compound',
+    suitable_goals: ['athletic_performance', 'general_fitness', 'rehab'],
+    recommended_reps: '5-8',
+    recommended_rest_seconds: 60,
+    is_unilateral: true,
+    is_beginner_friendly: false,
+    requires_spotter: false,
+    joint_stress_level: 'low'
+  },
+
+  {
+    id: 'kettlebell-halo',
+    name: 'Kettlebell Halo',
+    description: 'Shoulder mobility exercise circling KB around head',
+    category: 'flexibility',
+    muscleGroups: ['shoulders', 'core'],
+    equipment: 'kettlebell',
+    difficulty: 'beginner',
+    instructions: [
+      'Hold KB upside down by horns at chest',
+      'Circle KB around your head',
+      'Keep core tight, don\'t arch back',
+      'Pass KB hand-to-hand behind head',
+      'Complete full circle',
+      'Reverse direction'
+    ],
+    tips: [
+      'Great warm-up for shoulders',
+      'Builds shoulder mobility and stability',
+      'Use light weight',
+      'Keep core engaged to protect back'
+    ],
+    breathing: 'Breathe normally throughout',
+    tempo: 'Slow and controlled',
+    rest: '30 seconds',
+    recommendedSets: {
+      beginner: { sets: 2, reps: '8-10 each direction' },
+      intermediate: { sets: 3, reps: '10-12 each direction' },
+      advanced: { sets: 3, reps: '12-15 each direction' }
+    },
+    primary_muscles: ['shoulders'],
+    secondary_muscles: ['core', 'triceps'],
+    movement_pattern: 'rotation',
+    plane_of_motion: 'transverse',
+    exercise_type: 'isolation',
+    suitable_goals: ['general_fitness', 'rehab', 'athletic_performance'],
+    recommended_reps: '10-12',
+    recommended_rest_seconds: 30,
+    is_unilateral: false,
+    is_beginner_friendly: true,
+    requires_spotter: false,
+    joint_stress_level: 'low'
   }
 ];
 
@@ -2209,4 +4807,193 @@ export function getExercisesByEquipment(equipment: Exercise['equipment']): Exerc
 // Get exercises by difficulty
 export function getExercisesByDifficulty(difficulty: Exercise['difficulty']): Exercise[] {
   return exercisesDatabase.filter(ex => ex.difficulty === difficulty);
+}
+
+// ========================================
+// NEW: INTELLIGENT EXERCISE SELECTION HELPERS
+// ========================================
+
+// Get exercises by primary muscle (using new metadata)
+export function getExercisesByPrimaryMuscle(muscle: string): Exercise[] {
+  return exercisesDatabase.filter(ex => 
+    ex.primary_muscles?.includes(muscle) || 
+    (!ex.primary_muscles && ex.muscleGroups.includes(muscle))
+  );
+}
+
+// Get exercises by movement pattern
+export function getExercisesByMovementPattern(pattern: NonNullable<Exercise['movement_pattern']>): Exercise[] {
+  return exercisesDatabase.filter(ex => ex.movement_pattern === pattern);
+}
+
+// Get exercises by goal
+export function getExercisesByGoal(goal: string): Exercise[] {
+  return exercisesDatabase.filter(ex => 
+    ex.suitable_goals?.includes(goal as any) || 
+    !ex.suitable_goals // Include exercises without goal specification as universally suitable
+  );
+}
+
+// Get exercises by exercise type
+export function getExercisesByType(type: 'compound' | 'isolation'): Exercise[] {
+  return exercisesDatabase.filter(ex => ex.exercise_type === type);
+}
+
+// Get beginner-friendly exercises
+export function getBeginnerFriendlyExercises(): Exercise[] {
+  return exercisesDatabase.filter(ex => 
+    ex.is_beginner_friendly === true || 
+    ex.difficulty === 'beginner'
+  );
+}
+
+// Get low joint-stress exercises (for rehab/injury management)
+export function getLowJointStressExercises(): Exercise[] {
+  return exercisesDatabase.filter(ex => 
+    ex.joint_stress_level === 'low' || 
+    !ex.joint_stress_level
+  );
+}
+
+// Get unilateral exercises (for addressing imbalances)
+export function getUnilateralExercises(): Exercise[] {
+  return exercisesDatabase.filter(ex => ex.is_unilateral === true);
+}
+
+// INTELLIGENT EXERCISE SELECTOR with multiple criteria
+export interface ExerciseSelectionCriteria {
+  equipment?: Exercise['equipment'][];
+  primaryMuscles?: string[];
+  movementPattern?: NonNullable<Exercise['movement_pattern']>[];
+  goal?: string;
+  difficulty?: Exercise['difficulty'][];
+  exerciseType?: ('compound' | 'isolation')[];
+  isUnilateral?: boolean;
+  isBeginnerFriendly?: boolean;
+  lowJointStress?: boolean;
+  excludeIds?: string[];
+}
+
+export function selectExercises(criteria: ExerciseSelectionCriteria): Exercise[] {
+  return exercisesDatabase.filter(exercise => {
+    // Equipment filter
+    if (criteria.equipment && criteria.equipment.length > 0) {
+      if (!criteria.equipment.includes(exercise.equipment)) return false;
+    }
+
+    // Primary muscles filter (check new metadata first, fallback to muscleGroups)
+    if (criteria.primaryMuscles && criteria.primaryMuscles.length > 0) {
+      const hasMatch = criteria.primaryMuscles.some(muscle =>
+        exercise.primary_muscles?.includes(muscle) ||
+        exercise.muscleGroups.includes(muscle)
+      );
+      if (!hasMatch) return false;
+    }
+
+    // Movement pattern filter
+    if (criteria.movementPattern && criteria.movementPattern.length > 0) {
+      if (!exercise.movement_pattern || !criteria.movementPattern.includes(exercise.movement_pattern)) {
+        return false;
+      }
+    }
+
+    // Goal filter
+    if (criteria.goal) {
+      if (exercise.suitable_goals && !exercise.suitable_goals.includes(criteria.goal as any)) {
+        return false;
+      }
+    }
+
+    // Difficulty filter
+    if (criteria.difficulty && criteria.difficulty.length > 0) {
+      if (!criteria.difficulty.includes(exercise.difficulty)) return false;
+    }
+
+    // Exercise type filter
+    if (criteria.exerciseType && criteria.exerciseType.length > 0) {
+      if (!exercise.exercise_type || !criteria.exerciseType.includes(exercise.exercise_type)) {
+        return false;
+      }
+    }
+
+    // Unilateral filter
+    if (criteria.isUnilateral !== undefined) {
+      if (exercise.is_unilateral !== criteria.isUnilateral) return false;
+    }
+
+    // Beginner-friendly filter
+    if (criteria.isBeginnerFriendly === true) {
+      if (!exercise.is_beginner_friendly && exercise.difficulty !== 'beginner') {
+        return false;
+      }
+    }
+
+    // Low joint stress filter
+    if (criteria.lowJointStress === true) {
+      if (exercise.joint_stress_level && exercise.joint_stress_level !== 'low') {
+        return false;
+      }
+    }
+
+    // Exclude specific exercises
+    if (criteria.excludeIds && criteria.excludeIds.includes(exercise.id)) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
+// SMART SELECTOR: Balance push/pull ratios
+export function getBalancedPushPullExercises(options: {
+  count: number;
+  equipment?: Exercise['equipment'][];
+  difficulty?: Exercise['difficulty'];
+  goal?: string;
+}): { push: Exercise[]; pull: Exercise[] } {
+  const pushCount = Math.ceil(options.count / 2);
+  const pullCount = Math.floor(options.count / 2);
+
+  const pushExercises = selectExercises({
+    movementPattern: ['push', 'press'],
+    equipment: options.equipment,
+    difficulty: options.difficulty ? [options.difficulty] : undefined,
+    goal: options.goal
+  }).slice(0, pushCount);
+
+  const pullExercises = selectExercises({
+    movementPattern: ['pull'],
+    equipment: options.equipment,
+    difficulty: options.difficulty ? [options.difficulty] : undefined,
+    goal: options.goal
+  }).slice(0, pullCount);
+
+  return { push: pushExercises, pull: pullExercises };
+}
+
+// CABLE/MACHINE SELECTOR for hypertrophy blocks
+export function getMachineAndCableExercises(options: {
+  primaryMuscles: string[];
+  count: number;
+  difficulty?: Exercise['difficulty'];
+}): Exercise[] {
+  return selectExercises({
+    equipment: ['cable', 'machine'],
+    primaryMuscles: options.primaryMuscles,
+    difficulty: options.difficulty ? [options.difficulty] : undefined,
+    goal: 'muscle_gain'
+  }).slice(0, options.count);
+}
+
+// KETTLEBELL SELECTOR for athletic/conditioning work
+export function getKettlebellExercises(options: {
+  goal: 'athletic_performance' | 'endurance' | 'fat_loss';
+  count: number;
+  difficulty?: Exercise['difficulty'];
+}): Exercise[] {
+  return selectExercises({
+    equipment: ['kettlebell'],
+    goal: options.goal,
+    difficulty: options.difficulty ? [options.difficulty] : undefined
+  }).slice(0, options.count);
 }
